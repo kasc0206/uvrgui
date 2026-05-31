@@ -27,6 +27,64 @@ from pathlib import Path
 
 import numpy as np
 
+
+def _ensure_model_downloaded(model_name: str):
+    """确保 Demucs 模型文件已缓存，缺失时自动用 curl 下载"""
+    import subprocess
+
+    import yaml
+
+    remote_dir = BASE_DIR / "demucs" / "remote"
+    files_txt = remote_dir / "files.txt"
+    cache_dir = Path.home() / ".cache" / "torch" / "hub" / "checkpoints"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    base_url = "https://dl.fbaipublicfiles.com/demucs/"
+    model_urls = {}
+    root = ""
+    if files_txt.exists():
+        with open(files_txt) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if line.startswith("root:"):
+                    root = line.split(":", 1)[1].strip()
+                else:
+                    sig = line.split("-", 1)[0]
+                    model_urls[sig] = base_url + root + line
+
+    yaml_path = remote_dir / f"{model_name}.yaml"
+    if not yaml_path.exists():
+        return
+
+    bag = yaml.safe_load(open(yaml_path))
+    signatures = bag.get("models", [])
+
+    missing = []
+    for sig in signatures:
+        if sig not in model_urls:
+            continue
+        url = model_urls[sig]
+        filename = url.rstrip("/").split("/")[-1]
+        cached_path = cache_dir / filename
+        if not cached_path.exists():
+            missing.append((filename, url))
+
+    if not missing:
+        return
+
+    total = len(missing)
+    print(f"需要下载 {total} 个模型文件...")
+    for i, (name, url) in enumerate(missing, 1):
+        print(f"  [{i}/{total}] {name}")
+        subprocess.run(
+            ["curl", "-L", "-o", str(cache_dir / name), "--retry", "3", "-s", url],
+            capture_output=True, check=True,
+        )
+    print("模型文件下载完成")
+
+
 BASE_DIR = Path(__file__).parent
 MODELS_DIR = BASE_DIR / "models"
 
@@ -301,7 +359,10 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
             device = "cpu"
     print(f"使用设备: {device}")
 
-    # 加载 Demucs 模型（自动下载）
+    # 自动补全下载模型文件
+    _ensure_model_downloaded(model_name)
+
+    # 加载 Demucs 模型
     print(f"正在加载模型 {model_name}...")
     model = get_model(model_name)
     model.to(device)
@@ -327,7 +388,6 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
 
         # 加载音频
         mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
-        print("  加载音频...")
         mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
         if mix.ndim == 1:
             mix = np.stack([mix, mix], axis=0)
