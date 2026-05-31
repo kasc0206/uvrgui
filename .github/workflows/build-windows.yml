@@ -49,6 +49,10 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Install CUDA PyTorch (optional, for GPU acceleration)
+        run: |
+          pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
       - name: Install PyInstaller
         run: |
           pip install pyinstaller

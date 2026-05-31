@@ -75,19 +75,37 @@ python UVR.py
 
 ### 🪟 Windows EXE 构建
 
-本 Fork 支持通过 GitHub Actions 自动构建 Windows EXE。
+本 Fork 支持通过 GitHub Actions 自动构建 Windows EXE。推送 tag 即可触发：
 
-方法一：推送 tag 自动构建
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-方法二：手动触发 [Actions 页面](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
+也可手动触发 [Actions 页面](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
 
-方法三：Windows 本机直接编译
+#### 构建变体
+
+CI 会同时产出以下两种构建产物：
+
+| 变体 | PyTorch 版本 | 体积 | GPU 加速 | 适用场景 |
+|------|-------------|------|---------|---------|
+| **CPU 版** | CPU-only | ~400 MB | ❌ | 通用兼容，体积小 |
+| **CUDA 版** | CUDA 12.1 | ~2.5 GB | ✅ NVIDIA GPU | 需要 GPU 加速 |
+
+CI 流程：先通过 `requirements.txt` 安装 CPU PyTorch，再覆盖安装 CUDA PyTorch，最终产物为 CUDA 版。如需仅构建 CPU 版，可删除工作流中的 CUDA 安装步骤。
+
+#### 本机构建
+
 ```bash
+pip install -r requirements.txt
 pip install pyinstaller
+
+# CPU 版（默认）
+pyinstaller UVR.spec --clean --noconfirm
+
+# CUDA 版（需先安装 CUDA PyTorch）
+pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu121
 pyinstaller UVR.spec --clean --noconfirm
 ```
 
