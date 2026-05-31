@@ -1,4 +1,4 @@
-.PHONY: install run gui lint clean list process download
+.PHONY: install run gui lint clean list process download precommit
 
 # 默认 Python 解释器
 PYTHON = python3
@@ -35,6 +35,10 @@ process:
 download:
 	$(ACTIVATE) && $(PYTHON) uvr_cli.py download-models
 
+## 安装 pre-commit 钩子
+precommit:
+	$(ACTIVATE) && pip install pre-commit -q && pre-commit install
+
 ## 运行代码检查
 lint:
 	$(ACTIVATE) && pip install ruff -q && ruff check --select=E,F,W,I --ignore=E501 uvr_cli.py playsound.py demucs/pretrained.py demucs/repo.py
@@ -63,4 +67,5 @@ help:
 	@echo "  download        预下载模型"
 	@echo "  lint            代码检查"
 	@echo "  fix             自动修复 lint"
+	@echo "  precommit       安装 git 提交钩子"
 	@echo "  clean           清理缓存"
