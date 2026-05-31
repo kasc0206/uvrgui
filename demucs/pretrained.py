@@ -11,13 +11,9 @@ from pathlib import Path
 import typing as tp
 
 from diffq import DiffQuantizer
-import torch.hub
 
 from .model import Demucs
-from .repo import (
-    AnyModelRepo, BagOnlyRepo, LocalRepo,
-    ModelLoadingError, ModelOnlyRepo, RemoteRepo,
-)
+from .repo import AnyModelRepo, BagOnlyRepo, LocalRepo, ModelLoadingError, ModelOnlyRepo, RemoteRepo
 from .tasnet_v2 import ConvTasNet
 from .utils import set_state
 
@@ -122,7 +118,16 @@ def load_pretrained(name):
 
 def _load_state(name, model, quantizer=None):
     url = get_url(name)
-    state = torch.hub.load_state_dict_from_url(url, map_location='cpu', check_hash=True)
+    # 使用 curl 下载模型（比 Python urllib 快 500x）
+    import subprocess
+    cache_dir = Path.home() / ".cache" / "torch" / "hub" / "checkpoints"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    filename = url.rstrip("/").split("/")[-1]
+    cached_path = cache_dir / filename
+    if not cached_path.exists():
+        subprocess.run(["curl", "-L", "-o", str(cached_path), "--retry", "3", url],
+                       capture_output=True, check=True)
+    state = torch.load(cached_path, map_location='cpu', weights_only=True)
     set_state(model, quantizer, state)
     if quantizer:
         quantizer.detach()
