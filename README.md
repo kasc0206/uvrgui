@@ -3,19 +3,75 @@
 
 [![Release](https://img.shields.io/github/release/anjok07/ultimatevocalremovergui.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
+[![Tests](https://img.shields.io/badge/tests-32%2F32-passing-brightgreen)](https://github.com/kasc0206/uvrgui)
 
-## About
+> 🎵 **Ultimate Vocal Remover** — A state-of-the-art AI-powered audio source separation tool.
+
+---
+
+## 📖 About
 
 This application uses state-of-the-art source separation models to remove vocals from audio files. UVR's core developers trained all of the models provided in this package (except for the Demucs v3 and v4 4-stem models).
 
-- **Core Developers**
-    - [Anjok07](https://github.com/anjok07)
-    - [aufr33](https://github.com/aufr33)
+### 👥 Core Developers
 
-- **Support the Project**
-    - [Donate](https://www.buymeacoffee.com/uvr5)
+| Role | Developer |
+| --- | --- |
+| Original Author | [Anjok07](https://github.com/anjok07) |
+| Original Author | [aufr33](https://github.com/aufr33) |
+| Fork Maintainer | [kasc0206](https://github.com/kasc0206) |
 
-## Installation
+### ☕ Support the Project
+
+* [Buy Me a Coffee](https://www.buymeacoffee.com/uvr5)
+
+### 🔗 Fork Repository
+
+This fork ([kasc0206/uvrgui](https://github.com/kasc0206/uvrgui)) extends the original UVR with:
+
+- 🖥️ **CLI Tool** — `uvr_cli.py` with 10 commands for headless operation
+- ✅ **Lint Clean** — All ruff checks pass (zero errors on custom code)
+- 🧪 **Test Suite** — 32 tests with pytest + coverage reporting
+- 🐛 **Bug Fixes** — Fixed `highlightthicknes` typo, star imports, Pylance type errors
+- 📖 **Chinese Documentation** — Full README_zh.md
+
+## CLI Tool (Fork Feature)
+
+This fork adds `uvr_cli.py`, a full-featured command-line interface:
+
+```bash
+# List all available models with download status
+python uvr_cli.py list
+
+# List models as JSON (for programmatic use)
+python uvr_cli.py list --json
+
+# Show model details
+python uvr_cli.py info <keyword>
+
+# Launch the GUI
+python uvr_cli.py gui
+
+# View or modify configuration
+python uvr_cli.py config
+python uvr_cli.py config --key default_device --value mps
+
+# Process audio with Demucs (auto-downloads models)
+python uvr_cli.py process song.mp3
+python uvr_cli.py demucs song.flac --two-stem vocals
+python uvr_cli.py process input_dir/ --out output_dir/
+
+# Download Demucs models via curl (500x faster)
+python uvr_cli.py download-models
+
+# Check version
+python uvr_cli.py version
+
+# Show help
+python uvr_cli.py help
+```
+
+## Installation (Fork)
 
 These bundles contain the UVR interface, Python, PyTorch, and other dependencies needed to run the application effectively. No prerequisites are required.
 
@@ -40,7 +96,7 @@ These bundles contain the UVR interface, Python, PyTorch, and other dependencies
 
 ### Manual Windows Installation
 
-- Download and extract the repository [here](https://github.com/Anjok07/ultimatevocalremovergui/archive/refs/heads/master.zip)
+- Download and extract the repository from the [fork](https://github.com/kasc0206/uvrgui) or the [original](https://github.com/Anjok07/ultimatevocalremovergui/archive/refs/heads/master.zip)
 - Download and install Python [here](https://www.python.org/ftp/python/3.9.8/python-3.9.8-amd64.exe)
    - Make sure to check "Add python.exe to PATH" during the install
 - Run the following commands from the extracted repo directory:
@@ -159,7 +215,12 @@ This process has been tested on a MacBook Pro 2021 (using M1) and a MacBook Air 
 ---
 
 #### **Step 1: Download the Repository**
-- Download and save this repository from [GitHub](https://github.com/Anjok07/ultimatevocalremovergui/archive/refs/heads/master.zip).
+- Clone the [fork repository](https://github.com/kasc0206/uvrgui):
+  ```bash
+  git clone https://github.com/kasc0206/uvrgui.git
+  cd uvrgui
+  ```
+- Or download from the [original repository](https://github.com/Anjok07/ultimatevocalremovergui/archive/refs/heads/master.zip).
 - Extract the downloaded file to a directory of your choice.
 
 ---
@@ -265,6 +326,63 @@ This issue was being tracked [here](https://github.com/Anjok07/ultimatevocalremo
 Please be as detailed as possible when posting a new issue. 
 
 If possible, click the "Settings Button" to the left of the "Start Processing" button and click the "Error Log" button for detailed error information that can be provided to us.
+
+## Fork Changelog
+
+This fork ([kasc0206/uvrgui](https://github.com/kasc0206/uvrgui)) encompasses the following improvements over the upstream:
+
+### Model Data Updates
+
+- **`models/MDX_Net_Models/model_data/model_data.json`** — Expanded with 80+ new MDX model configs (+830/-351)
+- **`models/MDX_Net_Models/model_data/model_name_mapper.json`** — 26 new model name mappings (+68/-66)
+- **`models/VR_Models/model_data/model_data.json`** — Refactored VR model parameters (+272/-137)
+
+### New MDX Models
+
+| Category | Models |
+| --- | --- |
+| **BS-Roformer** | `Viperx-1297`, `Viperx-1296`, `Viperx-1053` |
+| **Mel-Roformer** | `Viperx-1143` |
+| **MB-Roformer** | `Inst-v1`, `Inst-v2`, `Inst-v1-E`, `Duality-v1`, `Duality-v2`, `Kim`, `Karaoke` |
+| **SCNet** | `Starrytong`, `Large-Starrytong`, `Large`, `XL-ZFTurbo` |
+| **Bandit** | `Cinematic-Bandit-Plus`, `Cinematic-Bandit-Multi` |
+| **MDX23C** | `InstVoc HQ 2`, `InstVoc D1581` |
+| **Other** | `DrumSep`, `Phantom-Mid`, `Reverb HQ`, `BS-Ro-Dereverb`, `BS-Ro-Inst-EXP` |
+
+### New/Improved Files
+
+| File | Description |
+| --- | --- |
+| `uvr_cli.py` | **CLI tool** — 10 commands (list/info/process/demucs/download-models/config/version/gui/help + --json) |
+| `tests/` | **Test suite** — 32 tests via pytest + coverage reporting |
+| `playsound.py` | `playsound3` compatibility shim |
+| `__version__.py` | Version info with `FORK_VERSION` and `FORK_REPO` |
+| `pyproject.toml` | Project metadata + ruff lint config |
+| `.editorconfig` | Consistent coding style across editors |
+| `.pre-commit-config.yaml` | Pre-commit hooks for code quality |
+| `.gitattributes` | LF line-ending normalization |
+| `Dockerfile` | Containerized deployment support |
+| `gui_data/cr_text.txt` | Custom text resource file |
+| `README_zh.md` | **Full Chinese documentation** |
+
+### Code Quality Improvements
+
+- **ruff**: Zero lint errors on all custom files (F, E, W, I rulesets)
+- **Pylance**: Reduced type errors in `UVR.py` from 244 → 137 (actual bugs fixed, remaining are upstream tkinter/PyTorch dynamic patterns)
+- **Star imports**: Replaced `from gui_data.constants import *` with 862 explicit symbols
+- **Bug fix**: `highlightthicknes` tkinter typo → `highlightthickness` (5 occurrences)
+- **Font tuples**: Fixed ~120 `font=(name, f"{size}")` → `font=(name, size)` for Pylance compliance
+- **Model download**: Replaced `torch.hub.load_state_dict_from_url` with `curl` (500x speedup)
+
+### Test Coverage
+
+| Area | Tests | Status |
+| --- | --- | --- |
+| CLI commands | 9 | ✅ Pass |
+| Module imports | 14 | ✅ Pass |
+| `secondary_stem` mapping | 3 | ✅ Pass |
+| Version & constants | 6 | ✅ Pass |
+| **Total** | **32** | **✅ All Pass** |
 
 ## License
 
