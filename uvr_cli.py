@@ -332,7 +332,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
         print(f"  耗时: {elapsed:.1f}秒")
 
         # 保存结果
-        result = sources[0].cpu().numpy()
+        result: "np.ndarray" = sources[0].cpu().numpy()  # type: ignore[assignment]
 
         if two_stem:
             # 只分离指定音源和其补集
