@@ -33,6 +33,46 @@ import numpy as np
 
 CONFIG_FILE = Path(__file__).parent / "uvr_config.json"
 
+# 全局 JSON 输出模式（通过 --json 启用）
+JSON_MODE = False
+
+
+class Output:
+    """统一输出接口，支持人类可读和 JSON 两种模式"""
+
+    @staticmethod
+    def print(*args, **kwargs):
+        if not JSON_MODE:
+            print(*args, **kwargs)
+
+    @staticmethod
+    def json(data: dict):
+        """输出 JSON（始终输出到 stdout）"""
+        print(json.dumps(data, ensure_ascii=False, default=str))
+
+    @staticmethod
+    def result(data: dict):
+        """输出结果：JSON 模式输出 JSON，否则输出可读文本"""
+        if JSON_MODE:
+            Output.json(data)
+        # 可读文本由调用方自行 print
+
+    @staticmethod
+    def error(message: str, code: int = 1):
+        """输出错误并以指定码退出"""
+        if JSON_MODE:
+            Output.json({"error": message, "code": code})
+        else:
+            print(f"错误: {message}", file=sys.stderr)
+        sys.exit(code)
+
+    @staticmethod
+    def ok(data: dict):
+        """输出成功结果并退出"""
+        if JSON_MODE:
+            Output.json({"ok": True, **data})
+        sys.exit(0)
+
 
 def load_config():
     """加载用户配置文件，不存在时返回空字典"""
@@ -203,52 +243,64 @@ def get_model_display_name(arch, model_key):
 def list_models():
     """列出所有可用模型及下载状态"""
     downloaded = scan_downloaded_models()
+    result = {}
 
     for arch, data_path in MODEL_DATA_FILES.items():
-        print(f"\n{'='*60}")
-        print(f"  {arch}")
-        print(f"{'='*60}")
-
         if not data_path.exists():
-            print(f"  [配置缺失] {data_path}")
             continue
 
         model_data = load_model_data(arch)
         mapper = load_model_name_mapper(arch)
+        arch_models = []
 
-        if not model_data:
-            print("  (无模型数据)")
-            continue
-
-        # 如果是 Demucs，model_data 本身就是名称映射
         if arch == "Demucs":
-            items = list(model_data.items())
-            print(f"  共 {len(items)} 个模型配置\n")
-            for model_key, display_name in items[:30]:
+            for model_key, display_name in model_data.items():
                 model_file = model_key.replace(".yaml", "").replace(".th", "")
-                status = "✅ 已下载" if model_file in downloaded.get(arch, []) else "⬜ 未下载"
-                print(f"    {display_name:<35} {status}")
-            if len(items) > 30:
-                print(f"    ... 还有 {len(items) - 30} 个模型未显示")
-            continue
+                downloaded_flag = model_file in downloaded.get(arch, [])
+                arch_models.append({
+                    "name": display_name,
+                    "file": model_key,
+                    "downloaded": downloaded_flag,
+                })
+        else:
+            for model_hash, config in model_data.items():
+                display_name = mapper.get(model_hash, model_hash[:12] + "...")
+                primary = config.get("primary_stem", "?")
+                downloaded_flag = model_hash in downloaded.get(arch, [])
+                entry = {
+                    "name": display_name,
+                    "hash": model_hash,
+                    "output": primary,
+                    "downloaded": downloaded_flag,
+                }
+                if config.get("is_karaoke"):
+                    entry["type"] = "karaoke"
+                if config.get("is_bv_model"):
+                    entry["type"] = "backing_vocals"
+                arch_models.append(entry)
 
-        # VR / MDX-Net: model_data 是 {hash: config}
-        items = list(model_data.items())
-        print(f"  共 {len(items)} 个模型配置\n")
+        result[arch] = arch_models
 
-        for model_hash, config in items:
-            display_name = mapper.get(model_hash, model_hash[:12] + "...")
-            primary = config.get("primary_stem", "?")
-            status = "✅" if model_hash in downloaded.get(arch, []) else "⬜"
+    if JSON_MODE:
+        Output.json({"models": result, "total": sum(len(v) for v in result.values())})
+        return
 
+    # 可读输出
+    for arch, models in result.items():
+        print(f"\n{'='*60}")
+        print(f"  {arch}  ({len(models)} 个模型)")
+        print(f"{'='*60}")
+        for m in models:
+            status = "✅" if m["downloaded"] else "⬜"
             extra = ""
-            if config.get("is_karaoke"):
+            if m.get("type") == "karaoke":
                 extra = " 🎤卡拉OK"
-            if config.get("is_bv_model"):
+            elif m.get("type") == "backing_vocals":
                 extra = " 🎤背景人声"
-
-            print(f"    [{status}] {display_name:<35} → {primary}{extra}")
-
+            if arch == "Demucs":
+                print(f"    [{status}] {m['name']:<35}{extra}")
+            else:
+                print(f"    [{status}] {m['name']:<35} → {m['output']}{extra}")
     print()
 
 
@@ -256,6 +308,7 @@ def show_model_info(search_term):
     """查看特定模型的信息"""
     found = False
     search_lower = search_term.lower()
+    json_results = []
 
     for arch in MODEL_DATA_FILES:
         model_data = load_model_data(arch)
@@ -264,29 +317,43 @@ def show_model_info(search_term):
         if arch == "Demucs":
             for key, name in model_data.items():
                 if search_lower in key.lower() or search_lower in name.lower():
-                    print(f"\n{'='*50}")
-                    print(f"  架构: {arch}")
-                    print(f"  模型: {name}")
-                    print(f"  文件: {key}")
+                    entry = {"arch": arch, "name": name, "file": key}
+                    if JSON_MODE:
+                        json_results.append(entry)
+                    else:
+                        print(f"\n{'='*50}")
+                        print(f"  架构: {arch}")
+                        print(f"  模型: {name}")
+                        print(f"  文件: {key}")
                     found = True
             continue
 
-        # 方法1: 遍历 model_data（hash 作为 key）
         for model_key, config in model_data.items():
-            # 尝试在 mapper 中找显示名
-            display_name = mapper.get(model_key, mapper.get(model_key, None))
-            # 如果 mapper 中没找到，尝试用 hash 的反查
-            if not display_name:
-                display_name = model_key[:16] + "..."
+            display_name = mapper.get(model_key, model_key[:16] + "...")
+            matched = (search_lower in model_key.lower()
+                       or (display_name and search_lower in display_name.lower())
+                       or search_lower in config.get("primary_stem", "").lower())
+            if not matched:
+                continue
 
-            # 检查搜索词是否匹配
-            matched = search_lower in model_key.lower()
-            if display_name and not matched:
-                matched = search_lower in display_name.lower()
-            if config.get("primary_stem") and not matched:
-                matched = search_lower in config["primary_stem"].lower()
+            entry = {
+                "arch": arch,
+                "name": display_name,
+                "key": model_key,
+                "output": config.get("primary_stem", "?"),
+            }
+            for k in ("compensate", "mdx_dim_f_set", "mdx_dim_t_set",
+                      "mdx_n_fft_scale_set", "vr_model_param"):
+                if config.get(k):
+                    entry[k] = config[k]
+            if config.get("is_karaoke"):
+                entry["type"] = "karaoke"
+            if config.get("is_bv_model"):
+                entry["type"] = "backing_vocals"
 
-            if matched:
+            if JSON_MODE:
+                json_results.append(entry)
+            else:
                 print("\n" + "=" * 50)
                 print(f"  架构: {arch}")
                 print(f"  模型: {display_name}")
@@ -306,18 +373,27 @@ def show_model_info(search_term):
                     print("  类型: 卡拉OK")
                 if config.get("is_bv_model"):
                     print("  类型: 背景人声模型")
-                found = True
+            found = True
 
         # 方法2: 遍历 mapper，查找 model_data 中没有的条目
         for mapper_key, display_name in mapper.items():
             if search_lower in mapper_key.lower() or search_lower in display_name.lower():
                 if mapper_key not in model_data:
-                    print("\n" + "=" * 50)
-                    print(f"  架构: {arch}")
-                    print(f"  模型: {display_name}")
-                    print(f"  文件: {mapper_key}")
-                    print("  (模型配置数据未加载)")
+                    entry = {"arch": arch, "name": display_name, "file": mapper_key,
+                             "note": "模型配置数据未加载"}
+                    if JSON_MODE:
+                        json_results.append(entry)
+                    else:
+                        print("\n" + "=" * 50)
+                        print(f"  架构: {arch}")
+                        print(f"  模型: {display_name}")
+                        print(f"  文件: {mapper_key}")
+                        print("  (模型配置数据未加载)")
                     found = True
+
+    if JSON_MODE:
+        Output.json({"results": json_results, "count": len(json_results)})
+        return
 
     if not found:
         print(f"\n未找到匹配 \"{search_term}\" 的模型")
@@ -327,10 +403,10 @@ def launch_gui():
     """启动 UVR 图形界面"""
     gui_path = BASE_DIR / "UVR.py"
     if not gui_path.exists():
-        print("错误: 找不到 UVR.py")
-        sys.exit(1)
+        Output.error("找不到 UVR.py")
 
-    print("正在启动 UVR 图形界面...")
+    if not JSON_MODE:
+        print("正在启动 UVR 图形界面...")
     os.chdir(BASE_DIR)
     os.execv(sys.executable, [sys.executable, str(gui_path)])
 
@@ -401,24 +477,20 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # 选择设备
-    if device is None:
-        if torch.cuda.is_available():
-            device = "cuda"
-        elif torch.backends.mps.is_available():
-            device = "mps"
-        else:
-            device = "cpu"
-    print(f"使用设备: {device}")
+    if not JSON_MODE:
+        print(f"使用设备: {device}")
 
     # 自动补全下载模型文件
     _ensure_model_downloaded(model_name)
 
     # 加载 Demucs 模型
-    print(f"正在加载模型 {model_name}...")
+    if not JSON_MODE:
+        print(f"正在加载模型 {model_name}...")
     model = get_model(model_name)
     model.to(device)
     model.eval()
-    print("模型加载完成")
+    if not JSON_MODE:
+        print("模型加载完成")
 
     sample_rate = model.samplerate
     sources_list: "list[str]" = model.sources  # type: ignore[assignment]
@@ -428,7 +500,8 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
         return
 
     total_files = len(audio_files)
-    pbar = tqdm(total=total_files, desc="处理音频", unit="个")
+    pbar = tqdm(total=total_files, desc="处理音频", unit="个",
+                disable=JSON_MODE, file=sys.stderr)
     for idx, audio_path in enumerate(audio_files, 1):
         stem_name = audio_path.stem
         ext = audio_path.suffix.lower()
@@ -496,7 +569,12 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
         pbar.update(1)
 
     pbar.close()
-    tqdm.write(f"\n✅ 全部完成！输出目录: {output_dir}")
+    if JSON_MODE:
+        Output.json({"ok": True, "output_dir": str(output_dir),
+                      "files": len(audio_files), "model": model_name,
+                      "device": device})
+    else:
+        tqdm.write(f"\n✅ 全部完成！输出目录: {output_dir}")
 
 
 def run_process(args):
@@ -505,8 +583,7 @@ def run_process(args):
 
     input_path = Path(args.input)
     if not input_path.exists():
-        print(f"错误: 找不到 {input_path}")
-        sys.exit(1)
+        Output.error(f"找不到 {input_path}")
 
     demucs_separate(
         input_path=input_path,
@@ -521,98 +598,97 @@ def cmd_config(args):
     """查看或修改配置"""
     if args.key and args.value:
         save_config({args.key: args.value})
-        print(f"✅ 已设置 {args.key} = {args.value}")
+        if JSON_MODE:
+            Output.json({"ok": True, "key": args.key, "value": args.value})
+        else:
+            print(f"✅ 已设置 {args.key} = {args.value}")
 
     cfg = load_config()
-    print("当前配置:")
-    print(json.dumps(cfg, indent=2, ensure_ascii=False))
+    if JSON_MODE:
+        Output.json({"config": cfg})
+    else:
+        print("当前配置:")
+        print(json.dumps(cfg, indent=2, ensure_ascii=False))
 
 
 def download_models():
     """预下载 Demucs 模型（使用 curl 加速）"""
+    import subprocess
+
     import yaml
 
     remote_dir = BASE_DIR / "demucs" / "remote"
-    files_txt = remote_dir / "files.txt"
-
-    if not files_txt.exists():
-        print("错误: 找不到模型索引文件 demucs/remote/files.txt")
-        return
-
-    # 解析 files.txt 获取模型 URL
-    base_url = "https://dl.fbaipublicfiles.com/demucs/"
     cache_dir = Path.home() / ".cache" / "torch" / "hub" / "checkpoints"
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    urls = []
-    root = ""
-    with open(files_txt) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            if line.startswith("root:"):
-                root = line.split(":", 1)[1].strip()
-            else:
-                urls.append(base_url + root + line)
+    base_url = "https://dl.fbaipublicfiles.com/demucs/"
+    cache_dir.mkdir(parents=True, exist_ok=True)
 
-    # 也解析 YAML bag 中的模型签名
-    sigs_to_download = set()
-    for yaml_file in remote_dir.glob("*.yaml"):
-        bag = yaml.safe_load(open(yaml_file))
-        for sig in bag.get("models", []):
-            sigs_to_download.add(sig)
-
-    # 从 files.txt 中找到对应的 URL
+    # 解析 files.txt
     model_urls = {}
     root = ""
-    with open(files_txt) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            if line.startswith("root:"):
-                root = line.split(":", 1)[1].strip()
-            else:
-                sig = line.split("-", 1)[0]
-                model_urls[sig] = base_url + root + line
+    files_txt = remote_dir / "files.txt"
+    if files_txt.exists():
+        with open(files_txt) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if line.startswith("root:"):
+                    root = line.split(":", 1)[1].strip()
+                else:
+                    sig = line.split("-", 1)[0]
+                    model_urls[sig] = base_url + root + line
 
-    total = len(sigs_to_download)
-    if total == 0:
-        print("没有需要下载的模型")
+    # 收集所有 YAML bag 中引用的签名
+    sigs_to_download = set()
+    for yaml_file in sorted(remote_dir.glob("*.yaml")):
+        bag = yaml.safe_load(open(yaml_file))
+        for sig in bag.get("models", []):
+            if sig in model_urls:
+                sigs_to_download.add(sig)
+
+    if not sigs_to_download:
+        if JSON_MODE:
+            Output.json({"ok": True, "downloaded": [], "total": 0})
+        else:
+            print("没有需要下载的模型")
         return
 
-    print(f"共 {total} 个模型需要下载\n")
+    results = []
+    total = len(sigs_to_download)
+    if not JSON_MODE:
+        print(f"共 {total} 个模型需要下载\n")
 
-    for i, sig in enumerate(sigs_to_download, 1):
-        if sig not in model_urls:
-            print(f"[{i}/{total}] ⏭️  {sig} (未知 URL)")
-            continue
-
+    for i, sig in enumerate(sorted(sigs_to_download), 1):
         url = model_urls[sig]
         filename = url.rstrip("/").split("/")[-1]
         cached_path = cache_dir / filename
 
         if cached_path.exists():
             size_mb = cached_path.stat().st_size / 1024 / 1024
-            print(f"[{i}/{total}] ✅  {filename} ({size_mb:.0f}MB, 已缓存)")
+            results.append({"file": filename, "status": "cached", "size_mb": round(size_mb, 1)})
+            if not JSON_MODE:
+                print(f"[{i}/{total}] ✅  {filename} ({size_mb:.0f}MB, 已缓存)")
             continue
 
-        print(f"[{i}/{total}] ⬇️  正在下载 {filename} ...")
+        if not JSON_MODE:
+            print(f"[{i}/{total}] ⬇️  正在下载 {filename} ...")
         start = time.time()
-        cmd = ["curl", "-L", "-o", str(cached_path), "--retry", "3", url]
-        import subprocess
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        subprocess.run(["curl", "-L", "-o", str(cached_path), "--retry", "3", "-s", url],
+                       capture_output=True, check=True)
         elapsed = time.time() - start
-
-        if result.returncode == 0:
-            size_mb = cached_path.stat().st_size / 1024 / 1024
-            speed = size_mb / elapsed if elapsed > 0 else 0
+        size_mb = cached_path.stat().st_size / 1024 / 1024
+        speed = size_mb / elapsed if elapsed > 0 else 0
+        results.append({"file": filename, "status": "downloaded",
+                        "size_mb": round(size_mb, 1), "speed_mbps": round(speed, 1)})
+        if not JSON_MODE:
             print(f"[{i}/{total}] ✅  {filename} ({size_mb:.0f}MB, {speed:.0f}MB/s)")
-        else:
-            print(f"[{i}/{total}] ❌  {filename} 下载失败: {result.stderr.strip()}")
 
-    print(f"\n✅ 全部完成！模型缓存目录: {cache_dir}")
+    if JSON_MODE:
+        Output.json({"ok": True, "downloaded": results, "total": total})
+    else:
+        print(f"\n✅ 全部完成！模型缓存目录: {cache_dir}")
 
 
 def print_help():
@@ -637,8 +713,16 @@ def main():
                         help="Demucs 模型 (htdemucs/htdemucs_6s/mdx_extra 等)")
     parser.add_argument("--key", help="配置项名称 (config 命令)")
     parser.add_argument("--value", help="配置项值 (config 命令)")
+    parser.add_argument("--json", action="store_true", help="JSON 格式输出（AI 工具调用用）")
+    parser.add_argument("--quiet", "-q", action="store_true", help="静默模式，仅输出关键信息")
 
     args = parser.parse_args()
+
+    # 设为全局
+    global JSON_MODE  # noqa: PLW0603
+    JSON_MODE = args.json
+    if args.quiet:
+        JSON_MODE = True  # 静默模式也走 JSON 输出路径
 
     if not args.command or args.command == "help":
         print_help()
@@ -661,13 +745,11 @@ def main():
         launch_gui()
     elif command == "info":
         if not args.input:
-            print("用法: python uvr_cli.py info <关键词>")
-            sys.exit(1)
+            Output.error("用法: python uvr_cli.py info <关键词>")
         show_model_info(args.input)
     elif command in ("process", "demucs"):
         if not args.input:
-            print(f"用法: python uvr_cli.py {command} <音频文件或目录> [选项]")
-            sys.exit(1)
+            Output.error(f"用法: python uvr_cli.py {command} <音频文件或目录> [选项]")
         run_process(args)
     elif command == "download-models":
         download_models()
