@@ -4,11 +4,7 @@ PyInstaller build script for Ultimate Vocal Remover GUI (Windows).
 Usage: pyinstaller UVR.spec
 """
 
-import platform
-import sys
 from pathlib import Path
-
-import lib_v5
 
 BLOCK_CIPHER_KEY = None
 block_cipher = None
