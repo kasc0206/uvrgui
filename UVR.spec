@@ -10,7 +10,8 @@ BLOCK_CIPHER_KEY = None
 block_cipher = None
 
 # ─── Project paths ───
-ROOT = Path(__file__).resolve().parent
+# Use CWD: pyinstaller must be run from the project root directory.
+ROOT = Path.cwd()
 GUI_DATA = ROOT / "gui_data"
 MODELS = ROOT / "models"
 LIB_V5 = ROOT / "lib_v5"
