@@ -86,7 +86,7 @@ sudo pacman -S ffmpeg python-pip tk
 python3 -m venv venv
 source venv/bin/activate
 
-# 安装依赖
+# 安装依赖（从已激活的 venv 中）
 pip install -r requirements.txt
 
 # 启动
@@ -206,6 +206,9 @@ Meta 开源的音源分离模型，UVR 集成了全部版本：
 
 ## 🖥️ 界面功能速览
 
+### 图形界面（GUI）
+
+
 - **Select Input** — 选择输入音频文件或文件夹
 - **Select Output** — 选择输出目录
 - **Download More Models** — 下载更多预训练模型
@@ -214,6 +217,24 @@ Meta 开源的音源分离模型，UVR 集成了全部版本：
 - **Secondary Model** — 二级模型混合（调整分离倾向）
 - **Ensemble Mode** — 集成模式（多模型组合）
 - **Sample Mode** — 仅处理音频片段预览效果
+
+### 命令行工具（CLI）
+
+本 Fork 新增了 `uvr_cli.py` 命令行工具，方便快速操作：
+
+```bash
+# 列出所有可用模型及下载状态
+python uvr_cli.py list
+
+# 查看特定模型详情
+python uvr_cli.py info BS-Roformer
+
+# 启动图形界面
+python uvr_cli.py gui
+
+# 显示帮助
+python uvr_cli.py help
+```
 
 ---
 
@@ -287,10 +308,12 @@ sudo pacman -S ffmpeg    # Arch
 | `data.pkl` | 数据处理文件 |
 | `.gitignore` | 排除 `venv/`、`__pycache__/`、`.vscode/` 等构建产物 |
 | `README_zh.md` | **本中文文档** |
+| `uvr_cli.py` | **命令行工具** — 查看模型列表、搜索模型信息、快速启动 GUI |
+| `requirements.txt` | **重建依赖清单** — 基于当前已验证的虚拟环境生成 |
 
 ### 清理
 
-- **删除** `requirements.txt` — 改用 `venv` 虚拟环境管理依赖
+- **重建** `requirements.txt` — 基于当前虚拟环境生成的完整依赖清单，方便新用户快速搭建环境
 - **删除** `models/Demucs_Models/v3_v4_repo/demucs_models.txt` — 废弃的模型引用文件
 
 ---
