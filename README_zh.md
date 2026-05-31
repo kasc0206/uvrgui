@@ -19,8 +19,9 @@
 
 | 角色 | 开发者 |
 | --- | --- |
-| 核心开发者 | [Anjok07](https://github.com/anjok07) |
-| 核心开发者 | [aufr33](https://github.com/aufr33) |
+| 原作者 | [Anjok07](https://github.com/anjok07) |
+| 原作者 | [aufr33](https://github.com/aufr33) |
+| Fork 维护者 | [kasc0206](https://github.com/kasc0206) |
 
 ### ☕ 支持项目
 
