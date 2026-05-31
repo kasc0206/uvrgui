@@ -9,6 +9,8 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
     python uvr_cli.py process <音频> [--model]  分离人声/伴奏（使用 Demucs）
     python uvr_cli.py demucs <音频>             使用 Demucs 分离（自动下载模型）
     python uvr_cli.py download-models           预下载 Demucs 模型（使用 curl）
+    python uvr_cli.py config                    查看配置
+    python uvr_cli.py config --key x --value y  设置配置项
     python uvr_cli.py help                      显示帮助信息
 
 示例：
@@ -16,6 +18,8 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
     python uvr_cli.py demucs 歌曲.flac --two-stem vocals
     python uvr_cli.py process 歌曲.mp3 --model htdemucs_6s
     python uvr_cli.py process 输入文件夹/ --out 输出文件夹/
+    python uvr_cli.py config --key default_device --value mps
+    python uvr_cli.py config --key default_model --value htdemucs_6s
 """
 
 import argparse
@@ -26,6 +30,35 @@ import time
 from pathlib import Path
 
 import numpy as np
+
+CONFIG_FILE = Path(__file__).parent / "uvr_config.json"
+
+
+def load_config():
+    """加载用户配置文件，不存在时返回空字典"""
+    if not CONFIG_FILE.exists():
+        return {}
+    try:
+        with open(CONFIG_FILE) as f:
+            cfg = json.load(f)
+            return {k: v for k, v in cfg.items() if v is not None}
+    except (json.JSONDecodeError, IOError):
+        return {}
+
+
+def save_config(config: dict):
+    """保存配置项到文件（保留既有配置）"""
+    existing = {}
+    if CONFIG_FILE.exists():
+        try:
+            with open(CONFIG_FILE) as f:
+                existing = json.load(f)
+            existing.update(config)
+        except (json.JSONDecodeError, IOError):
+            existing = config
+    with open(CONFIG_FILE, "w") as f:
+        json.dump(existing, f, indent=2)
+        f.write("\n")
 
 
 def _ensure_model_downloaded(model_name: str):
@@ -432,6 +465,8 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
 
 def run_process(args):
     """处理 process 和 demucs 命令"""
+    cfg = load_config()
+
     input_path = Path(args.input)
     if not input_path.exists():
         print(f"错误: 找不到 {input_path}")
@@ -440,10 +475,21 @@ def run_process(args):
     demucs_separate(
         input_path=input_path,
         output_dir=args.output,
-        two_stem=args.two_stem,
-        device=args.device,
-        model_name=args.model,
+        two_stem=args.two_stem or cfg.get("two_stem"),
+        device=args.device or cfg.get("default_device"),
+        model_name=args.model or cfg.get("default_model", "htdemucs"),
     )
+
+
+def cmd_config(args):
+    """查看或修改配置"""
+    if args.key and args.value:
+        save_config({args.key: args.value})
+        print(f"✅ 已设置 {args.key} = {args.value}")
+
+    cfg = load_config()
+    print("当前配置:")
+    print(json.dumps(cfg, indent=2, ensure_ascii=False))
 
 
 def download_models():
@@ -551,14 +597,25 @@ def main():
                         help="提取指定音源（如 vocals），同时输出其补集")
     parser.add_argument("--device", "-d", default=None,
                         help="运行设备 (cpu/mps/cuda)，默认自动选择")
-    parser.add_argument("--model", "-m", default="htdemucs",
+    parser.add_argument("--model", "-m", default=None,
                         help="Demucs 模型 (htdemucs/htdemucs_6s/mdx_extra 等)")
+    parser.add_argument("--key", help="配置项名称 (config 命令)")
+    parser.add_argument("--value", help="配置项值 (config 命令)")
 
     args = parser.parse_args()
 
     if not args.command or args.command == "help":
         print_help()
         sys.exit(0)
+
+    # 加载配置作为默认值
+    cfg = load_config()
+    if args.model is None:
+        args.model = cfg.get("default_model")
+    if args.device is None:
+        args.device = cfg.get("default_device")
+    if args.two_stem is None:
+        args.two_stem = cfg.get("two_stem")
 
     command = args.command
 
@@ -578,6 +635,8 @@ def main():
         run_process(args)
     elif command == "download-models":
         download_models()
+    elif command == "config":
+        cmd_config(args)
     else:
         print(f"未知命令: {command}")
         print_help()
