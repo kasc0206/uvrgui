@@ -7,9 +7,10 @@
 """
 
 import logging
-from pathlib import Path
 import typing as tp
+from pathlib import Path
 
+import torch
 from diffq import DiffQuantizer
 
 from .model import Demucs
