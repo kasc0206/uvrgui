@@ -255,8 +255,8 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
     import soundfile as sf
     import torch
 
-    from demucs.pretrained import get_model
     from demucs.apply import apply_model
+    from demucs.pretrained import get_model
 
     input_path = Path(input_path)
     if not input_path.exists():
@@ -316,7 +316,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
         print(f"\n[{idx}/{total_files}] 处理: {stem_name}")
 
         # 加载音频
-        print(f"  加载音频...")
+        print("  加载音频...")
         mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
         if mix.ndim == 1:
             mix = np.stack([mix, mix], axis=0)
@@ -324,7 +324,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
         mix_tensor = torch.tensor(mix[None], dtype=torch.float32, device=device)
 
         # 运行模型
-        print(f"  正在分离...")
+        print("  正在分离...")
         start = time.time()
         with torch.no_grad():
             sources = apply_model(model, mix_tensor, shifts=1, split=True, overlap=0.25, device=device)
