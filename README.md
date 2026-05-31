@@ -3,7 +3,8 @@
 
 [![Release](https://img.shields.io/github/release/anjok07/ultimatevocalremovergui.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
-[![Tests](https://img.shields.io/badge/tests-32%2F32-passing-brightgreen)](https://github.com/kasc0206/uvrgui)
+[![Tests](https://img.shields.io/badge/tests-33%2F33-passing-brightgreen)](https://github.com/kasc0206/uvrgui)
+[![Build Windows](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
 
 > 🎵 **Ultimate Vocal Remover** — A state-of-the-art AI-powered audio source separation tool.
 
@@ -326,6 +327,44 @@ This issue was being tracked [here](https://github.com/Anjok07/ultimatevocalremo
 Please be as detailed as possible when posting a new issue. 
 
 If possible, click the "Settings Button" to the left of the "Start Processing" button and click the "Error Log" button for detailed error information that can be provided to us.
+
+## Building Windows EXE
+
+This fork provides automated Windows EXE builds via GitHub Actions:
+
+### Method 1: GitHub Actions (Recommended)
+
+Push a version tag to trigger an automated build:
+
+```bash
+git tag v5.6.0-fork
+git push origin v5.6.0-fork
+```
+
+The workflow will:
+1. Build `UVR.exe` with PyInstaller on `windows-latest`
+2. Create a ZIP archive with all runtime files
+3. Upload the artifact and create a GitHub Release
+
+You can also trigger manually from the [Actions tab](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml).
+
+### Method 2: Docker Cross-Compilation (macOS/Linux)
+
+```bash
+docker run --rm -v "$PWD:/workspace" \
+  -w /workspace cdrx/pyinstaller-windows:latest \
+  pyinstaller UVR.spec --clean --noconfirm
+```
+
+### Method 3: Native Windows Build
+
+```bash
+pip install -r requirements.txt
+pip install pyinstaller
+pyinstaller UVR.spec --clean --noconfirm
+```
+
+The output `UVR.exe` will be in `dist/`.
 
 ## Fork Changelog
 

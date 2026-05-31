@@ -1,0 +1,112 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version tag (e.g., v5.6.0-fork)"
+        required: false
+        default: ""
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: |
+          choco install ffmpeg -y
+        shell: powershell
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+
+      - name: Install Python dependencies
+        run: |
+          pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+          pip install pyinstaller
+          pip install -r requirements.txt
+
+      - name: Verify imports
+        run: |
+          python -c "
+          import tkinter
+          import torch
+          import librosa
+          import soundfile
+          import numpy
+          import demucs
+          import gui_data.constants
+          print('All imports OK')
+          "
+
+      - name: Build EXE with PyInstaller
+        run: |
+          pyinstaller UVR.spec --clean --noconfirm
+
+      - name: Verify build output
+        run: |
+          if (Test-Path "dist/UVR.exe") {
+            $size = (Get-Item "dist/UVR.exe").Length
+            Write-Host "EXE size: $([math]::Round($size / 1MB, 2)) MB"
+          } else {
+            Write-Error "UVR.exe not found in dist/"
+            exit 1
+          }
+
+      - name: Create distributable archive
+        run: |
+          # Copy additional runtime files
+          Copy-Item "README.md" "dist/" -ErrorAction SilentlyContinue
+          Copy-Item "README_zh.md" "dist/" -ErrorAction SilentlyContinue
+          Copy-Item "LICENSE" "dist/" -ErrorAction SilentlyContinue
+
+          # Create zip archive
+          $version = "${{ github.event.inputs.version }}"
+          if (-not $version) { $version = "v5.6.0-fork" }
+          $zipName = "UVR_${version}_Windows_x86_64.zip"
+          Compress-Archive -Path "dist/*" -DestinationPath $zipName
+          Write-Host "Archive created: $zipName"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UVR-Windows-x86_64
+          path: UVR_*.zip
+          retention-days: 30
+
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: UVR_*.zip
+          generate_release_notes: true
+          body: |
+            ## Ultimate Vocal Remover GUI — Windows Build
+
+            Auto-built from commit ${{ github.sha }}
+
+            ### 安装说明
+            1. 下载 `UVR_*.zip`
+            2. 解压到任意目录
+            3. 运行 `UVR.exe`
+
+            > 首次启动可能需要 5-10 分钟（模型初始化）
