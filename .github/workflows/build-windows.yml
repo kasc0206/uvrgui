@@ -33,6 +33,8 @@ jobs:
       - name: Install system dependencies
         run: |
           choco install ffmpeg -y
+          # Ensure tkinter is available (choco Python includes it)
+          python --version
         shell: powershell
 
       - name: Upgrade pip
@@ -41,9 +43,15 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-          pip install pyinstaller
           pip install -r requirements.txt
+
+      - name: Install CUDA PyTorch (overrides CPU-only torch from requirements)
+        run: |
+          pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+      - name: Install PyInstaller
+        run: |
+          pip install pyinstaller
 
       - name: Verify imports
         run: |
