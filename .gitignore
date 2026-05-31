@@ -13,4 +13,8 @@ venv/
 .DS_Store
 Thumbs.db
 
+# Tools
+.ruff_cache/
+
+
 
