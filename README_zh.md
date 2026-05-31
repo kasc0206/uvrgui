@@ -253,6 +253,48 @@ sudo pacman -S ffmpeg    # Arch
 
 ---
 
+## 🔄 本 Fork 修订记录
+
+相较于原仓库 [Anjok07/ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)，本 Fork 做了以下修订：
+
+### 模型数据更新
+
+| 文件 | 变更说明 |
+|------|----------|
+| `models/MDX_Net_Models/model_data/model_data.json` | **大幅扩充**，新增大量新型 MDX 模型配置（+830/-351） |
+| `models/MDX_Net_Models/model_data/model_name_mapper.json` | **新增 26 个模型名称映射**（+68/-66） |
+| `models/VR_Models/model_data/model_data.json` | 重构并更新 VR 模型参数配置（+272/-137） |
+| `models/Demucs_Models/model_data/model_name_mapper.json` | 格式修正，添加文件末尾换行（+66/-66） |
+
+#### 新增 MDX 模型清单
+
+| 类别 | 模型 |
+|------|------|
+| **BS-Roformer** | `Viperx-1297`、`Viperx-1296`、`Viperx-1053` |
+| **Mel-Roformer** | `Viperx-1143` |
+| **MB-Roformer** | `Inst-v1`、`Inst-v2`、`Inst-v1-E`、`Duality-v1`、`Duality-v2`、`Kim`、`Karaoke` |
+| **SCNet** | `Starrytong`、`Large-Starrytong`、`Large`、`XL-ZFTurbo` |
+| **Bandit** | `Cinematic-Bandit-Plus`、`Cinematic-Bandit-Multi` |
+| **MDX23C** | `InstVoc HQ 2`、`InstVoc D1581` |
+| **其他** | `DrumSep`、`Phantom-Mid`、`Reverb HQ`、`BS-Ro-Dereverb`、`BS-Ro-Inst-EXP` |
+
+### 新增文件
+
+| 文件 | 说明 |
+|------|------|
+| `playsound.py` | `playsound3` 兼容垫片，适配新版库接口 |
+| `gui_data/cr_text.txt` | 自定义文本资源文件 |
+| `data.pkl` | 数据处理文件 |
+| `.gitignore` | 排除 `venv/`、`__pycache__/`、`.vscode/` 等构建产物 |
+| `README_zh.md` | **本中文文档** |
+
+### 清理
+
+- **删除** `requirements.txt` — 改用 `venv` 虚拟环境管理依赖
+- **删除** `models/Demucs_Models/v3_v4_repo/demucs_models.txt` — 废弃的模型引用文件
+
+---
+
 ## 🤝 贡献指南
 
 - 欢迎提交 Pull Request
