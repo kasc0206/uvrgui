@@ -27,8 +27,58 @@ from demucs.hdemucs import HDemucs
 from demucs.model_v2 import auto_load_demucs_model_v2
 from demucs.pretrained import get_model as _gm
 from demucs.utils import apply_model_v1, apply_model_v2
-from gui_data.constants import *
-from gui_data.error_handling import *
+from gui_data.constants import (
+    ALL_STEMS,
+    ARM,
+    BV_VOCAL_STEM,
+    BV_VOCAL_STEM_I,
+    BV_VOCAL_STEM_LABEL,
+    CUDA_DEVICE,
+    DEFAULT,
+    DEMUCS_2_SOURCE_MAPPER,
+    DEMUCS_4_SOURCE_MAPPER,
+    DEMUCS_6_SOURCE_MAPPER,
+    DEMUCS_ARCH_TYPE,
+    DEMUCS_V1,
+    DEMUCS_V2,
+    DEMUCS_V3,
+    DEMUCS_V4,
+    DONE,
+    FLAC,
+    GUITAR_STEM,
+    INFERENCE_STEP_1,
+    INFERENCE_STEP_1_PRE,
+    INFERENCE_STEP_1_SEC,
+    INFERENCE_STEP_1_VOC_S,
+    INFERENCE_STEP_2_PRE,
+    INFERENCE_STEP_2_PRE_CACHED_MODOEL,
+    INFERENCE_STEP_2_PRIMARY_CACHED,
+    INFERENCE_STEP_2_SEC,
+    INFERENCE_STEP_2_SEC_CACHED_MODOEL,
+    INFERENCE_STEP_2_VOC_S,
+    INFERENCE_STEP_DEVERBING,
+    INST_STEM,
+    LEAD_VOCAL_STEM,
+    LEAD_VOCAL_STEM_I,
+    LEAD_VOCAL_STEM_LABEL,
+    MDX_ARCH_TYPE,
+    MDX_NET_FREQ_CUT,
+    MP3,
+    NO_STEM,
+    NON_ACCOM_STEMS,
+    OPERATING_SYSTEM,
+    OTHER_STEM,
+    PIANO_STEM,
+    SAVING_STEM,
+    SYSTEM_ARCH,
+    SYSTEM_PROC,
+    VOCAL_STEM,
+    VR_ARCH_TYPE,
+    WAV,
+    is_macos,
+    secondary_stem,
+)
+from gui_data.error_handling import ERROR_MAPPER, WINDOW_SIZE_ERROR
 from lib_v5 import spec_utils
 from lib_v5.tfc_tdf_v3 import STFT, TFC_TDF_net
 from lib_v5.vr_network import nets, nets_new
@@ -777,7 +827,7 @@ class SeperateMDXC(SeperateAttributes):
 
         estimated_sources = X[..., chunk_size - hop_size:-(pad_size + chunk_size - hop_size)] / overlap
         del X
-        pitch_fix = lambda s:self.pitch_fix(s, sr_pitched, org_mix)
+        pitch_fix = lambda s:self.pitch_fix(s, sr_pitched, org_mix)  # noqa: E731
 
         if S > 1:
             sources = {k: pitch_fix(v) if self.is_pitch_change else v for k, v in zip(self.mdx_c_configs.training.instruments, estimated_sources.cpu().detach().numpy())}
