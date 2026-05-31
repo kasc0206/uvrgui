@@ -102,51 +102,154 @@ python UVR.py
 
 参见 [Building Windows EXE](#building-windows-exe) 章节。通过 GitHub Actions 自动构建或本地 PyInstaller 打包。
 
-<details id="WindowsManual">
-  <summary>Windows Manual Installation (Detailed)</summary>
+---
 
-### Manual Windows Installation
+### 🍎 macOS 从源码编译
 
-- Download and extract the repository from the [fork](https://github.com/kasc0206/uvrgui) or the [original](https://github.com/Anjok07/ultimatevocalremovergui/archive/refs/heads/master.zip)
-- Download and install Python [here](https://www.python.org/ftp/python/3.9.8/python-3.9.8-amd64.exe)
-   - Make sure to check "Add python.exe to PATH" during the install
-- Run the following commands from the extracted repo directory:
+#### 前置条件
 
+- macOS Big Sur (11) 或更高版本
+- 约 10 GB 磁盘空间（含 PyTorch 运行时）
+- Xcode Command Line Tools
+
+#### 步骤
+
+```bash
+# 1. 安装 Xcode Command Line Tools
+xcode-select --install
+
+# 2. 安装 Homebrew（如尚未安装）
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 3. 安装系统依赖
+brew install ffmpeg python@3.10
+
+# 4. 可选 — 安装 Rubber Band（变调变速功能）
+brew install rubberband
+
+# 5. 克隆仓库
+git clone https://github.com/kasc0206/uvrgui.git
+cd uvrgui
+
+# 6. 创建虚拟环境
+python3.10 -m venv venv
+source venv/bin/activate
+
+# 7. 安装依赖
+pip install --upgrade pip wheel setuptools
+pip install -r requirements.txt
+
+# 8. 启动
+python UVR.py
 ```
-python.exe -m pip install -r requirements.txt
+
+> **首次启动可能需要 5-10 分钟**（模型初始化）。
+>
+> **Apple Silicon (M1/M2/M3)**：PyTorch MPS 加速自动启用，无需额外配置。
+>
+> **如果遇到「无法验证开发者」提示**：
+> ```bash
+> sudo spctl --master-disable
+> sudo xattr -rd com.apple.quarantine /Applications/Ultimate\ Vocal\ Remover.app
+> ```
+
+---
+
+### 🐧 Linux 从源码编译
+
+#### 前置条件
+
+- 64 位 Linux 发行版
+- 约 10 GB 磁盘空间（含 PyTorch 运行时）
+- NVIDIA GPU 用户：CUDA Toolkit 11.8+（可选）
+
+#### Debian / Ubuntu 系
+
+```bash
+# 1. 更新系统
+sudo apt update && sudo apt upgrade -y
+
+# 2. 安装系统依赖
+sudo apt install -y ffmpeg python3-pip python3-tk python3-venv
+
+# 3. 可选 — 安装 Rubber Band（变调变速功能）
+sudo apt install -y rubberband-cli
+
+# 4. 克隆仓库
+git clone https://github.com/kasc0206/uvrgui.git
+cd uvrgui
+
+# 5. 创建虚拟环境
+python3 -m venv venv
+source venv/bin/activate
+
+# 6. 安装 Python 依赖
+pip install --upgrade pip wheel setuptools
+pip install -r requirements.txt
+
+# 7. NVIDIA GPU 用户安装 CUDA PyTorch（可选）
+pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu118
+
+# 8. 启动
+python UVR.py
 ```
 
-If you have a compatible Nvidia GPU, run the following command:
+#### Arch Linux 系
 
+```bash
+# 1. 更新系统
+sudo pacman -Syu
+
+# 2. 安装系统依赖
+sudo pacman -S ffmpeg python-pip tk python-virtualenv
+
+# 3. 可选 — 安装 Rubber Band（变调变速功能）
+sudo pacman -S rubberband
+
+# 4. 克隆仓库
+git clone https://github.com/kasc0206/uvrgui.git
+cd uvrgui
+
+# 5. 创建虚拟环境
+python -m venv venv
+source venv/bin/activate
+
+# 6. 安装依赖
+pip install --upgrade pip wheel setuptools
+pip install -r requirements.txt
+
+# 7. 启动
+python UVR.py
 ```
-python.exe -m pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu117
+
+#### Fedora / RHEL 系
+
+```bash
+# 1. 安装系统依赖
+sudo dnf install -y ffmpeg python3-pip python3-tkinter python3-virtualenv
+
+# 2. 可选 — 安装 Rubber Band
+sudo dnf install -y rubberband
+
+# 3. 克隆仓库
+git clone https://github.com/kasc0206/uvrgui.git
+cd uvrgui
+
+# 4. 创建虚拟环境
+python3 -m venv venv
+source venv/bin/activate
+
+# 5. 安装依赖
+pip install --upgrade pip wheel setuptools
+pip install -r requirements.txt
+
+# 6. 启动
+python UVR.py
 ```
 
-If you do not have FFmpeg or Rubber Band installed and want to avoid going through the process of installing them the long way, follow the instructions below.
+---
 
-**FFmpeg Installation**
-
-- Download the precompiled build [here](https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip)
-- From the archive, extract the following file to the UVR application directory:
-   - ```ffmpeg-5.1.2-essentials_build/bin/ffmpeg.exe```
-
-**Rubber Band Installation**
-
-In order to use the Time Stretch or Change Pitch tool, you'll need Rubber Band.
-
-- Download the precompiled build [here](https://breakfastquay.com/files/releases/rubberband-3.1.2-gpl-executable-windows.zip)
-- From the archive, extract the following files to the UVR application directory:
-   - ```rubberband-3.1.2-gpl-executable-windows/rubberband.exe```
-   - ```rubberband-3.1.2-gpl-executable-windows/sndfile.dll```
-
-</details>
-
-### MacOS Installation
-
-- Follow the [source installation](#windows--macos--linux--源码安装) steps above.
-- Apple Silicon (M1/M2/M3) users: PyTorch MPS acceleration is supported out-of-the-box.
-- The application may take up to 5-10 minutes to start for the first time (depending on your Mac).
-- If you encounter "cannot be opened" issues, run:
+### 额外依赖
 
 ```bash
 sudo spctl --master-disable
