@@ -3,16 +3,27 @@
 UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
 
 用法：
-    python uvr_cli.py list          列出所有可用模型及下载状态
-    python uvr_cli.py gui           启动图形界面
-    python uvr_cli.py info <模型名>  查看模型详情
-    python uvr_cli.py help          显示帮助信息
+    python uvr_cli.py list                      列出所有可用模型及下载状态
+    python uvr_cli.py gui                       启动图形界面
+    python uvr_cli.py info <关键词>              查看模型详情
+    python uvr_cli.py process <音频> [--model]  分离人声/伴奏（使用 Demucs）
+    python uvr_cli.py demucs <音频>             使用 Demucs 分离（自动下载模型）
+    python uvr_cli.py help                      显示帮助信息
+
+示例：
+    python uvr_cli.py process 歌曲.mp3
+    python uvr_cli.py demucs 歌曲.flac --two-stem vocals
+    python uvr_cli.py process 输入文件夹/ --out 输出文件夹/
 """
 
+import argparse
 import json
 import os
 import sys
+import time
 from pathlib import Path
+
+import numpy as np
 
 BASE_DIR = Path(__file__).parent
 MODELS_DIR = BASE_DIR / "models"
@@ -231,29 +242,177 @@ def launch_gui():
     os.execv(sys.executable, [sys.executable, str(gui_path)])
 
 
+def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
+    """使用 Demucs 模型分离音频（模型自动下载）
+
+    参数:
+        input_path: 输入音频文件或文件夹路径
+        output_dir: 输出目录（默认: 输入文件所在目录）
+        two_stem: 如果设置，只分离此音源（如 'vocals'），否则分离所有音源
+        device: 运行设备（'cpu', 'mps', 'cuda'），默认自动选择
+    """
+    import librosa
+    import soundfile as sf
+    import torch
+
+    from demucs.pretrained import get_model
+    from demucs.apply import apply_model
+
+    input_path = Path(input_path)
+    if not input_path.exists():
+        print(f"错误: 找不到 {input_path}")
+        return
+
+    # 收集音频文件
+    audio_files = []
+    if input_path.is_file():
+        ext = input_path.suffix.lower()
+        if ext in (".mp3", ".wav", ".flac", ".ogg", ".m4a", ".wma"):
+            audio_files.append(input_path)
+        else:
+            print(f"错误: 不支持的格式 {ext}")
+            return
+    else:
+        for ext in ("*.mp3", "*.wav", "*.flac", "*.ogg", "*.m4a"):
+            audio_files.extend(sorted(input_path.glob(ext)))
+        if not audio_files:
+            print(f"错误: {input_path} 中没有找到音频文件")
+            return
+
+    # 确定输出目录
+    if output_dir is None:
+        output_dir = input_path.parent if input_path.is_file() else input_path
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # 选择设备
+    if device is None:
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.backends.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
+    print(f"使用设备: {device}")
+
+    # 加载 Demucs 模型（自动下载）
+    model_name = "htdemucs"
+    print(f"正在加载模型 {model_name}...")
+    model = get_model(model_name)
+    model.to(device)
+    model.eval()
+    print("模型加载完成")
+
+    sample_rate = model.samplerate
+    sources_list = model.sources  # ['drums', 'bass', 'other', 'vocals'] 或类似
+
+    if two_stem and two_stem not in sources_list:
+        print(f"错误: 音源 '{two_stem}' 不在模型中。可用音源: {sources_list}")
+        return
+
+    total_files = len(audio_files)
+    for idx, audio_path in enumerate(audio_files, 1):
+        stem_name = audio_path.stem
+        print(f"\n[{idx}/{total_files}] 处理: {stem_name}")
+
+        # 加载音频
+        print(f"  加载音频...")
+        mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
+        if mix.ndim == 1:
+            mix = np.stack([mix, mix], axis=0)
+
+        mix_tensor = torch.tensor(mix[None], dtype=torch.float32, device=device)
+
+        # 运行模型
+        print(f"  正在分离...")
+        start = time.time()
+        with torch.no_grad():
+            sources = apply_model(model, mix_tensor, shifts=1, split=True, overlap=0.25, device=device)
+        elapsed = time.time() - start
+        print(f"  耗时: {elapsed:.1f}秒")
+
+        # 保存结果
+        sources = sources[0].cpu().numpy()
+
+        if two_stem:
+            # 只分离指定音源和其补集
+            stem_idx = list(sources_list).index(two_stem)
+            stem_audio = sources[stem_idx]
+            other_audio = mix - stem_audio
+
+            out_path = output_dir / f"{stem_name}_({two_stem}).wav"
+            sf.write(str(out_path), stem_audio.T, sample_rate)
+            print(f"  ✅ 已保存: {out_path.name}")
+
+            other_name = f"no_{two_stem}"
+            out_path2 = output_dir / f"{stem_name}_({other_name}).wav"
+            sf.write(str(out_path2), other_audio.T, sample_rate)
+            print(f"  ✅ 已保存: {out_path2.name}")
+        else:
+            for s_idx, source_name in enumerate(sources_list):
+                out_path = output_dir / f"{stem_name}_({source_name}).wav"
+                sf.write(str(out_path), sources[s_idx].T, sample_rate)
+                print(f"  ✅ 已保存: {out_path.name}")
+
+    print(f"\n✅ 全部完成！输出目录: {output_dir}")
+
+
+def run_process(args):
+    """处理 process 和 demucs 命令"""
+    input_path = Path(args.input)
+    if not input_path.exists():
+        print(f"错误: 找不到 {input_path}")
+        sys.exit(1)
+
+    demucs_separate(
+        input_path=input_path,
+        output_dir=args.output,
+        two_stem=args.two_stem,
+        device=args.device,
+    )
+
+
 def print_help():
     """显示帮助信息"""
     print(__doc__)
 
 
 def main():
-    if len(sys.argv) < 2:
-        print_help()
-        sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Ultimate Vocal Remover CLI 工具",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
+    )
+    parser.add_argument("command", nargs="?", help="list | gui | info | process | demucs | help")
+    parser.add_argument("input", nargs="?", help="输入音频文件或目录")
+    parser.add_argument("--out", "-o", dest="output", help="输出目录")
+    parser.add_argument("--two-stem", "-2", dest="two_stem",
+                        help="提取指定音源（如 vocals），同时输出其补集")
+    parser.add_argument("--device", "-d", default=None,
+                        help="运行设备 (cpu/mps/cuda)，默认自动选择")
 
-    command = sys.argv[1]
+    args = parser.parse_args()
+
+    if not args.command or args.command == "help":
+        print_help()
+        sys.exit(0)
+
+    command = args.command
 
     if command == "list":
         list_models()
     elif command == "gui":
         launch_gui()
     elif command == "info":
-        if len(sys.argv) < 3:
-            print("用法: python uvr_cli.py info <模型名>")
+        if not args.input:
+            print("用法: python uvr_cli.py info <关键词>")
             sys.exit(1)
-        show_model_info(" ".join(sys.argv[2:]))
-    elif command == "help" or command == "--help" or command == "-h":
-        print_help()
+        show_model_info(args.input)
+    elif command in ("process", "demucs"):
+        if not args.input:
+            print(f"用法: python uvr_cli.py {command} <音频文件或目录> [选项]")
+            sys.exit(1)
+        run_process(args)
     else:
         print(f"未知命令: {command}")
         print_help()
