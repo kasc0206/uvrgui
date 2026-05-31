@@ -33,13 +33,14 @@ jobs:
       - name: Install system dependencies
         run: |
           choco install ffmpeg -y
-          # Ensure tkinter is available (choco Python includes it)
           python --version
         shell: powershell
 
-      - name: Upgrade pip
+      - name: Upgrade pip & install build tools
         run: |
           python -m pip install --upgrade pip wheel setuptools
+          # pkg_resources is needed by librosa; ensure setuptools is installed
+          python -c "import pkg_resources; print('pkg_resources OK')"
 
       - name: Install Python dependencies
         run: |
