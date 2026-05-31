@@ -10,31 +10,21 @@ import logging
 from pathlib import Path
 import typing as tp
 
-#from dora.log import fatal
-
-import logging
-
 from diffq import DiffQuantizer
 import torch.hub
 
+from .hdemucs import HDemucs
 from .model import Demucs
+from .repo import (AnyModelRepo, BagOnlyRepo, LocalRepo,
+                   ModelLoadingError, ModelOnlyRepo, RemoteRepo)
 from .tasnet_v2 import ConvTasNet
 from .utils import set_state
 
-from .hdemucs import HDemucs
-from .repo import RemoteRepo, LocalRepo, ModelOnlyRepo, BagOnlyRepo, AnyModelRepo, ModelLoadingError  # noqa
-
 logger = logging.getLogger(__name__)
-ROOT_URL = "https://dl.fbaipublicfiles.com/demucs/mdx_final/"
+ROOT_URL = "https://dl.fbaipublicfiles.com/demucs/"
 REMOTE_ROOT = Path(__file__).parent / 'remote'
 
 SOURCES = ["drums", "bass", "other", "vocals"]
-
-
-def demucs_unittest():
-    model = HDemucs(channels=4, sources=SOURCES)
-    return model
-
 
 def add_model_flags(parser):
     group = parser.add_mutually_exclusive_group(required=False)
@@ -74,7 +64,7 @@ def get_model(name: str,
         bag_repo = BagOnlyRepo(REMOTE_ROOT, model_repo)
     else:
         if not repo.is_dir():
-            fatal(f"{repo} must exist and be a directory.")
+            raise ModelLoadingError(f"{repo} must exist and be a directory.")
         model_repo = LocalRepo(repo)
         bag_repo = BagOnlyRepo(repo, model_repo)
     any_repo = AnyModelRepo(model_repo, bag_repo)
@@ -88,7 +78,7 @@ def get_model_from_args(args):
     """
     return get_model(name=args.name, repo=args.repo)
 
-logger = logging.getLogger(__name__)
+
 ROOT = "https://dl.fbaipublicfiles.com/demucs/v3.0/"
 
 PRETRAINED_MODELS = {
@@ -100,8 +90,6 @@ PRETRAINED_MODELS = {
     'tasnet_extra': 'df3777b2',
     'demucs_unittest': '09ebc15f',
 }
-
-SOURCES = ["drums", "bass", "other", "vocals"]
 
 
 def get_url(name):
