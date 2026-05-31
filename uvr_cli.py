@@ -347,6 +347,8 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
                     可选: htdemucs, htdemucs_ft, htdemucs_6s, htdemucs_mmi,
                           mdx, mdx_extra, mdx_q, mdx_extra_q, UVR_Model_1 等
     """
+    import subprocess
+
     import librosa
     import soundfile as sf
     import torch
@@ -354,6 +356,11 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
 
     from demucs.apply import apply_model
     from demucs.pretrained import get_model
+
+    # 支持的音频扩展名（含大写的变体）
+    AUDIO_EXTS = {".mp3", ".wav", ".flac", ".ogg", ".m4a", ".wma", ".aiff", ".aac", ".opus"}
+    # librosa 可以直接加载的格式
+    DIRECT_EXTS = {".mp3", ".wav", ".flac", ".ogg", ".m4a", ".wma", ".aiff"}
 
     input_path = Path(input_path)
     if not input_path.exists():
@@ -364,17 +371,28 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
     audio_files = []
     if input_path.is_file():
         ext = input_path.suffix.lower()
-        if ext in (".mp3", ".wav", ".flac", ".ogg", ".m4a", ".wma"):
+        if ext in AUDIO_EXTS:
             audio_files.append(input_path)
         else:
-            print(f"错误: 不支持的格式 {ext}")
+            print(f"错误: 不支持的文件格式 {ext}")
+            print(f"支持: {', '.join(sorted(AUDIO_EXTS))}")
             return
     else:
-        for ext in ("*.mp3", "*.wav", "*.flac", "*.ogg", "*.m4a"):
-            audio_files.extend(sorted(input_path.glob(ext)))
+        for ext in sorted(AUDIO_EXTS):
+            audio_files.extend(sorted(input_path.glob(f"*{ext}")))
+            audio_files.extend(sorted(input_path.glob(f"*{ext.upper()}")))
         if not audio_files:
             print(f"错误: {input_path} 中没有找到音频文件")
+            print(f"支持: {', '.join(sorted(AUDIO_EXTS))}")
             return
+
+    # 检查 FFmpeg 是否可用
+    ffmpeg_available = False
+    try:
+        subprocess.run(["ffmpeg", "-version"], capture_output=True, check=True)
+        ffmpeg_available = True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pass
 
     # 确定输出目录
     if output_dir is None:
@@ -413,6 +431,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
     pbar = tqdm(total=total_files, desc="处理音频", unit="个")
     for idx, audio_path in enumerate(audio_files, 1):
         stem_name = audio_path.stem
+        ext = audio_path.suffix.lower()
         pbar.set_description(f"处理: {stem_name}")
 
         # 每个文件独立子目录，避免文件名冲突
@@ -420,7 +439,24 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
         file_out_dir.mkdir(parents=True, exist_ok=True)
 
         # 加载音频
-        mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
+        if ext in DIRECT_EXTS:
+            mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
+        elif ffmpeg_available:
+            # FFmpeg 临时转码为 WAV
+            import tempfile
+            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+                tmp_wav = tmp.name
+            subprocess.run(
+                ["ffmpeg", "-y", "-i", str(audio_path), "-ar", str(sample_rate),
+                 "-ac", "2", "-f", "wav", tmp_wav],
+                capture_output=True, check=True,
+            )
+            mix, sr = librosa.load(tmp_wav, sr=sample_rate, mono=False)
+            os.unlink(tmp_wav)
+        else:
+            pbar.write(f"  ⚠️  跳过 {stem_name}: 格式 {ext} 需要 FFmpeg")
+            pbar.update(1)
+            continue
         mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
         if mix.ndim == 1:
             mix = np.stack([mix, mix], axis=0)
