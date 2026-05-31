@@ -8,6 +8,7 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
     python uvr_cli.py info <关键词>              查看模型详情
     python uvr_cli.py process <音频> [--model]  分离人声/伴奏（使用 Demucs）
     python uvr_cli.py demucs <音频>             使用 Demucs 分离（自动下载模型）
+    python uvr_cli.py download-models           预下载 Demucs 模型（使用 curl）
     python uvr_cli.py help                      显示帮助信息
 
 示例：
@@ -372,6 +373,93 @@ def run_process(args):
     )
 
 
+def download_models():
+    """预下载 Demucs 模型（使用 curl 加速）"""
+    import yaml
+
+    remote_dir = BASE_DIR / "demucs" / "remote"
+    files_txt = remote_dir / "files.txt"
+
+    if not files_txt.exists():
+        print("错误: 找不到模型索引文件 demucs/remote/files.txt")
+        return
+
+    # 解析 files.txt 获取模型 URL
+    base_url = "https://dl.fbaipublicfiles.com/demucs/"
+    cache_dir = Path.home() / ".cache" / "torch" / "hub" / "checkpoints"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    urls = []
+    root = ""
+    with open(files_txt) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if line.startswith("root:"):
+                root = line.split(":", 1)[1].strip()
+            else:
+                urls.append(base_url + root + line)
+
+    # 也解析 YAML bag 中的模型签名
+    sigs_to_download = set()
+    for yaml_file in remote_dir.glob("*.yaml"):
+        bag = yaml.safe_load(open(yaml_file))
+        for sig in bag.get("models", []):
+            sigs_to_download.add(sig)
+
+    # 从 files.txt 中找到对应的 URL
+    model_urls = {}
+    root = ""
+    with open(files_txt) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            if line.startswith("root:"):
+                root = line.split(":", 1)[1].strip()
+            else:
+                sig = line.split("-", 1)[0]
+                model_urls[sig] = base_url + root + line
+
+    total = len(sigs_to_download)
+    if total == 0:
+        print("没有需要下载的模型")
+        return
+
+    print(f"共 {total} 个模型需要下载\n")
+
+    for i, sig in enumerate(sigs_to_download, 1):
+        if sig not in model_urls:
+            print(f"[{i}/{total}] ⏭️  {sig} (未知 URL)")
+            continue
+
+        url = model_urls[sig]
+        filename = url.rstrip("/").split("/")[-1]
+        cached_path = cache_dir / filename
+
+        if cached_path.exists():
+            size_mb = cached_path.stat().st_size / 1024 / 1024
+            print(f"[{i}/{total}] ✅  {filename} ({size_mb:.0f}MB, 已缓存)")
+            continue
+
+        print(f"[{i}/{total}] ⬇️  正在下载 {filename} ...")
+        start = time.time()
+        cmd = ["curl", "-L", "-o", str(cached_path), "--retry", "3", url]
+        import subprocess
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        elapsed = time.time() - start
+
+        if result.returncode == 0:
+            size_mb = cached_path.stat().st_size / 1024 / 1024
+            speed = size_mb / elapsed if elapsed > 0 else 0
+            print(f"[{i}/{total}] ✅  {filename} ({size_mb:.0f}MB, {speed:.0f}MB/s)")
+        else:
+            print(f"[{i}/{total}] ❌  {filename} 下载失败: {result.stderr.strip()}")
+
+    print(f"\n✅ 全部完成！模型缓存目录: {cache_dir}")
+
+
 def print_help():
     """显示帮助信息"""
     print(__doc__)
@@ -413,6 +501,8 @@ def main():
             print(f"用法: python uvr_cli.py {command} <音频文件或目录> [选项]")
             sys.exit(1)
         run_process(args)
+    elif command == "download-models":
+        download_models()
     else:
         print(f"未知命令: {command}")
         print_help()

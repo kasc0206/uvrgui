@@ -10,6 +10,7 @@ with your own models.
 
 from hashlib import sha256
 from pathlib import Path
+import subprocess
 import typing as tp
 
 import torch
@@ -49,6 +50,18 @@ class ModelOnlyRepo:
         raise NotImplementedError()
 
 
+def _download_with_curl(url: str, dest: Path) -> None:
+    """使用 curl 下载文件，速度远快于 Python urllib"""
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    cmd = ["curl", "-L", "-o", str(dest), "--retry", "3", url]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    if result.returncode != 0:
+        raise ModelLoadingError(
+            f"模型下载失败: {url}\n"
+            f"curl 错误: {result.stderr.strip()}"
+        )
+
+
 class RemoteRepo(ModelOnlyRepo):
     def __init__(self, models: tp.Dict[str, str]):
         self._models = models
@@ -61,7 +74,18 @@ class RemoteRepo(ModelOnlyRepo):
             url = self._models[sig]
         except KeyError:
             raise ModelLoadingError(f'Could not find a pre-trained model with signature {sig}.')
-        pkg = torch.hub.load_state_dict_from_url(url, map_location='cpu', check_hash=True)
+
+        # 使用 curl 下载到 torch hub 缓存目录
+        cache_dir = Path.home() / ".cache" / "torch" / "hub" / "checkpoints"
+        filename = url.rstrip("/").split("/")[-1]
+        cached_path = cache_dir / filename
+
+        if not cached_path.exists():
+            print(f"正在下载模型 {filename} ...")
+            _download_with_curl(url, cached_path)
+            print("下载完成")
+
+        pkg = torch.load(cached_path, map_location="cpu", weights_only=True)
         return load_model(pkg)
 
 
