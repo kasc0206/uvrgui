@@ -49,75 +49,112 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Install CUDA PyTorch (optional, for GPU acceleration)
-        run: |
-          pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
       - name: Install PyInstaller
         run: |
           pip install pyinstaller
 
-      - name: Verify imports
+      - name: Verify imports (CPU)
         run: |
           python -c "
-          import tkinter
-          import torch
-          import librosa
-          import soundfile
-          import numpy
-          import demucs
+          import tkinter; import torch; import librosa
+          import soundfile; import numpy; import demucs
           import gui_data.constants
-          print('All imports OK')
+          print('CPU torch OK:', torch.backends.mps.is_available() if hasattr(torch.backends, 'mps') else 'N/A')
           "
 
-      - name: Build EXE with PyInstaller
+      # ──────────── CPU Build ────────────
+      - name: Build EXE (CPU)
         run: |
           pyinstaller UVR.spec --clean --noconfirm
+          $size = (Get-Item "dist/UVR.exe").Length
+          Write-Host "CPU EXE size: $([math]::Round($size / 1MB, 2)) MB"
 
-      - name: Verify build output
+      - name: Package CPU ZIP
         run: |
-          if (Test-Path "dist/UVR.exe") {
-            $size = (Get-Item "dist/UVR.exe").Length
-            Write-Host "EXE size: $([math]::Round($size / 1MB, 2)) MB"
-          } else {
-            Write-Error "UVR.exe not found in dist/"
-            exit 1
-          }
-
-      - name: Create distributable archive
-        run: |
-          # Copy additional runtime files
           Copy-Item "README.md" "dist/" -ErrorAction SilentlyContinue
           Copy-Item "README_zh.md" "dist/" -ErrorAction SilentlyContinue
           Copy-Item "LICENSE" "dist/" -ErrorAction SilentlyContinue
-
-          # Create zip archive (use 7z to handle files >2GB)
           $version = "${{ github.event.inputs.version }}"
           if (-not $version) { $version = "v1.0.0" }
-          $zipName = "UVR_${version}_Windows_x86_64.zip"
+          $zipName = "UVR_${version}_Windows_x86_64_CPU.zip"
           7z a -mx=5 "$zipName" ".\dist\*"
-          Write-Host "Archive created: $zipName"
+          Write-Host "CPU archive: $zipName"
 
-      - name: Upload artifact
+      - name: Upload CPU artifact
         uses: actions/upload-artifact@v4
         with:
-          name: UVR-Windows-x86_64
-          path: UVR_*.zip
+          name: UVR-Windows-x86_64-CPU
+          path: UVR_*_CPU.zip
           retention-days: 30
 
+      # ──────────── CUDA Build ────────────
+      - name: Install CUDA PyTorch
+        run: |
+          pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+      - name: Verify imports (CUDA)
+        run: |
+          python -c "
+          import torch; print('CUDA available:', torch.cuda.is_available())
+          import tkinter; import librosa; import soundfile; import numpy
+          import demucs; import gui_data.constants
+          print('CUDA imports OK')
+          "
+
+      - name: Rebuild EXE (CUDA)
+        run: |
+          pyinstaller UVR.spec --clean --noconfirm
+          $size = (Get-Item "dist/UVR.exe").Length
+          Write-Host "CUDA EXE size: $([math]::Round($size / 1MB, 2)) MB"
+
+      - name: Package CUDA ZIP
+        run: |
+          Copy-Item "README.md" "dist/" -ErrorAction SilentlyContinue
+          Copy-Item "README_zh.md" "dist/" -ErrorAction SilentlyContinue
+          Copy-Item "LICENSE" "dist/" -ErrorAction SilentlyContinue
+          $version = "${{ github.event.inputs.version }}"
+          if (-not $version) { $version = "v1.0.0" }
+          $zipName = "UVR_${version}_Windows_x86_64_CUDA.zip"
+          7z a -mx=5 "$zipName" ".\dist\*"
+          Write-Host "CUDA archive: $zipName"
+
+      - name: Upload CUDA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UVR-Windows-x86_64-CUDA
+          path: UVR_*_CUDA.zip
+          retention-days: 30
+
+      # ──────────── Release ────────────
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: ""
+          files: UVR_*_CPU.zip
           generate_release_notes: true
           body: |
-            ## Ultimate Vocal Remover GUI v${{ github.ref_name }} (CUDA)
+            ## Ultimate Vocal Remover GUI v${{ github.ref_name }}
 
             ### 📥 下载
-            由于 CUDA 版体积超过 GitHub Release 的 2GB 限制，请从 **Actions Artifact** 下载：
 
-            [⬇️ 下载 UVR-Windows-x86_64.zip](https://github.com/kasc0206/uvrgui/actions/runs/${{ github.run_id }})
+            **CPU 版**（~400 MB，通用兼容）— 已附件在本 Release 中 👇
+
+            **CUDA 版**（~2.5 GB，NVIDIA GPU 加速）— 请从 Actions Artifact 下载：
+            https://github.com/kasc0206/uvrgui/actions/runs/${{ github.run_id }}
+
+            ### 🏗️ 本机构建
+            ```bash
+            git clone https://github.com/kasc0206/uvrgui.git
+            cd uvrgui
+            pip install -r requirements.txt
+            pip install pyinstaller
+            pyinstaller UVR.spec --clean --noconfirm
+            ```
+
+            ### ✅ 构建信息
+            - 提交: `${{ github.sha }}`
+            - CPU 版: CPU-only PyTorch
+            - CUDA 版: CUDA 12.1 PyTorch
 
             进入链接后，点击 Artifacts → 下载 `UVR-Windows-x86_64.zip`。
 

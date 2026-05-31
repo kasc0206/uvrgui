@@ -111,15 +111,17 @@ git push origin v1.0.0
 
 #### 构建变体
 
-CI 会同时产出以下两种构建产物：
+每次推送 tag 后，CI 会自动构建两个版本：
 
-| 变体 | PyTorch 版本 | 体积 | GPU 加速 | 适用场景 |
-|------|-------------|------|---------|---------|
-| **CPU 版** | CPU-only | ~400 MB | ❌ | 通用兼容，体积小 |
-| **CUDA 版** | CUDA 12.1 | ~2.5 GB | ✅ NVIDIA GPU | 需要 GPU 加速 |
+| 变体 | 文件 | 体积 | GPU | Release 附件 | Artifact |
+|------|------|------|-----|:---:|:---:|
+| **CPU 版** | `UVR_*_CPU.zip` | ~400 MB | ❌ | ✅ 直接下载 | ✅ |
+| **CUDA 版** | `UVR_*_CUDA.zip` | ~2.5 GB | ✅ NVIDIA | ❌ 超 2GB 限制 | ✅ |
 
-CI 流程：先通过 `requirements.txt` 安装 CPU PyTorch，再覆盖安装 CUDA PyTorch，
-最终产物为 CUDA 版。如需仅构建 CPU 版，可删除工作流中的 CUDA 安装步骤。
+CI 流程：
+1. 先安装 CPU PyTorch → 编译 CPU 版 → 打包 ZIP → 上传 Artifact
+2. 再安装 CUDA PyTorch → 重新编译 CUDA 版 → 打包 ZIP → 上传 Artifact
+3. Release 页面：CPU 版作为附件直接下载，CUDA 版提供 Artifact 链接
 
 #### 本机构建
 
