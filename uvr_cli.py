@@ -304,7 +304,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
     print("模型加载完成")
 
     sample_rate = model.samplerate
-    sources_list = model.sources  # ['drums', 'bass', 'other', 'vocals'] 或类似
+    sources_list: "list[str]" = model.sources  # type: ignore[assignment]
 
     if two_stem and two_stem not in sources_list:
         print(f"错误: 音源 '{two_stem}' 不在模型中。可用音源: {sources_list}")
@@ -332,12 +332,12 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
         print(f"  耗时: {elapsed:.1f}秒")
 
         # 保存结果
-        sources = sources[0].cpu().numpy()
+        result = sources[0].cpu().numpy()
 
         if two_stem:
             # 只分离指定音源和其补集
-            stem_idx = list(sources_list).index(two_stem)
-            stem_audio = sources[stem_idx]
+            stem_idx = sources_list.index(two_stem)
+            stem_audio = result[stem_idx]
             other_audio = mix - stem_audio
 
             out_path = output_dir / f"{stem_name}_({two_stem}).wav"
@@ -351,7 +351,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
         else:
             for s_idx, source_name in enumerate(sources_list):
                 out_path = output_dir / f"{stem_name}_({source_name}).wav"
-                sf.write(str(out_path), sources[s_idx].T, sample_rate)
+                sf.write(str(out_path), result[s_idx].T, sample_rate)
                 print(f"  ✅ 已保存: {out_path.name}")
 
     print(f"\n✅ 全部完成！输出目录: {output_dir}")
