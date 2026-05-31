@@ -29,6 +29,13 @@ MODEL_NAME_MAPPER = {
     "MDX-Net": MODELS_DIR / "MDX_Net_Models" / "model_data" / "model_name_mapper.json",
 }
 
+# 架构名称到模型目录的映射
+ARCH_TO_DIR = {
+    "VR Architecture": "VR_Models",
+    "MDX-Net": "MDX_Net_Models",
+    "Demucs": "Demucs_Models",
+}
+
 # 模型文件扩展名
 MODEL_EXTENSIONS = {
     "VR Architecture": ".pth",
@@ -46,7 +53,7 @@ def scan_downloaded_models():
     """扫描已下载的模型文件，返回 {架构: [模型文件名]}"""
     downloaded = {}
     for arch, exts in MODEL_EXTENSIONS.items():
-        arch_dir = MODELS_DIR / arch.split()[0] + "_Models"
+        arch_dir = MODELS_DIR / ARCH_TO_DIR[arch]
         files = []
         if isinstance(exts, str):
             exts = (exts,)
@@ -145,13 +152,15 @@ def list_models():
 def show_model_info(search_term):
     """查看特定模型的信息"""
     found = False
+    search_lower = search_term.lower()
+
     for arch in MODEL_DATA_FILES:
         model_data = load_model_data(arch)
         mapper = load_model_name_mapper(arch)
 
         if arch == "Demucs":
             for key, name in model_data.items():
-                if search_term.lower() in key.lower() or search_term.lower() in name.lower():
+                if search_lower in key.lower() or search_lower in name.lower():
                     print(f"\n{'='*50}")
                     print(f"  架构: {arch}")
                     print(f"  模型: {name}")
@@ -159,13 +168,36 @@ def show_model_info(search_term):
                     found = True
             continue
 
-        for model_hash, config in model_data.items():
-            name = mapper.get(model_hash, model_hash)
-            if search_term.lower() in name.lower() or search_term.lower() in model_hash.lower():
+        # 构建 {hash/文件名: 显示名} 的完整映射
+        full_mapper = {}
+        for mk, mv in mapper.items():
+            full_mapper[mk] = mv
+        # 也尝试将 hash 键添加到映射中（查找 model_data 中对应关系）
+        hash_to_display = {}
+        for mk, mv in mapper.items():
+            # 有些 mapper 的 key 是 hash，有些是文件名
+            pass
+
+        # 方法1: 遍历 model_data（hash 作为 key）
+        for model_key, config in model_data.items():
+            # 尝试在 mapper 中找显示名
+            display_name = mapper.get(model_key, mapper.get(model_key, None))
+            # 如果 mapper 中没找到，尝试用 hash 的反查
+            if not display_name:
+                display_name = model_key[:16] + "..."
+
+            # 检查搜索词是否匹配
+            matched = search_lower in model_key.lower()
+            if display_name and not matched:
+                matched = search_lower in display_name.lower()
+            if config.get("primary_stem") and not matched:
+                matched = search_lower in config["primary_stem"].lower()
+
+            if matched:
                 print(f"\n{'='*50}")
                 print(f"  架构: {arch}")
-                print(f"  模型: {name}")
-                print(f"  Hash: {model_hash}")
+                print(f"  模型: {display_name}")
+                print(f"  标识: {model_key}")
                 print(f"  输出: {config.get('primary_stem', '?')}")
                 if config.get("compensate"):
                     print(f"  补偿: {config['compensate']}")
@@ -173,6 +205,8 @@ def show_model_info(search_term):
                     print(f"  dim_f: {config['mdx_dim_f_set']}")
                 if config.get("mdx_dim_t_set"):
                     print(f"  dim_t: {config['mdx_dim_t_set']}")
+                if config.get("mdx_n_fft_scale_set"):
+                    print(f"  n_fft: {config['mdx_n_fft_scale_set']}")
                 if config.get("vr_model_param"):
                     print(f"  参数: {config['vr_model_param']}")
                 if config.get("is_karaoke"):
@@ -180,6 +214,17 @@ def show_model_info(search_term):
                 if config.get("is_bv_model"):
                     print(f"  类型: 背景人声模型")
                 found = True
+
+        # 方法2: 遍历 mapper，查找 model_data 中没有的条目
+        for mapper_key, display_name in mapper.items():
+            if search_lower in mapper_key.lower() or search_lower in display_name.lower():
+                if mapper_key not in model_data:
+                    print(f"\n{'='*50}")
+                    print(f"  架构: {arch}")
+                    print(f"  模型: {display_name}")
+                    print(f"  文件: {mapper_key}")
+                    print(f"  (模型配置数据未加载)")
+                    found = True
 
     if not found:
         print(f"\n未找到匹配 \"{search_term}\" 的模型")
