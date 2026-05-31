@@ -319,6 +319,10 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
         stem_name = audio_path.stem
         print(f"\n[{idx}/{total_files}] 处理: {stem_name}")
 
+        # 每个文件独立子目录，避免文件名冲突
+        file_out_dir = output_dir / stem_name
+        file_out_dir.mkdir(parents=True, exist_ok=True)
+
         # 加载音频
         print("  加载音频...")
         mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
@@ -344,17 +348,17 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
             stem_audio = result[stem_idx]
             other_audio = mix - stem_audio
 
-            out_path = output_dir / f"{stem_name}_({two_stem}).wav"
+            out_path = file_out_dir / f"{stem_name}_({two_stem}).wav"
             sf.write(str(out_path), stem_audio.T, sample_rate)
             print(f"  ✅ 已保存: {out_path.name}")
 
             other_name = f"no_{two_stem}"
-            out_path2 = output_dir / f"{stem_name}_({other_name}).wav"
+            out_path2 = file_out_dir / f"{stem_name}_({other_name}).wav"
             sf.write(str(out_path2), other_audio.T, sample_rate)
             print(f"  ✅ 已保存: {out_path2.name}")
         else:
             for s_idx, source_name in enumerate(sources_list):
-                out_path = output_dir / f"{stem_name}_({source_name}).wav"
+                out_path = file_out_dir / f"{stem_name}_({source_name}).wav"
                 sf.write(str(out_path), result[s_idx].T, sample_rate)
                 print(f"  ✅ 已保存: {out_path.name}")
 
