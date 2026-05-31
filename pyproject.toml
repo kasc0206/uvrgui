@@ -73,3 +73,25 @@ ignore = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["."]
+omit = ["venv/*", "tests/*", "htmlcov/*", ".pytest_cache/*"]
+parallel = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == .__main__.:",
+    "if self.debug",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if 0:",
+    "if TYPE_CHECKING:",
+]
