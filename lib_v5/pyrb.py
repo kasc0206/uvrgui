@@ -7,7 +7,7 @@ import soundfile as sf
 import sys
 
 if getattr(sys, 'frozen', False):
-    BASE_PATH_RUB = sys._MEIPASS
+    BASE_PATH_RUB = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 else:
     BASE_PATH_RUB = os.path.dirname(os.path.abspath(__file__))
 
