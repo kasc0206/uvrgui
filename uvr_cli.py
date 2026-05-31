@@ -414,7 +414,8 @@ def launch_gui():
     os.execv(sys.executable, [sys.executable, str(gui_path)])
 
 
-def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, model_name="htdemucs"):
+def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
+                    model_name="htdemucs", output_format="wav"):
     """使用 Demucs 模型分离音频（模型自动下载）
 
     参数:
@@ -438,8 +439,14 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
 
     # 支持的音频扩展名（含大写的变体）
     AUDIO_EXTS = {".mp3", ".wav", ".flac", ".ogg", ".m4a", ".wma", ".aiff", ".aac", ".opus"}
+    # 支持输出格式
+    FORMAT_MAP = {"wav": ".wav", "flac": ".flac", "mp3": ".mp3", "aiff": ".aiff"}
     # librosa 可以直接加载的格式
     DIRECT_EXTS = {".mp3", ".wav", ".flac", ".ogg", ".m4a", ".wma", ".aiff"}
+
+    out_ext = FORMAT_MAP.get(output_format, ".wav")
+    if output_format not in FORMAT_MAP:
+        print(f"警告: 不支持的输出格式 '{output_format}'，使用 wav")
 
     input_path = Path(input_path)
     if not input_path.exists():
@@ -554,18 +561,18 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
             stem_audio = result[stem_idx]
             other_audio = mix - stem_audio
 
-            out_path = file_out_dir / f"{stem_name}_({two_stem}).wav"
+            out_path = file_out_dir / f"{stem_name}_({two_stem}){out_ext}"
             sf.write(str(out_path), stem_audio.T, sample_rate)
 
             other_name = f"no_{two_stem}"
-            out_path2 = file_out_dir / f"{stem_name}_({other_name}).wav"
+            out_path2 = file_out_dir / f"{stem_name}_({other_name}){out_ext}"
             sf.write(str(out_path2), other_audio.T, sample_rate)
 
             pbar.write(f"  ✅ {out_path.name}  ({elapsed:.1f}s)")
             pbar.write(f"  ✅ {out_path2.name}")
         else:
             for s_idx, source_name in enumerate(sources_list):
-                out_path = file_out_dir / f"{stem_name}_({source_name}).wav"
+                out_path = file_out_dir / f"{stem_name}_({source_name}){out_ext}"
                 sf.write(str(out_path), result[s_idx].T, sample_rate)
                 pbar.write(f"  ✅ {out_path.name}  ({elapsed:.1f}s)")
 
@@ -573,9 +580,12 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
 
     pbar.close()
     if JSON_MODE:
-        Output.json({"ok": True, "output_dir": str(output_dir),
-                      "files": len(audio_files), "model": model_name,
-                      "device": device})
+        Output.json({"ok": True,
+                      "output_dir": str(output_dir),
+                      "files": len(audio_files),
+                      "model": model_name,
+                      "device": device,
+                      "format": output_format})
     else:
         tqdm.write(f"\n✅ 全部完成！输出目录: {output_dir}")
 
@@ -594,6 +604,7 @@ def run_process(args):
         two_stem=args.two_stem or cfg.get("two_stem"),
         device=args.device or cfg.get("default_device"),
         model_name=args.model or cfg.get("default_model", "htdemucs"),
+        output_format=args.format or cfg.get("output_format", "wav"),
     )
 
 
@@ -717,6 +728,8 @@ def main():
                         help="运行设备 (cpu/mps/cuda)，默认自动选择")
     parser.add_argument("--model", "-m", default=None,
                         help="Demucs 模型 (htdemucs/htdemucs_6s/mdx_extra 等)")
+    parser.add_argument("--format", "-f", default=None,
+                        help="输出格式 (wav/flac/mp3/aiff，默认 wav)")
     parser.add_argument("--key", help="配置项名称 (config 命令)")
     parser.add_argument("--value", help="配置项值 (config 命令)")
     parser.add_argument("--json", action="store_true", help="JSON 格式输出（AI 工具调用用）")
