@@ -1,6 +1,6 @@
 from __future__ import annotations
-# pyright: basic
 
+# pyright: basic
 import gc
 import gzip
 import math
