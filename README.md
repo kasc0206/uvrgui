@@ -74,26 +74,36 @@ python uvr_cli.py help
 
 ## Installation (Fork)
 
-These bundles contain the UVR interface, Python, PyTorch, and other dependencies needed to run the application effectively. No prerequisites are required.
+> ⚠️ **注意**：本 Fork 不提供预编译安装包。请按照以下步骤从源码构建。
 
-### Windows Installation
+### Windows / macOS / Linux — 源码安装
 
-- Please Note:
-    - This installer is intended for those running Windows 10 or higher. 
-    - Application functionality for systems running Windows 7 or lower is not guaranteed.
-    - Application functionality for Intel Pentium & Celeron CPUs systems is not guaranteed.
-    - You must install UVR to the main C:\ drive. Installing UVR to a secondary drive will cause instability.
+```bash
+# 1. 克隆仓库
+git clone https://github.com/kasc0206/uvrgui.git
+cd uvrgui
 
-- Download the UVR installer for Windows via the link below:
-    - [Main Download Link](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/UVR_v5.6.0_setup.exe)
-    - [Main Download Link mirror](https://www.mediafire.com/file_premium/jiatpgp0ljou52p/UVR_v5.6.0_setup.exe/file)
-- If you use an **AMD Radeon or Intel Arc graphics card**, you can try the DirectML version:
-    - [DirectML Version - Main Download Link](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/UVR_1_15_25_22_30_BETA_full.exe)
-- Update Package instructions for those who have UVR already installed:
-    - If you already have UVR installed you can install this package over it or download it straight from the application or [click here for the patch](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/UVR_Patch_10_6_23_4_27.exe).
+# 2. 创建虚拟环境
+python3 -m venv venv
+source venv/bin/activate  # Linux/macOS
+# 或 venv\Scripts\activate  # Windows
+
+# 3. 安装依赖
+pip install -r requirements.txt
+
+# 4. NVIDIA GPU 用户安装 CUDA PyTorch（可选）
+pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu118
+
+# 5. 启动
+python UVR.py
+```
+
+### Windows EXE 构建
+
+参见 [Building Windows EXE](#building-windows-exe) 章节。通过 GitHub Actions 自动构建或本地 PyInstaller 打包。
 
 <details id="WindowsManual">
-  <summary>Windows Manual Installation</summary>
+  <summary>Windows Manual Installation (Detailed)</summary>
 
 ### Manual Windows Installation
 
@@ -132,22 +142,16 @@ In order to use the Time Stretch or Change Pitch tool, you'll need Rubber Band.
 </details>
 
 ### MacOS Installation
-- Please Note:
-    - The MacOS Sonoma mouse clicking issue has been fixed.
-    - MPS (GPU) acceleration for Mac M1 has been expanded to work with Demucs v4 and all MDX-Net models.
-    - This bundle is intended for those running macOS Big Sur and above.
-    - Application functionality for systems running macOS Catalina or lower is not guaranteed.
-    - Application functionality for older or budget Mac systems is not guaranteed.
-    - Once everything is installed, the application may take up to 5-10 minutes to start for the first time (depending on your Macbook).
 
-- Download the UVR dmg for MacOS via one of the links below:
-    - Mac M1 (arm64) users:
-       - [Main Download Link](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/Ultimate_Vocal_Remover_v5_6_MacOS_arm64.dmg)
-       - [Main Download Link mirror](https://www.mediafire.com/file_premium/u3rk54wsqadpy93/Ultimate_Vocal_Remover_v5_6_MacOS_arm64.dmg/file)
+- Follow the [source installation](#windows--macos--linux--源码安装) steps above.
+- Apple Silicon (M1/M2/M3) users: PyTorch MPS acceleration is supported out-of-the-box.
+- The application may take up to 5-10 minutes to start for the first time (depending on your Mac).
+- If you encounter "cannot be opened" issues, run:
 
-    - Mac Intel (x86_64) users:
-       - [Main Download Link](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/Ultimate_Vocal_Remover_v5_6_MacOS_x86_64.dmg)
-       - [Main Download Link mirror](https://www.mediafire.com/file_premium/2gf1werx5ly5ylz/Ultimate_Vocal_Remover_v5_6_MacOS_x86_64.dmg/file)
+```bash
+sudo spctl --master-disable
+sudo xattr -rd com.apple.quarantine /path/to/UVR
+```
 
 <details id="CannotOpen">
   <summary>MacOS Users: Having Trouble Opening UVR?</summary>
@@ -318,9 +322,11 @@ If you encounter issues, refer to the [GitHub Issues](https://github.com/Anjok07
 - Memory allocation errors can usually be resolved by lowering the "Segment" or "Window" sizes.
 
 #### MacOS Sonoma Left-click Bug
-There's a known issue on MacOS Sonoma where left-clicks aren't registering correctly within the app. This was impacting all applications built with Tkinter on Sonoma and has since been resolved. Please download the latest version via the following link if you are still experiencing issues - [link](https://github.com/Anjok07/ultimatevocalremovergui/releases/tag/v5.6)
+There's a known issue on MacOS Sonoma where left-clicks weren't registering correctly within Tkinter applications. This was caused by a Tkinter bug on Sonoma and has since been resolved. If you still experience this issue, updating Tkinter via Homebrew should resolve it:
 
-This issue was being tracked [here](https://github.com/Anjok07/ultimatevocalremovergui/issues/840).
+```bash
+brew update && brew upgrade python-tk
+```
 
 ### Issue Reporting
 

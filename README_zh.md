@@ -49,34 +49,49 @@
 
 ## 🚀 安装指南
 
-### 📦 快速安装（推荐）
+> ⚠️ **注意**：本 Fork 不提供预编译安装包。请按照以下步骤从源码构建。
 
-#### Windows
-
-1. 下载安装包：[主下载链接](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/UVR_v5.6.0_setup.exe) | [镜像](https://www.mediafire.com/file_premium/jiatpgp0ljou52p/UVR_v5.6.0_setup.exe/file)
-2. 运行安装程序，按向导完成安装
-
-> **注意：**
->
-> * 仅支持 Windows 10 及以上系统
-> * 必须安装到 C 盘主分区
-> * AMD Radeon / Intel Arc 用户请使用 [DirectML 版本](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/UVR_1_15_25_22_30_BETA_full.exe)
-
-#### macOS
-
-* **Apple Silicon (M1/M2/M3)**：[arm64 下载](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/Ultimate_Vocal_Remover_v5_6_MacOS_arm64.dmg)
-* **Intel Mac**：[x86_64 下载](https://github.com/Anjok07/ultimatevocalremovergui/releases/download/v5.6/Ultimate_Vocal_Remover_v5_6_MacOS_x86_64.dmg)
-
-> **首次启动可能需要 5~10 分钟**，取决于你的 Mac 型号。
->
-> 如果遇到无法打开的问题，请在终端执行：
+### 📦 源码安装（所有平台通用）
 
 ```bash
-sudo spctl --master-disable
-sudo xattr -rd com.apple.quarantine /Applications/Ultimate\ Vocal\ Remover.app
+# 1. 克隆仓库
+git clone https://github.com/kasc0206/uvrgui.git
+cd uvrgui
+
+# 2. 创建虚拟环境
+python3 -m venv venv
+source venv/bin/activate  # Linux/macOS
+# 或 venv\Scripts\activate  # Windows
+
+# 3. 安装依赖
+pip install -r requirements.txt
+
+# 4. （可选）NVIDIA GPU 用户安装 CUDA 版 PyTorch
+pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu118
+
+# 5. 启动
+python UVR.py
 ```
 
-#### Linux
+### 🪟 Windows EXE 构建
+
+本 Fork 支持通过 GitHub Actions 自动构建 Windows EXE。
+
+方法一：推送 tag 自动构建
+```bash
+git tag v5.6.0-fork
+git push origin v5.6.0-fork
+```
+
+方法二：手动触发 [Actions 页面](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
+
+方法三：Windows 本机直接编译
+```bash
+pip install pyinstaller
+pyinstaller UVR.spec --clean --noconfirm
+```
+
+#### macOS
 
 ```bash
 # Debian/Ubuntu 系
