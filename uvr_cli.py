@@ -199,9 +199,9 @@ def show_model_info(search_term):
                 if config.get("vr_model_param"):
                     print(f"  参数: {config['vr_model_param']}")
                 if config.get("is_karaoke"):
-                    print(f"  类型: 卡拉OK")
+                    print("  类型: 卡拉OK")
                 if config.get("is_bv_model"):
-                    print(f"  类型: 背景人声模型")
+                    print("  类型: 背景人声模型")
                 found = True
 
         # 方法2: 遍历 mapper，查找 model_data 中没有的条目
