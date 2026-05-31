@@ -109,10 +109,27 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: UVR_*.zip
+          files: ""
           generate_release_notes: true
           body: |
-            ## Ultimate Vocal Remover GUI — Windows Build
+            ## Ultimate Vocal Remover GUI v${{ github.ref_name }} (CUDA)
+
+            ### 📥 下载
+            由于 CUDA 版体积超过 GitHub Release 的 2GB 限制，请从 **Actions Artifact** 下载：
+
+            [⬇️ 下载 UVR-Windows-x86_64.zip](https://github.com/kasc0206/uvrgui/actions/runs/${{ github.run_id }})
+
+            进入链接后，点击 Artifacts → 下载 `UVR-Windows-x86_64.zip`。
+
+            ### 🏗️ 本机构建 CPU 版（~400 MB）
+            ```bash
+            pip install -r requirements.txt
+            pip install pyinstaller
+            pyinstaller UVR.spec --clean --noconfirm
+            ```
+
+            ### ✅ 构建信息
+            - 提交: ${{ github.sha }}
 
             Auto-built from commit ${{ github.sha }}
 
