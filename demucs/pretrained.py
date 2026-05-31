@@ -13,10 +13,11 @@ import typing as tp
 from diffq import DiffQuantizer
 import torch.hub
 
-from .hdemucs import HDemucs
 from .model import Demucs
-from .repo import (AnyModelRepo, BagOnlyRepo, LocalRepo,
-                   ModelLoadingError, ModelOnlyRepo, RemoteRepo)
+from .repo import (
+    AnyModelRepo, BagOnlyRepo, LocalRepo,
+    ModelLoadingError, ModelOnlyRepo, RemoteRepo,
+)
 from .tasnet_v2 import ConvTasNet
 from .utils import set_state
 
@@ -128,7 +129,7 @@ def _load_state(name, model, quantizer=None):
 
 
 def demucs_unittest(pretrained=True):
-    model = Demucs(channels=4, sources=SOURCES)
+    model = Demucs(channels=4, sources=len(SOURCES))
     if pretrained:
         _load_state('demucs_unittest', model)
     return model
@@ -137,7 +138,7 @@ def demucs_unittest(pretrained=True):
 def demucs(pretrained=True, extra=False, quantized=False, hq=False, channels=64):
     if not pretrained and (extra or quantized or hq):
         raise ValueError("if extra or quantized is True, pretrained must be True.")
-    model = Demucs(sources=SOURCES, channels=channels)
+    model = Demucs(sources=len(SOURCES), channels=channels)
     if pretrained:
         name = 'demucs'
         if channels != 64:
