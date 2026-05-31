@@ -91,11 +91,11 @@ jobs:
           Copy-Item "README_zh.md" "dist/" -ErrorAction SilentlyContinue
           Copy-Item "LICENSE" "dist/" -ErrorAction SilentlyContinue
 
-          # Create zip archive
+          # Create zip archive (use 7z to handle files >2GB)
           $version = "${{ github.event.inputs.version }}"
           if (-not $version) { $version = "v1.0.0" }
           $zipName = "UVR_${version}_Windows_x86_64.zip"
-          Compress-Archive -Path "dist/*" -DestinationPath $zipName
+          7z a -mx=5 "$zipName" ".\dist\*"
           Write-Host "Archive created: $zipName"
 
       - name: Upload artifact
