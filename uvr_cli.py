@@ -14,6 +14,7 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
 示例：
     python uvr_cli.py process 歌曲.mp3
     python uvr_cli.py demucs 歌曲.flac --two-stem vocals
+    python uvr_cli.py process 歌曲.mp3 --model htdemucs_6s
     python uvr_cli.py process 输入文件夹/ --out 输出文件夹/
 """
 
@@ -243,7 +244,7 @@ def launch_gui():
     os.execv(sys.executable, [sys.executable, str(gui_path)])
 
 
-def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
+def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, model_name="htdemucs"):
     """使用 Demucs 模型分离音频（模型自动下载）
 
     参数:
@@ -251,6 +252,9 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
         output_dir: 输出目录（默认: 输入文件所在目录）
         two_stem: 如果设置，只分离此音源（如 'vocals'），否则分离所有音源
         device: 运行设备（'cpu', 'mps', 'cuda'），默认自动选择
+        model_name: Demucs 模型名称（默认: htdemucs）
+                    可选: htdemucs, htdemucs_ft, htdemucs_6s, htdemucs_mmi,
+                          mdx, mdx_extra, mdx_q, mdx_extra_q, UVR_Model_1 等
     """
     import librosa
     import soundfile as sf
@@ -297,7 +301,6 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None):
     print(f"使用设备: {device}")
 
     # 加载 Demucs 模型（自动下载）
-    model_name = "htdemucs"
     print(f"正在加载模型 {model_name}...")
     model = get_model(model_name)
     model.to(device)
@@ -370,6 +373,7 @@ def run_process(args):
         output_dir=args.output,
         two_stem=args.two_stem,
         device=args.device,
+        model_name=args.model,
     )
 
 
@@ -478,6 +482,8 @@ def main():
                         help="提取指定音源（如 vocals），同时输出其补集")
     parser.add_argument("--device", "-d", default=None,
                         help="运行设备 (cpu/mps/cuda)，默认自动选择")
+    parser.add_argument("--model", "-m", default="htdemucs",
+                        help="Demucs 模型 (htdemucs/htdemucs_6s/mdx_extra 等)")
 
     args = parser.parse_args()
 
