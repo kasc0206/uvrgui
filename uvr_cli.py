@@ -11,6 +11,7 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
     python uvr_cli.py download-models           预下载 Demucs 模型（使用 curl）
     python uvr_cli.py config                    查看配置
     python uvr_cli.py config --key x --value y  设置配置项
+    python uvr_cli.py version                   查看版本信息
     python uvr_cli.py help                      显示帮助信息
 
 示例：
@@ -30,6 +31,8 @@ import time
 from pathlib import Path
 
 import numpy as np
+
+from __version__ import FORK_REPO, FORK_VERSION, VERSION
 
 CONFIG_FILE = Path(__file__).parent / "uvr_config.json"
 
@@ -693,6 +696,9 @@ def download_models():
 
 def print_help():
     """显示帮助信息"""
+    print(f"UVR CLI {FORK_VERSION} (基于 {VERSION})")
+    print(f"仓库: {FORK_REPO}")
+    print()
     print(__doc__)
 
 
@@ -702,7 +708,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
-    parser.add_argument("command", nargs="?", help="list | gui | info | process | demucs | help")
+    parser.add_argument("command", nargs="?", help="list | gui | info | process | demucs | download-models | config | version | help")
     parser.add_argument("input", nargs="?", help="输入音频文件或目录")
     parser.add_argument("--out", "-o", dest="output", help="输出目录")
     parser.add_argument("--two-stem", "-2", dest="two_stem",
@@ -753,6 +759,12 @@ def main():
         run_process(args)
     elif command == "download-models":
         download_models()
+    elif command == "version":
+        if JSON_MODE:
+            Output.json({"version": FORK_VERSION, "base": VERSION, "repo": FORK_REPO})
+        else:
+            print(f"UVR CLI {FORK_VERSION} (基于 {VERSION})")
+            print(f"仓库: {FORK_REPO}")
     elif command == "config":
         cmd_config(args)
     else:
