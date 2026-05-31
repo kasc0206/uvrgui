@@ -331,7 +331,17 @@ sudo pacman -S ffmpeg    # Arch
 * 本项目完全开源（MIT 协议），可自由使用和修改
 * 如需使用我们的模型，请保留 UVR 及开发者的署名
 
-## 📜 许可证
+## � 项目信息
+
+| 项目 | 信息 |
+| --- | --- |
+| 版本 | `v5.6.0-fork`（基于上游 `v5.6.0`） |
+| 仓库 | [kasc0206/uvrgui](https://github.com/kasc0206/uvrgui) |
+| 累计提交 | 31 次 Fork 改进 |
+| CLI 命令 | 10 个（list/info/process/demucs/download-models/config/version/gui/help + --json） |
+| 代码质量 | ruff 零错误（自定义文件） |
+
+## �📜 许可证
 
 本项目代码采用 [MIT 许可证](LICENSE)。
 

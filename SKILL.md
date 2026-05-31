@@ -20,6 +20,8 @@ version: 1.0.0
 | 下载模型 | "帮我预下载模型" | `download-models` |
 | 配置默认值 | "以后默认用 mps 设备" | `config --key default_device --value mps` |
 | 搜索模型 | "帮我找找有没有去混响的模型" | `info reverb` / `info reverb --json` |
+| 查看版本 | "当前是什么版本" | `version` / `version --json` |
+| 设置输出格式 | "输出 flac 格式" | `--format flac` / `config --key output_format --value flac` |
 
 ## 快速开始
 
@@ -111,6 +113,9 @@ python uvr_cli.py process 歌曲.mp3 --device cuda  # NVIDIA GPU
 # 指定输出目录
 python uvr_cli.py process 歌曲.mp3 --out ./output/
 
+# 指定输出格式（wav/flac/mp3/aiff）
+python uvr_cli.py process 歌曲.mp3 --format flac
+
 # 批量处理文件夹
 python uvr_cli.py process ./音乐文件夹/ --two-stem vocals
 
@@ -125,7 +130,8 @@ python uvr_cli.py process 歌曲.mp3 --json
   "output_dir": "/path/to/output",
   "files": 1,
   "model": "htdemucs",
-  "device": "mps"
+  "device": "mps",
+  "format": "wav"
 }
 ```
 
@@ -175,6 +181,23 @@ python uvr_cli.py download-models --json   # ✅ AI 推荐
 
 ---
 
+### `version` — 查看版本
+
+```bash
+python uvr_cli.py version
+# UVR CLI v5.6.0-fork (基于 v5.6.0)
+# 仓库: https://github.com/kasc0206/uvrgui
+
+python uvr_cli.py version --json
+```
+
+**JSON 返回：**
+```json
+{"version": "v5.6.0-fork", "base": "v5.6.0", "repo": "https://github.com/kasc0206/uvrgui"}
+```
+
+---
+
 ### `config` — 配置管理
 
 设置默认值，避免重复输入参数。
@@ -189,6 +212,9 @@ python uvr_cli.py config --key default_device --value mps
 
 # 设置默认模型
 python uvr_cli.py config --key default_model --value htdemucs_6s
+
+# 设置默认输出格式
+python uvr_cli.py config --key output_format --value flac
 
 # 设置默认输出音源
 python uvr_cli.py config --key two_stem --value vocals
