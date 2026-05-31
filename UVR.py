@@ -2952,6 +2952,9 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
     def get_files_from_dir(self, directory, ext, is_mdxnet=False):
         """Gets files from specified directory that ends with specified extention"""
 
+        if not os.path.isdir(directory):
+            return ()
+
         return tuple(
             x if is_mdxnet and x.endswith(CKPT) else os.path.splitext(x)[0]
             for x in os.listdir(directory)
