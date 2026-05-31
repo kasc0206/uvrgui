@@ -259,6 +259,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
     import librosa
     import soundfile as sf
     import torch
+    from tqdm import tqdm
 
     from demucs.apply import apply_model
     from demucs.pretrained import get_model
@@ -315,15 +316,17 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
         return
 
     total_files = len(audio_files)
+    pbar = tqdm(total=total_files, desc="处理音频", unit="个")
     for idx, audio_path in enumerate(audio_files, 1):
         stem_name = audio_path.stem
-        print(f"\n[{idx}/{total_files}] 处理: {stem_name}")
+        pbar.set_description(f"处理: {stem_name}")
 
         # 每个文件独立子目录，避免文件名冲突
         file_out_dir = output_dir / stem_name
         file_out_dir.mkdir(parents=True, exist_ok=True)
 
         # 加载音频
+        mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
         print("  加载音频...")
         mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
         if mix.ndim == 1:
@@ -332,12 +335,10 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
         mix_tensor = torch.tensor(mix[None], dtype=torch.float32, device=device)
 
         # 运行模型
-        print("  正在分离...")
         start = time.time()
         with torch.no_grad():
             sources = apply_model(model, mix_tensor, shifts=1, split=True, overlap=0.25, device=device)
         elapsed = time.time() - start
-        print(f"  耗时: {elapsed:.1f}秒")
 
         # 保存结果
         result: "np.ndarray" = sources[0].cpu().numpy()  # type: ignore[assignment]
@@ -350,19 +351,23 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None, mod
 
             out_path = file_out_dir / f"{stem_name}_({two_stem}).wav"
             sf.write(str(out_path), stem_audio.T, sample_rate)
-            print(f"  ✅ 已保存: {out_path.name}")
 
             other_name = f"no_{two_stem}"
             out_path2 = file_out_dir / f"{stem_name}_({other_name}).wav"
             sf.write(str(out_path2), other_audio.T, sample_rate)
-            print(f"  ✅ 已保存: {out_path2.name}")
+
+            pbar.write(f"  ✅ {out_path.name}  ({elapsed:.1f}s)")
+            pbar.write(f"  ✅ {out_path2.name}")
         else:
             for s_idx, source_name in enumerate(sources_list):
                 out_path = file_out_dir / f"{stem_name}_({source_name}).wav"
                 sf.write(str(out_path), result[s_idx].T, sample_rate)
-                print(f"  ✅ 已保存: {out_path.name}")
+                pbar.write(f"  ✅ {out_path.name}  ({elapsed:.1f}s)")
 
-    print(f"\n✅ 全部完成！输出目录: {output_dir}")
+        pbar.update(1)
+
+    pbar.close()
+    tqdm.write(f"\n✅ 全部完成！输出目录: {output_dir}")
 
 
 def run_process(args):
