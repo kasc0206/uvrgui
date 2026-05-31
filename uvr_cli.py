@@ -12,7 +12,6 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
 import json
 import os
 import sys
-import glob
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
@@ -168,16 +167,6 @@ def show_model_info(search_term):
                     found = True
             continue
 
-        # 构建 {hash/文件名: 显示名} 的完整映射
-        full_mapper = {}
-        for mk, mv in mapper.items():
-            full_mapper[mk] = mv
-        # 也尝试将 hash 键添加到映射中（查找 model_data 中对应关系）
-        hash_to_display = {}
-        for mk, mv in mapper.items():
-            # 有些 mapper 的 key 是 hash，有些是文件名
-            pass
-
         # 方法1: 遍历 model_data（hash 作为 key）
         for model_key, config in model_data.items():
             # 尝试在 mapper 中找显示名
@@ -194,7 +183,7 @@ def show_model_info(search_term):
                 matched = search_lower in config["primary_stem"].lower()
 
             if matched:
-                print(f"\n{'='*50}")
+                print("\n" + "=" * 50)
                 print(f"  架构: {arch}")
                 print(f"  模型: {display_name}")
                 print(f"  标识: {model_key}")
@@ -219,11 +208,11 @@ def show_model_info(search_term):
         for mapper_key, display_name in mapper.items():
             if search_lower in mapper_key.lower() or search_lower in display_name.lower():
                 if mapper_key not in model_data:
-                    print(f"\n{'='*50}")
+                    print("\n" + "=" * 50)
                     print(f"  架构: {arch}")
                     print(f"  模型: {display_name}")
                     print(f"  文件: {mapper_key}")
-                    print(f"  (模型配置数据未加载)")
+                    print("  (模型配置数据未加载)")
                     found = True
 
     if not found:
