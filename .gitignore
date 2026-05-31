@@ -1,20 +1,19 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-venv/
-.env/
 
 # IDE
-.vscode/
-.idea/
-
 # OS
-.DS_Store
-Thumbs.db
-
+# Python
 # Tools
+*.egg-info/
+*.py[cod]
+.DS_Store
+.coverage
+.coverage.*
+.env/
+.idea/
+.pytest_cache/
 .ruff_cache/
-
-
-
+.vscode/
+Thumbs.db
+__pycache__/
+htmlcov/
+venv/
