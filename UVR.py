@@ -1,6 +1,4 @@
 # GUI modules
-# pyright: basic
-# ruff: noqa: E731, F405, F403
 import base64
 import hashlib
 import json
@@ -46,8 +44,656 @@ from pyglet import font as pyglet_font
 
 import gui_data.sv_ttk
 from __version__ import PATCH, PATCH_LINUX, PATCH_MAC, VERSION
-from gui_data.app_size_values import *
-from gui_data.constants import *
+from gui_data.app_size_values import (
+    BUTTON_Y_1080P,
+    CHECK_BOX_HEIGHT,
+    CHECK_BOX_WIDTH,
+    CHECK_BOX_X,
+    CHECK_BOX_Y,
+    COMBO_WIDTH,
+    COMMAND_HEIGHT,
+    CONVERSIONBUTTON_HEIGHT,
+    DB_ANALYSIS_LABEL_WIDTH,
+    DB_ANALYSIS_LABEL_X,
+    DB_ANALYSIS_OPTION_X,
+    DEMUCS_CHECKBOXS_WIDTH,
+    DEMUCS_PRE_CHECKBOXS_WIDTH,
+    ENSEMBLE_CHECKBOXS_WIDTH,
+    ENSEMBLE_LISTBOX_FRAME_HEIGHT,
+    ENSEMBLE_LISTBOX_FRAME_WIDTH,
+    ENSEMBLE_LISTBOX_FRAME_X,
+    ENSEMBLE_LISTBOX_FRAME_Y,
+    ENSEMBLE_LISTBOX_SCROLL_HEIGHT,
+    ENSEMBLE_LISTBOX_SCROLL_WIDTH,
+    ENSEMBLE_LISTBOX_SCROLL_X,
+    ENSEMBLE_LISTBOX_SCROLL_Y,
+    ENTRY_OPEN_BUTT_WIDTH,
+    ENTRY_OPEN_BUTT_X_OFF,
+    ENTRY_WIDTH,
+    ENTRY_Y,
+    FILEONE_LABEL_WIDTH,
+    FILEONE_LABEL_X,
+    FILEPATHS_FRAME_WIDTH,
+    FILEPATHS_FRAME_X,
+    FILEPATHS_FRAME_Y,
+    FILEPATHS_HEIGHT,
+    FILETWO_LABEL_WIDTH,
+    FILETWO_LABEL_X,
+    FONT_SIZE_0,
+    FONT_SIZE_1,
+    FONT_SIZE_2,
+    FONT_SIZE_3,
+    FONT_SIZE_4,
+    FONT_SIZE_5,
+    FONT_SIZE_6,
+    FONT_SIZE_F2,
+    GEN_SETTINGS_WIDTH,
+    HEIGHT_GENERIC_BUTTON_1080P,
+    HEIGHT_PROGRESSBAR_1080P,
+    HELP_HINT_CHECKBOX_WIDTH,
+    IMAGE_HEIGHT,
+    INTRO_ANALYSIS_LABEL_WIDTH,
+    INTRO_ANALYSIS_LABEL_X,
+    INTRO_ANALYSIS_OPTION_X,
+    LABEL_HEIGHT,
+    LABEL_Y,
+    LEFT_ROW_WIDTH,
+    LOW_MENU_Y,
+    MAIN_ROW_2_X,
+    MAIN_ROW_2_Y,
+    MAIN_ROW_WIDTH,
+    MAIN_ROW_X,
+    MAIN_ROW_Y,
+    MDX_CHECKBOXS_WIDTH,
+    MENU_COMBOBOX_WIDTH,
+    MENU_PADDING_1,
+    MENU_PADDING_2,
+    MENU_PADDING_3,
+    MENU_PADDING_4,
+    MUSICFILE_BUTTON_HEIGHT,
+    MUSICFILE_BUTTON_WIDTH,
+    MUSICFILE_BUTTON_X,
+    MUSICFILE_BUTTON_Y,
+    MUSICFILE_ENTRY_HEIGHT,
+    MUSICFILE_ENTRY_WIDTH,
+    MUSICFILE_ENTRY_X,
+    OPEN_BUTTON_WIDTH,
+    OPEN_BUTTON_X,
+    OPTION_HEIGHT,
+    OPTION_WIDTH,
+    OPTIONS_FRAME_WIDTH,
+    OPTIONS_FRAME_X,
+    OPTIONS_FRAME_Y,
+    OPTIONS_HEIGHT,
+    PADDING,
+    PROGRESS_HEIGHT,
+    RADIOBUTTON_HEIGHT,
+    RADIOBUTTON_WIDTH,
+    RADIOBUTTON_X_FLAC,
+    RADIOBUTTON_X_MP3,
+    RADIOBUTTON_X_WAV,
+    RADIOBUTTON_Y,
+    READ_ONLY_COMBO_WIDTH,
+    SAVETO_BUTTON_HEIGHT,
+    SAVETO_BUTTON_WIDTH,
+    SAVETO_BUTTON_X,
+    SAVETO_BUTTON_Y,
+    SAVETO_ENTRY_HEIGHT,
+    SAVETO_ENTRY_WIDTH,
+    SAVETO_ENTRY_X,
+    SET_MENUS_CHECK_WIDTH,
+    SET_VOC_SPLIT_CHECK_WIDTH,
+    SETTINGS_BUT_WIDTH,
+    SUB_ENT_ROW_X,
+    TIME_WINDOW_LABEL_WIDTH,
+    TIME_WINDOW_LABEL_X,
+    UPDATE_LABEL_WIDTH,
+    VR_BUT_WIDTH,
+    VR_CHECKBOXS_WIDTH,
+    WAV_TYPE_SET_LABEL_WIDTH,
+    WAV_TYPE_SET_LABEL_X,
+    WIDTH,
+    WIDTH_CONVERSION_BUTTON_1080P,
+    WIDTH_PROGRESSBAR_1080P,
+    X_CONVERSION_BUTTON_1080P,
+    X_PROGRESSBAR_1080P,
+    X_SETTINGS_BUTTON_1080P,
+    X_STOP_BUTTON_1080P,
+    Y_OFFSET_PROGRESS_BAR_1080P,
+    ImagePath,
+)
+from gui_data.constants import (
+    ACCEPT_ANY_INPUT_TEXT,
+    ACTIVATE_PRE_PROCESS_MODEL_TEXT,
+    ACTIVATE_SECONDARY_MODEL_TEXT,
+    ADDITIONAL_MENUS_INFORMATION_TEXT,
+    ADDITIONAL_SETTINGS_TEXT,
+    ADVANCED_ALIGN_TOOL_OPTIONS_TEXT,
+    ADVANCED_DEMUCS_OPTIONS_TEXT,
+    ADVANCED_ENSEMBLE_OPTIONS_TEXT,
+    ADVANCED_MDXNET23_OPTIONS_TEXT,
+    ADVANCED_MDXNET_OPTIONS_TEXT,
+    ADVANCED_OPTION_MENU_TEXT,
+    ADVANCED_VR_OPTIONS_TEXT,
+    AGGRESSION_SETTING_HELP,
+    AGGRESSION_SETTING_MAIN_LABEL,
+    AGGRESSION_SETTING_TEXT,
+    ALIGN_INPUTS,
+    ALIGN_PHASE_OPTIONS,
+    ALIGNMENT_TOOL,
+    ALL_ARCH_SETTING_LOAD,
+    ALL_STEMS,
+    ALL_TYPES,
+    ANY_EXT,
+    APPEND_ENSEMBLE_NAME_TEXT,
+    APPLICATION_DOWNLOAD_CENTER_TEXT,
+    APPLICATION_UPDATES_TEXT,
+    ARM,
+    AUDIO_FORMAT_SETTINGS_TEXT,
+    AUDIO_INPUT_TOTAL_TEXT,
+    AUDIO_TOOL_OPTIONS,
+    AUDIO_TOOLS,
+    AUDIO_TOOLS_HELP,
+    AUDIO_VERIFICATION_CHECK,
+    AUTO_SELECT,
+    AVAILABLE_MODELS_MAIN_LABEL,
+    BACK_TO_MAIN_MENU,
+    BALANCE_VALUE_TEXT,
+    BALANCE_VALUES,
+    BASS_PAIR,
+    BASS_STEM,
+    BATCH_MODE_DUAL,
+    BATCH_PROCESS_MENU_TEXT,
+    BATCH_SIZE,
+    BATCH_SIZE_HELP,
+    BATCH_SIZE_TEXT,
+    BETA_VERSION,
+    BG_COLOR,
+    BMAC_UVR_TEXT,
+    BROKEN_OR_INCOM_TEXT,
+    BULLETIN_CHECK,
+    BV_MODEL_TEXT,
+    BV_VOCAL_STEM,
+    CANCEL_TEXT,
+    CHANGE_MODEL_DEFAULT_TEXT,
+    CHANGE_MODEL_DEFAULTS_TEXT,
+    CHANGE_PARAMETERS_TEXT,
+    CHANGE_PITCH,
+    CHECK_FOR_UPDATES_TEXT,
+    CHOOSE_ADVANCED_MENU_TEXT,
+    CHOOSE_AUDIO_TOOLS_MAIN_LABEL,
+    CHOOSE_DEMUCS_MODEL_MAIN_LABEL,
+    CHOOSE_ENSEMBLE_ALGORITHM_MAIN_LABEL,
+    CHOOSE_ENSEMBLE_OPTION,
+    CHOOSE_EXPORT_FIR,
+    CHOOSE_INPUT_TEXT,
+    CHOOSE_MAIN_PAIR_MAIN_LABEL,
+    CHOOSE_MANUAL_ALGORITHM_MAIN_LABEL,
+    CHOOSE_MDX_MODEL_MAIN_LABEL,
+    CHOOSE_MODEL,
+    CHOOSE_MODEL_HELP,
+    CHOOSE_MODEL_PARAM_TEXT,
+    CHOOSE_PROC_METHOD_MAIN_LABEL,
+    CHOOSE_RATE_MAIN_LABEL,
+    CHOOSE_SEGMENT_MAIN_LABEL,
+    CHOOSE_SEMITONES_MAIN_LABEL,
+    CHOOSE_STEM_PAIR,
+    CHOOSE_STEMS_MAIN_LABEL,
+    CHOSEN_ENSEMBLE_HELP,
+    CHOSEN_PROCESS_METHOD_HELP,
+    CKPT,
+    CLEAR_AUTOSET_CACHE_TEXT,
+    CLEAR_CACHE_HELP,
+    CLEAR_ENSEMBLE,
+    CLOSE_WINDOW,
+    COMBINE_INPUTS,
+    COMBINE_STEMS_TEXT,
+    COMPENSATE_HELP,
+    CONFIRM_ENTRIES,
+    CONFIRM_RESTART_TEXT,
+    CONFIRM_TEXT,
+    CONFIRM_UPDATE_TEXT,
+    CONFIRM_WARNING,
+    COPY_ALL_TEXT_TEXT,
+    CUDA_NUM_TEXT,
+    DEF_OPT,
+    DEFAULT,
+    DEFAULT_DATA,
+    DELETE_ENS_ENTRY,
+    DELETE_PARAMETERS_TEXT,
+    DELETE_USER_SAVED_SETTING_TEXT,
+    DELETE_YOUR_SETTINGS_HELP,
+    DEMUCS_2_SOURCE,
+    DEMUCS_2_SOURCE_MAPPER,
+    DEMUCS_2_STEM_OPTIONS,
+    DEMUCS_4_SOURCE,
+    DEMUCS_4_SOURCE_LIST,
+    DEMUCS_4_SOURCE_MAPPER,
+    DEMUCS_4_STEM_OPTIONS,
+    DEMUCS_6_STEM_MODEL,
+    DEMUCS_6_STEM_OPTIONS,
+    DEMUCS_ARCH_TYPE,
+    DEMUCS_MODEL_NAME_DATA_LINK,
+    DEMUCS_NEWER_ARCH_TYPES,
+    DEMUCS_OPTION,
+    DEMUCS_OVERLAP,
+    DEMUCS_SEGMENTS,
+    DEMUCS_SETTING_LOAD,
+    DEMUCS_SHIFTS,
+    DEMUCS_STEMS_HELP,
+    DEMUCS_UVR_MODEL,
+    DEMUCS_V3,
+    DEMUCS_V4,
+    DEMUCS_VERSION_MAPPER,
+    DENOISE_M,
+    DENOISE_NONE,
+    DENOISE_OUTPUT_TEXT,
+    DENOISE_S,
+    DETECTED_VER,
+    DEVERB_MAPPER,
+    DEVERB_VOCALS_TEXT,
+    DONATE_HELP,
+    DONATE_LINK_BMAC,
+    DONATE_LINK_PATREON,
+    DONE,
+    DONE_MENU_TEXT,
+    DOWNLOAD_CENTER_TEXT,
+    DOWNLOAD_CHECKS,
+    DOWNLOAD_CODE_TEXT,
+    DOWNLOAD_COMPLETE,
+    DOWNLOAD_FAILED,
+    DOWNLOAD_MORE,
+    DOWNLOAD_STOPPED,
+    DOWNLOAD_UPDATE_COMPLETE,
+    DOWNLOADING_ITEM,
+    DOWNLOADING_UPDATE,
+    DRUM_PAIR,
+    DRUM_STEM,
+    DUAL_AUDIO_PROCESSING,
+    ENABLE_HELP_HINTS_TEXT,
+    ENABLE_TTA_TEXT,
+    ENABLE_VOCAL_SPLIT_MODE_TEXT,
+    ENSEMBLE_CHECK,
+    ENSEMBLE_INPUT_RULE,
+    ENSEMBLE_LISTBOX_HELP,
+    ENSEMBLE_MAIN_STEM,
+    ENSEMBLE_MAIN_STEM_HELP,
+    ENSEMBLE_MODE,
+    ENSEMBLE_NAME_TEXT,
+    ENSEMBLE_OPTION,
+    ENSEMBLE_OPTIONS,
+    ENSEMBLE_OPTIONS_MAIN_LABEL,
+    ENSEMBLE_PARTITION,
+    ENSEMBLE_STEM_CHECK,
+    ENSEMBLE_TYPE,
+    ENSEMBLE_TYPE_4_STEM,
+    ENSEMBLE_TYPE_HELP,
+    ENSEMBLE_WARNING_NOT_ENOUGH_SHORT_TEXT,
+    ENSEMBLE_WARNING_NOT_ENOUGH_TEXT,
+    ENSEMBLE_WAVFORMS_TEXT,
+    ENSEMBLING_OUTPUTS,
+    ERROR_CONSOLE_TEXT,
+    ERROR_LOADING_FILE_TEXT,
+    ERROR_OCCURED,
+    ERROR_OPTION,
+    EXIT_DOWNLOAD_ERROR,
+    EXIT_HALTED_PROCESS_ERROR,
+    EXIT_PROCESS_ERROR,
+    FFMPEG_EXT,
+    FG_COLOR,
+    FILE_1,
+    FILE_1_LB,
+    FILE_2,
+    FILE_2_LB,
+    FILE_EXISTS,
+    FILE_ONE_MAIN_LABEL,
+    FILE_ONE_MATCH_MAIN_LABEL,
+    FILE_TWO_MAIN_LABEL,
+    FILE_TWO_MATCH_MAIN_LABEL,
+    FLAC,
+    FORMAT_SETTING_HELP,
+    FOUR_STEM_ENSEMBLE,
+    FULL_APP_SET_TEXT,
+    GENERAL_MENU_TEXT,
+    GENERAL_PROCESS_SETTINGS_TEXT,
+    GENERATE_MODEL_FOLDER_TEXT,
+    GET_DL_VIP_CODE_TEXT,
+    GPU_CONVERSION_MAIN_LABEL,
+    GPU_DEVICE_NUM_OPTS,
+    HELP_OPTION,
+    HIGHEND_PROCESS_TEXT,
+    INFO_UNAVAILABLE_TEXT,
+    INPUT_CODE_TEXT,
+    INPUT_FOLDER_BUTTON_HELP,
+    INPUT_FOLDER_ENTRY_HELP,
+    INPUT_FOLDER_ENTRY_HELP_2,
+    INPUT_SEC_FIELDS_HELP,
+    INPUT_STEM_NAME,
+    INPUT_STEM_NAME_TEXT,
+    INPUT_UNIQUE_STEM_NAME_TEXT,
+    INPUTS_MENU,
+    INST_STEM,
+    INST_STEM_ONLY,
+    INTRO_ANALYSIS_ALIGN_HELP,
+    INTRO_ANALYSIS_MAIN_LABEL,
+    INTRO_MAPPER,
+    INVALID_ENSEMBLE,
+    INVALID_EXPORT,
+    INVALID_FOLDER_ERROR_TEXT,
+    INVALID_INPUT,
+    INVALID_INPUT_E,
+    INVALID_MODEL,
+    INVALID_ONNX_MODEL_ERROR,
+    INVALID_PARAM_MODEL_ERROR,
+    IS_ACCEPT_ANY_INPUT_HELP,
+    IS_ALIGN_TRACK_HELP,
+    IS_APPEND_ENSEMBLE_NAME_HELP,
+    IS_BV_MODEL,
+    IS_BV_MODEL_REBAL,
+    IS_CREATE_MODEL_FOLDER_HELP,
+    IS_CUDA_SELECT_HELP,
+    IS_DEMUCS_COMBINE_STEMS_HELP,
+    IS_DENOISE_HELP,
+    IS_DEVERB_OPT_HELP,
+    IS_DEVERB_VOC_HELP,
+    IS_FREQUENCY_MATCH_HELP,
+    IS_GPU_CONVERSION_HELP,
+    IS_HIGH_END_PROCESS_HELP,
+    IS_INVERSE_STEM_TEXT,
+    IS_INVERT_SPEC_HELP,
+    IS_KARAOKEE,
+    IS_MATCH_SILENCE_HELP,
+    IS_MATCH_SPEC_HELP,
+    IS_MODEL_TESTING_AUDIO_HELP,
+    IS_NORMALIZATION_HELP,
+    IS_PHASE_HELP,
+    IS_POST_PROCESS_HELP,
+    IS_SAVE_ALL_OUTPUTS_ENSEMBLE_HELP,
+    IS_SAVE_INST_ONLY,
+    IS_SAVE_VOC_ONLY,
+    IS_SEGMENT_DEFAULT_HELP,
+    IS_SPLIT_MODE_HELP,
+    IS_TASK_COMPLETE_HELP,
+    IS_TESTING_AUDIO_HELP,
+    IS_TIME_CORRECTION_HELP,
+    IS_TTA_HELP,
+    IS_VOC_SPLIT_INST_SAVE_SELECT_HELP,
+    IS_VOC_SPLIT_MODEL_SELECT_HELP,
+    IS_WAV_ENSEMBLE_HELP,
+    ISSUE_LINK,
+    JSON,
+    KARAOKE_MODEL_TEXT,
+    KARAOKEE_CHECK,
+    LEAD_VOCAL_STEM,
+    LICENSE_TEXT,
+    LINUX_DND_CHECK,
+    LOADING_MODEL_TEXT,
+    LOADING_VERSION_INFO_TEXT,
+    MAC_DND_CHECK,
+    MAIN_MULTIPLE_FILE,
+    MANUAL_DOWNLOADS_TEXT,
+    MANUAL_ENSEMBLE,
+    MANUAL_ENSEMBLE_OPTIONS,
+    MATCH_FREQ_CUTOFF_TEXT,
+    MATCH_INPUTS,
+    MAX_MIN,
+    MDX23_CONFIG_CHECKS,
+    MDX23_OVERLAP,
+    MDX23C_ONLY_OPTIONS_TEXT,
+    MDX_23_NAME,
+    MDX_ARCH_TYPE,
+    MDX_DENOISE_OPTION,
+    MDX_DIM_F_SET_HELP,
+    MDX_DIM_T_SET_HELP,
+    MDX_MENU_WAR_TEXT,
+    MDX_MODEL_DATA_LINK,
+    MDX_MODEL_NAME_DATA_LINK,
+    MDX_N_FFT_SCALE_SET_HELP,
+    MDX_OPTION,
+    MDX_OVERLAP,
+    MDX_OVERLAP_HELP,
+    MDX_POP_DIMF,
+    MDX_POP_NFFT,
+    MDX_SEGMENT_SIZE_HELP,
+    MDX_SEGMENTS,
+    MDX_SETTING_LOAD,
+    MDXNET_C_MODEL_PARAMETERS_TEXT,
+    MISSING_MESS_TEXT,
+    MODEL_MISSING_CHECK,
+    MODEL_SAMPLE_MODE_HELP,
+    MODEL_SAMPLE_MODE_SETTINGS_TEXT,
+    MODEL_TEST_MODE_TEXT,
+    MP3,
+    MP3_BIT_RATES,
+    MP3_BITRATE_TEXT,
+    MULTI_STEM_ENSEMBLE,
+    MULTIPLE_FILE,
+    NAME_SETTINGS_TEXT,
+    NEW_LINE,
+    NEW_LINES,
+    NEW_UPDATE_FOUND_TEXT,
+    NO_BASS_STEM,
+    NO_CODE,
+    NO_CONNECTION,
+    NO_DRUM_STEM,
+    NO_FILES_TEXT,
+    NO_LINE,
+    NO_MODEL,
+    NO_NEW_MODELS,
+    NO_OTHER_STEM,
+    NO_STEM,
+    NO_TEXT,
+    NONE_SELECTED,
+    NORMAL_REPO,
+    NORMALIZE_OUTPUT_TEXT,
+    NOT_ENOUGH_ERROR_TEXT,
+    NOTIFICATION_CHIMES_TEXT,
+    NOUT_LSTM_SEL,
+    NOUT_SEL,
+    OK_TEXT,
+    ONNX,
+    OPEN_APPLICATION_DIRECTORY_TEXT,
+    OPEN_INPUT_DIR_TEXT,
+    OPEN_LINK_TO_MODEL_TEXT,
+    OPEN_MODEL_DIRECTORY_TEXT,
+    OPEN_MODELS_FOLDER_TEXT,
+    OPERATING_SYSTEM,
+    OPT_SEPARATOR,
+    OPT_SEPARATOR_SAVE,
+    OPTION_LIST,
+    OTHER_PAIR,
+    OTHER_STEM,
+    OUTPUT_FOLDER_BUTTON_HELP,
+    OUTPUT_FOLDER_ENTRY_HELP,
+    OVERLAP_23_HELP,
+    OVERLAP_HELP,
+    OVERLAP_TEXT,
+    PHASE_SHIFTS_ALIGN_HELP,
+    PHASE_SHIFTS_OPT,
+    PHASE_SHIFTS_TEXT,
+    PITCH_SHIFT_HELP,
+    PITCH_TEXT,
+    POPUP_COMPENSATE_HELP,
+    POST_PROCESS_TEXT,
+    POST_PROCESS_THREASHOLD_HELP,
+    POST_PROCESS_THRESHOLD_TEXT,
+    POST_PROCESSES_THREASHOLD_VALUES,
+    PRE_PROC_MODEL_ACTIVATE_HELP,
+    PRE_PROC_MODEL_INST_MIX_HELP,
+    PREPROCESS_MODEL_CHOOSE_TEXT,
+    PRIMARY_STEM,
+    PRIMARY_STEM_TEXT,
+    PROCESS_COMPLETE,
+    PROCESS_COMPLETE_2,
+    PROCESS_FAILED,
+    PROCESS_METHODS,
+    PROCESS_STARTING_TEXT,
+    PROCESS_STOPPED_BY_USER,
+    PTH,
+    READ_ONLY,
+    REFRESH_LIST_TEXT,
+    REG_AGGRESSION,
+    REG_BATCHES,
+    REG_COMPENSATION,
+    REG_INPUT_STEM_NAME,
+    REG_MDX_SEG,
+    REG_OVERLAP,
+    REG_OVERLAP23,
+    REG_PITCH,
+    REG_SAVE_INPUT,
+    REG_SEGMENTS,
+    REG_SEMITONES,
+    REG_SHIFTS,
+    REG_THES_POSTPORCESS,
+    REG_TIME,
+    REG_VOL_COMP,
+    REG_WINDOW,
+    REMOVE_SAVED_ENSEMBLE_TEXT,
+    REMOVED_FILES,
+    REPORT_ISSUE_TEXT,
+    RESET_ALL_SETTINGS_TO_DEFAULT_TEXT,
+    RESET_ALL_TO_DEFAULT_WARNING,
+    RESET_TO_DEFAULT,
+    RESTART_APPLICATION_TEXT,
+    ROLL_BACK_TEXT,
+    SAMPLE_BEGIN,
+    SAMPLE_CLIP_DURATION_TEXT,
+    SAMPLE_MODE_CHECKBOX,
+    SAVE_ALIGNED_TRACK_TEXT,
+    SAVE_ALL_OUTPUTS_TEXT,
+    SAVE_CURRENT_ENSEMBLE_TEXT,
+    SAVE_CURRENT_SETTINGS_HELP,
+    SAVE_CURRENT_SETTINGS_TEXT,
+    SAVE_ENSEMBLE,
+    SAVE_SET_OPTIONS,
+    SAVE_SETTINGS,
+    SAVE_SPLIT_VOCAL_INSTRUMENTALS_TEXT,
+    SAVE_STEM_ONLY_HELP,
+    SAVE_TEXT,
+    SECONDARY_MODEL_ACTIVATE_HELP,
+    SECONDARY_MODEL_HELP,
+    SECONDARY_MODEL_SCALE_HELP,
+    SECONDARY_MODEL_TEXT,
+    SECONDARY_PHASE_TEXT,
+    SECONDARY_STEM,
+    SECONDS_TEXT,
+    SEGMENT_DEFAULT_TEXT,
+    SEGMENT_HELP,
+    SEGMENT_MDX_MAIN_LABEL,
+    SEGMENT_SIZE_TEXT,
+    SEGMENTS_TEXT,
+    SELECT_DOWNLOAD_TEXT,
+    SELECT_INPUT_TEXT,
+    SELECT_INPUTS,
+    SELECT_MODEL_PARAM_TEXT,
+    SELECT_MODEL_TEXT,
+    SELECT_OUTPUT_TEXT,
+    SELECT_SAVED_ENSEMBLE,
+    SELECT_SAVED_SET,
+    SELECT_SAVED_SETTING,
+    SELECT_SAVED_SETTINGS_MAIN_LABEL,
+    SELECT_VR_MODEL_MAIN_LABEL,
+    SELECTED_INPUTS,
+    SELECTED_MODEL_PLACE_PATH_TEXT,
+    SELECTED_VER,
+    SEMI_DEF,
+    SEMITONE_SEL,
+    SET_STEM_NAME_HELP,
+    SET_TO_ANY_PROCESS_ERROR,
+    SET_TO_DEFAULT_PROCESS_ERROR,
+    SETTINGS_GUIDE_TEXT,
+    SETTINGS_HELP,
+    SETTINGS_TEST_MODE_TEXT,
+    SHIFT_CONVERSION_PITCH_TEXT,
+    SHIFTS_HELP,
+    SHIFTS_TEXT,
+    SILENCE_MATCHING_TEXT,
+    SIMILAR_TEXT,
+    SINGLE_DOWNLOAD,
+    SINGLE_FILE,
+    SPECIFY_MDX_NET_MODEL_PARAMETERS_TEXT,
+    SPECIFY_PARAMETERS_TEXT,
+    SPECIFY_VR_MODEL_PARAMETERS_TEXT,
+    SPECTRAL_INVERSION_TEXT,
+    SPECTRAL_MATCHING_TEXT,
+    SPLIT_MODE_TEXT,
+    START_PROCESSING,
+    STEM_INPUT_RULE,
+    STEM_NAME_TEXT,
+    STEM_SET_MENU,
+    STEM_SET_MENU_2,
+    STOP_DOWNLOAD_TEXT,
+    STOP_HELP,
+    STOP_PROCESS_CONFIRM,
+    STOP_PROCESSING,
+    STORAGE_ERROR,
+    STORAGE_WARNING,
+    SUPPORT_UVR_TEXT,
+    SYSTEM_ARCH,
+    SYSTEM_PROC,
+    TEMP_FILE_DELETION_TEXT,
+    TIME_CORRECTION_TEXT,
+    TIME_PITCH,
+    TIME_STRETCH,
+    TIME_TEXT,
+    TIME_WINDOW_ALIGN_HELP,
+    TIME_WINDOW_MAIN_LABEL,
+    TIME_WINDOW_MAPPER,
+    TRY_MANUAL_DOWNLOAD_TEXT,
+    UNRECOGNIZED_MODEL,
+    UPDATE_CONFIRMATION_TEXT,
+    UPDATE_FOUND_TEXT,
+    UPDATE_LINUX_REPO,
+    UPDATE_MAC_ARM_REPO,
+    UPDATE_MAC_X86_64_REPO,
+    UPDATE_REPO,
+    USER_DOWNLOAD_CODES_TEXT,
+    USER_INPUT,
+    UVR_ERROR_LOG_TEXT,
+    UVR_PATREON_LINK_TEXT,
+    VERIFY_BEGIN,
+    VERIFY_INPUTS_TEXT,
+    VIP_REPO,
+    VIP_SELECTION,
+    VOC_SPLIT_MODEL_SELECT_HELP,
+    VOCAL_DEVERB_OPTIONS_TEXT,
+    VOCAL_PAIR,
+    VOCAL_SPLIT_MODE_OPTIONS_TEXT,
+    VOCAL_SPLIT_OPTIONS_TEXT,
+    VOCAL_SPLITTER_OPTIONS_TEXT,
+    VOCAL_STEM,
+    VOCAL_STEM_ONLY,
+    VOL_COMPENSATION,
+    VOLUME_ADJUSTMENT_MAIN_LABEL,
+    VOLUME_ANALYSIS_ALIGN_HELP,
+    VOLUME_COMPENSATION_TEXT,
+    VOLUME_MAPPER,
+    VR_51_MODEL_TEXT,
+    VR_AGGRESSION,
+    VR_ARCH_PM,
+    VR_ARCH_SETTING_LOAD,
+    VR_ARCH_TYPE,
+    VR_MODEL_DATA_LINK,
+    VR_MODEL_PARAM_HELP,
+    VR_OPTION,
+    VR_WINDOW,
+    WAIT_PROCESSING,
+    WAV,
+    WAV_TYPE,
+    WAV_TYPE_TEXT,
+    WAVE_TYPE_TEXT,
+    WIDEN_BOX,
+    WINDOW_SIZE_HELP,
+    WINDOW_SIZE_MAIN_LABEL,
+    WINDOW_SIZE_TEXT,
+    WINDOWS_DND_CHECK,
+    WOOD_INST_MODEL_HASH,
+    WOOD_INST_PARAMS,
+    YAML,
+    YES_TEXT,
+    is_macos,
+    secondary_stem,
+)
 from gui_data.error_handling import error_dialouge, error_text
 from gui_data.old_data_check import file_check, remove_temps, remove_unneeded_yamls
 from gui_data.tkinterdnd2 import DND_FILES, TkinterDnD
@@ -104,7 +750,7 @@ is_dnd_compatible = True
 banner_placement = -2
 
 if OPERATING_SYSTEM=="Darwin":
-    OPEN_FILE_func = lambda input_string:subprocess.Popen(["open", input_string])
+    OPEN_FILE_func = lambda input_string: subprocess.Popen(["open", input_string])  # noqa: E731
     dnd_path_check = MAC_DND_CHECK
     banner_placement = -8
     current_patch = PATCH_MAC
@@ -113,7 +759,8 @@ if OPERATING_SYSTEM=="Darwin":
     right_click_button = '<Button-2>'
     application_extension = ".dmg"
 elif OPERATING_SYSTEM=="Linux":
-    OPEN_FILE_func = lambda input_string:subprocess.Popen(["xdg-open", input_string])
+    def OPEN_FILE_func(input_string):
+        return subprocess.Popen(["xdg-open", input_string])
     dnd_path_check = LINUX_DND_CHECK
     current_patch = PATCH_LINUX
     is_windows = False
@@ -121,7 +768,8 @@ elif OPERATING_SYSTEM=="Linux":
     right_click_button = '<Button-3>'
     application_extension = ".zip"
 elif OPERATING_SYSTEM=="Windows":
-    OPEN_FILE_func = lambda input_string:os.startfile(input_string)
+    def OPEN_FILE_func(input_string):
+        return os.startfile(input_string)
     dnd_path_check = WINDOWS_DND_CHECK
     current_patch = PATCH
     is_windows = True
@@ -843,7 +1491,8 @@ class Ensembler():
         return [os.path.join(folder, i) for i in os.listdir(folder) if i.startswith(prefix) and i.endswith(suffix)]
 
     def combine_audio(self, audio_inputs, audio_file_base):
-        save_format_ = lambda save_path:save_format(save_path, root.save_format_var.get(), root.mp3_bit_set_var.get())
+        def save_format_(save_path):
+            return save_format(save_path, root.save_format_var.get(), root.mp3_bit_set_var.get())
         spec_utils.combine_audio(audio_inputs,
                                  os.path.join(self.main_export_path, f"{self.is_testing_audio}{audio_file_base}"),
                                  self.wav_type_set,
@@ -2457,8 +3106,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
     def cached_source_model_list_check(self, model_list: List[ModelData]):
 
         model: ModelData
-        primary_model_names = lambda process_method:[model.model_basename if model.process_method == process_method else None for model in model_list]
-        secondary_model_names = lambda process_method:[model.secondary_model.model_basename if model.is_secondary_model_activated and model.process_method == process_method else None for model in model_list]
+        def primary_model_names(process_method):
+            return [model.model_basename if model.process_method == process_method else None for model in model_list]
+        def secondary_model_names(process_method):
+            return [model.secondary_model.model_basename if model.is_secondary_model_activated and model.process_method == process_method else None for model in model_list]
 
         self.vr_primary_model_names = primary_model_names(VR_ARCH_TYPE)
         self.mdx_primary_model_names = primary_model_names(MDX_ARCH_TYPE)
@@ -2795,12 +3446,14 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
             if event.widget.tab('current', option='text') == 'Secondary Model' and not self.tab2_loaded:
                 tab = tab2
                 self.tab2_loaded = True
-                tab_load = lambda:self.menu_secondary_model(tab, ai_network_vars)
+                def tab_load():
+                    return self.menu_secondary_model(tab, ai_network_vars)
                 load_screen = True
             elif event.widget.tab('current', option='text') == PREPROCESS_MODEL_CHOOSE_TEXT and not self.tab3_loaded:
                 tab = tab3
                 self.tab3_loaded = True
-                tab_load = lambda:self.menu_preproc_model(tab)
+                def tab_load():
+                    return self.menu_preproc_model(tab)
                 load_screen = True
 
             if load_screen:
@@ -2840,8 +3493,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         is_play_file_var = tk.BooleanVar(value=False)
         varification_text_var = tk.StringVar(value=VERIFY_INPUTS_TEXT)
 
-        reset_list = lambda:(input_files_listbox_Option.delete(0, 'end'), [input_files_listbox_Option.insert(tk.END, inputs) for inputs in self.inputPaths])
-        audio_input_total = lambda:input_length_var.set(f'{AUDIO_INPUT_TOTAL_TEXT}: {len(self.inputPaths)}')
+        def reset_list():
+            return (input_files_listbox_Option.delete(0, 'end'), [input_files_listbox_Option.insert(tk.END, inputs) for inputs in self.inputPaths])
+        def audio_input_total():
+            return input_length_var.set(f'{AUDIO_INPUT_TOTAL_TEXT}: {len(self.inputPaths)}')
         audio_input_total()
 
         def list_diff(list1, list2): return list(set(list1).symmetric_difference(set(list2)))
@@ -3346,7 +4001,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         self.vocal_splitter_Button_opt(settings_menu, settings_menu_format_Frame, width=SETTINGS_BUT_WIDTH-2, pady=MENU_PADDING_4)
 
         if not is_macos and self.is_gpu_available:
-            gpu_list_options = lambda:self.loop_gpu_list(device_set_Option, 'gpudevice', self.cuda_device_list)#self.opencl_list if is_opencl_only or self.is_use_opencl_var.get() else self.cuda_device_list)
+            def gpu_list_options():
+                return self.loop_gpu_list(device_set_Option, 'gpudevice', self.cuda_device_list)#self.opencl_list if is_opencl_only or self.is_use_opencl_var.get() else self.cuda_device_list)
             device_set_Label = self.menu_title_LABEL_SET(settings_menu_format_Frame, CUDA_NUM_TEXT)
             device_set_Label.grid(pady=MENU_PADDING_2)
 
@@ -3471,7 +4127,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         self.menu_advanced_vr_options_close_window = lambda:(self.is_open_menu_advanced_vr_options.set(False), vr_opt.destroy())
         vr_opt.protocol("WM_DELETE_WINDOW", self.menu_advanced_vr_options_close_window)
 
-        toggle_post_process = lambda:self.post_process_threshold_Option.configure(state=READ_ONLY) if self.is_post_process_var.get() else self.post_process_threshold_Option.configure(state=tk.DISABLED)
+        def toggle_post_process():
+            return self.post_process_threshold_Option.configure(state=READ_ONLY) if self.is_post_process_var.get() else self.post_process_threshold_Option.configure(state=tk.DISABLED)
 
         vr_opt_frame = self.menu_FRAME_SET(tab1)
         vr_opt_frame.grid(pady=0 if not self.chosen_process_method_var.get() == VR_ARCH_PM else 70)
@@ -3842,8 +4499,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         tab4.grid_rowconfigure(0, weight=1)
         tab4.grid_columnconfigure(0, weight=1)
 
-        section_title_Label = lambda place, frame, text, font_size=FONT_SIZE_4: tk.Label(master=frame, text=text,font=(MAIN_FONT_NAME, f"{font_size}", "bold"), justify="center", fg="#F4F4F4").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
-        description_Label = lambda place, frame, text, font=FONT_SIZE_2: tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, f"{font}"), justify="center", fg="#F6F6F7").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
+        def section_title_Label(place, frame, text, font_size=FONT_SIZE_4):
+            return tk.Label(master=frame, text=text,font=(MAIN_FONT_NAME, f"{font_size}", "bold"), justify="center", fg="#F4F4F4").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
+        def description_Label(place, frame, text, font=FONT_SIZE_2):
+            return tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, f"{font}"), justify="center", fg="#F6F6F7").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
 
         def credit_label(place, frame, text, link=None, message=None, is_link=False, is_top=False):
             if is_top:
@@ -4094,8 +4753,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         drums_secondary_model_scale_var = ai_network_vars['drums_secondary_model_scale']
         is_secondary_model_activate_var = ai_network_vars["is_secondary_model_activate"]
 
-        change_state_lambda = lambda:change_state(tk.NORMAL if is_secondary_model_activate_var.get() else tk.DISABLED)
-        init_convert_to_percentage = lambda raw_value:f"{int(float(raw_value)*100)}%"
+        def change_state_lambda():
+            return change_state(tk.NORMAL if is_secondary_model_activate_var.get() else tk.DISABLED)
+        def init_convert_to_percentage(raw_value):
+            return f"{int(float(raw_value)*100)}%"
 
         voc_inst_secondary_model_scale_LABEL_var = tk.StringVar(value=init_convert_to_percentage(voc_inst_secondary_model_scale_var.get()))
         other_secondary_model_scale_LABEL_var = tk.StringVar(value=init_convert_to_percentage(other_secondary_model_scale_var.get()))
@@ -4171,9 +4832,12 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         pre_proc_list = self.model_list(VOCAL_STEM, INST_STEM, is_dry_check=True, is_no_demucs=True)
         pre_proc_list.insert(0, NO_MODEL)
 
-        enable_pre_proc_model = lambda:(is_demucs_pre_proc_model_inst_mix_Option.configure(state=tk.NORMAL), demucs_pre_proc_model_Option.configure(state=READ_ONLY))
-        disable_pre_proc_model = lambda:(is_demucs_pre_proc_model_inst_mix_Option.configure(state=tk.DISABLED), demucs_pre_proc_model_Option.configure(state=tk.DISABLED), self.is_demucs_pre_proc_model_inst_mix_var.set(False))
-        pre_proc_model_toggle = lambda:enable_pre_proc_model() if self.is_demucs_pre_proc_model_activate_var.get() else disable_pre_proc_model()
+        def enable_pre_proc_model():
+            return (is_demucs_pre_proc_model_inst_mix_Option.configure(state=tk.NORMAL), demucs_pre_proc_model_Option.configure(state=READ_ONLY))
+        def disable_pre_proc_model():
+            return (is_demucs_pre_proc_model_inst_mix_Option.configure(state=tk.DISABLED), demucs_pre_proc_model_Option.configure(state=tk.DISABLED), self.is_demucs_pre_proc_model_inst_mix_var.set(False))
+        def pre_proc_model_toggle():
+            return enable_pre_proc_model() if self.is_demucs_pre_proc_model_activate_var.get() else disable_pre_proc_model()
 
         demucs_pre_proc_model_Label = self.menu_sub_LABEL_SET(preproc_model_Frame, SELECT_MODEL_TEXT, font_size=FONT_SIZE_3)
         demucs_pre_proc_model_Label.grid()
@@ -4214,7 +4878,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         mdx_download_list.update(model_data["mdx23c_download_list"])
 
         def create_link(link):
-            final_link = lambda:webbrowser.open_new_tab(link)
+            def final_link():
+                return webbrowser.open_new_tab(link)
             return final_link
 
         def get_links():
@@ -4313,7 +4978,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
     def invalid_tooltip(self, widget, pattern=None):
         tooltip = ToolTip(widget)
-        invalid_message = lambda:tooltip.showtip(INVALID_INPUT_E, True)
+        def invalid_message():
+            return tooltip.showtip(INVALID_INPUT_E, True)
 
         def invalid_message_():
             tooltip.showtip(INVALID_INPUT_E, True)
@@ -4347,8 +5013,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         settings_save_Frame = self.menu_FRAME_SET(settings_save)
         settings_save_Frame.grid(row=1)
 
-        save_func = lambda:(self.pop_up_save_current_settings_sub_json_dump(settings_save_var.get()), settings_save.destroy())
-        validation = lambda value:False if re.fullmatch(REG_SAVE_INPUT, value) is None else True
+        def save_func():
+            return (self.pop_up_save_current_settings_sub_json_dump(settings_save_var.get()), settings_save.destroy())
+        def validation(value):
+            return False if re.fullmatch(REG_SAVE_INPUT, value) is None else True
 
         settings_save_title = self.menu_title_LABEL_SET(settings_save_Frame, SAVE_CURRENT_SETTINGS_TEXT)
         settings_save_title.grid()
@@ -4545,13 +5213,19 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                 self.set_vocal_splitter_var.set(NO_MODEL)
             model_list.insert(0, NO_MODEL)
 
-            enable_voc_split_model = lambda:(model_select_Option.configure(state=READ_ONLY), save_inst_Button.configure(state=tk.NORMAL))
-            disable_voc_split_model = lambda:(model_select_Option.configure(state=tk.DISABLED), save_inst_Button.configure(state=tk.DISABLED), self.is_save_inst_set_vocal_splitter_var.set(False))
-            voc_split_model_toggle = lambda:enable_voc_split_model() if self.is_set_vocal_splitter_var.get() else disable_voc_split_model()
+            def enable_voc_split_model():
+                return (model_select_Option.configure(state=READ_ONLY), save_inst_Button.configure(state=tk.NORMAL))
+            def disable_voc_split_model():
+                return (model_select_Option.configure(state=tk.DISABLED), save_inst_Button.configure(state=tk.DISABLED), self.is_save_inst_set_vocal_splitter_var.set(False))
+            def voc_split_model_toggle():
+                return enable_voc_split_model() if self.is_set_vocal_splitter_var.get() else disable_voc_split_model()
 
-            enable_deverb_opt = lambda:(deverb_vocals_Option.configure(state=READ_ONLY))
-            disable_deverb_opt= lambda:(deverb_vocals_Option.configure(state=tk.DISABLED))
-            deverb_opt_toggle = lambda:enable_deverb_opt() if self.is_deverb_vocals_var.get() else disable_deverb_opt()
+            def enable_deverb_opt():
+                return (deverb_vocals_Option.configure(state=READ_ONLY))
+            def disable_deverb_opt():
+                return (deverb_vocals_Option.configure(state=tk.DISABLED))
+            def deverb_opt_toggle():
+                return enable_deverb_opt() if self.is_deverb_vocals_var.get() else disable_deverb_opt()
 
             set_vocal_splitter_Frame = self.menu_FRAME_SET(set_vocal_splitter)
             set_vocal_splitter_Frame.grid(row=1)
@@ -4784,7 +5458,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         mdx_c_param_menu = tk.Toplevel()
 
-        get_mdx_c_params = lambda dir, ext:tuple(os.path.splitext(x)[0] for x in os.listdir(dir) if x.endswith(ext))
+        def get_mdx_c_params(dir, ext):
+            return tuple(os.path.splitext(x)[0] for x in os.listdir(dir) if x.endswith(ext))
         new_mdx_c_params = get_mdx_c_params(MDX_C_CONFIG_PATH, YAML)
         mdx_c_model_param_var = tk.StringVar(value=NONE_SELECTED)
 
@@ -4829,7 +5504,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         vr_param_menu = tk.Toplevel()
 
-        get_vr_params = lambda dir, ext:tuple(os.path.splitext(x)[0] for x in os.listdir(dir) if x.endswith(ext))
+        def get_vr_params(dir, ext):
+            return tuple(os.path.splitext(x)[0] for x in os.listdir(dir) if x.endswith(ext))
         new_vr_params = get_vr_params(VR_PARAM_DIR, JSON)
         vr_model_param_var = tk.StringVar(value=NONE_SELECTED)
         vr_model_stem_var = tk.StringVar(value='Vocals')
@@ -4840,9 +5516,12 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         is_kara_model_var = tk.BooleanVar(value=False)
         is_bv_model_var = tk.BooleanVar(value=False)
 
-        enable_new_vr_op = lambda:(vr_model_nout_Option.configure(state=READ_ONLY), vr_model_nout_lstm_Option.configure(state=READ_ONLY))
-        disable_new_vr_op = lambda:(vr_model_nout_Option.configure(state=tk.DISABLED), vr_model_nout_lstm_Option.configure(state=tk.DISABLED))
-        vr_new_toggle = lambda:enable_new_vr_op() if is_new_vr_model_var.get() else disable_new_vr_op()
+        def enable_new_vr_op():
+            return (vr_model_nout_Option.configure(state=READ_ONLY), vr_model_nout_lstm_Option.configure(state=READ_ONLY))
+        def disable_new_vr_op():
+            return (vr_model_nout_Option.configure(state=tk.DISABLED), vr_model_nout_lstm_Option.configure(state=tk.DISABLED))
+        def vr_new_toggle():
+            return enable_new_vr_op() if is_new_vr_model_var.get() else disable_new_vr_op()
 
         def pull_data():
             if is_new_vr_model_var.get():
@@ -5002,7 +5681,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         stem_input_save_var = tk.StringVar(value='')
         is_inverse_stem_var = tk.BooleanVar(value=False)
 
-        validation = lambda value:False if re.fullmatch(REG_INPUT_STEM_NAME, value) is None else True
+        def validation(value):
+            return False if re.fullmatch(REG_INPUT_STEM_NAME, value) is None else True
         stem_input_save_Frame = self.menu_FRAME_SET(stem_input_save)
         stem_input_save_Frame.grid(row=1)
 
@@ -5047,8 +5727,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         ensemble_save_Frame = self.menu_FRAME_SET(ensemble_save)
         ensemble_save_Frame.grid(row=1)
 
-        validation = lambda value:False if re.fullmatch(REG_SAVE_INPUT, value) is None else True
-        save_func = lambda:(self.pop_up_save_ensemble_sub_json_dump(self.ensemble_listbox_get_all_selected_models(), ensemble_save_var.get()), ensemble_save.destroy())
+        def validation(value):
+            return False if re.fullmatch(REG_SAVE_INPUT, value) is None else True
+        def save_func():
+            return (self.pop_up_save_ensemble_sub_json_dump(self.ensemble_listbox_get_all_selected_models(), ensemble_save_var.get()), ensemble_save.destroy())
 
         if len(self.ensemble_listbox_get_all_selected_models()) <= 1:
             ensemble_save_title = self.menu_title_LABEL_SET(ensemble_save_Frame, ENSEMBLE_WARNING_NOT_ENOUGH_SHORT_TEXT, width=20)
@@ -6155,13 +6837,17 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         self.process_check_wav_type()
 
         if self.chosen_process_method_var.get() == ENSEMBLE_MODE:
-            continue_process = lambda:False if len(self.ensemble_listbox_get_all_selected_models()) <= 1 else True
+            def continue_process():
+                return False if len(self.ensemble_listbox_get_all_selected_models()) <= 1 else True
         if self.chosen_process_method_var.get() == VR_ARCH_PM:
-            continue_process = lambda:False if self.vr_model_var.get() == CHOOSE_MODEL else True
+            def continue_process():
+                return False if self.vr_model_var.get() == CHOOSE_MODEL else True
         if self.chosen_process_method_var.get() == MDX_ARCH_TYPE:
-            continue_process = lambda:False if self.mdx_net_model_var.get() == CHOOSE_MODEL else True
+            def continue_process():
+                return False if self.mdx_net_model_var.get() == CHOOSE_MODEL else True
         if self.chosen_process_method_var.get() == DEMUCS_ARCH_TYPE:
-            continue_process = lambda:False if self.demucs_model_var.get() == CHOOSE_MODEL else True
+            def continue_process():
+                return False if self.demucs_model_var.get() == CHOOSE_MODEL else True
 
         return continue_process()
 
@@ -6377,9 +7063,11 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                 base = (100 / total_files)
                 audio_file_base = get_audio_file_base(audio_file)
                 self.base_text = self.process_get_baseText(total_files=total_files, file_num=total_files if multiple_files else file_num, is_dual=is_dual)
-                command_Text = lambda text: self.command_Text.write(self.base_text + text)
+                def command_Text(text):
+                    return self.command_Text.write(self.base_text + text)
 
-                set_progress_bar = lambda step, inference_iterations=0:self.process_update_progress(total_files=total_files, step=(step + (inference_iterations)))
+                def set_progress_bar(step, inference_iterations=0):
+                    return self.process_update_progress(total_files=total_files, step=(step + (inference_iterations)))
 
                 if not self.verify_audio(audio_file):
                     error_text_console = f'{self.base_text}"{os.path.basename(audio_file)}\" {MISSING_MESS_TEXT}\n'
@@ -6551,7 +7239,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         """Start the conversion for all the given mp3 and wav files"""
 
         stime = time.perf_counter()
-        time_elapsed = lambda:f'Time Elapsed: {time.strftime("%H:%M:%S", time.gmtime(int(time.perf_counter() - stime)))}'
+        def time_elapsed():
+            return f'Time Elapsed: {time.strftime("%H:%M:%S", time.gmtime(int(time.perf_counter() - stime)))}'
         export_path = self.export_path_var.get()
         is_ensemble = False
         self.true_model_count = 0
@@ -6605,8 +7294,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                     model_name_text = f'({current_model.model_basename})' if not is_ensemble else ''
                     self.command_Text.write(base_text + f'{LOADING_MODEL_TEXT} {model_name_text}...')
 
-                    set_progress_bar = lambda step, inference_iterations=0:self.process_update_progress(total_files=inputPath_total_len, step=(step + (inference_iterations)))
-                    write_to_console = lambda progress_text, base_text=base_text:self.command_Text.write(base_text + progress_text)
+                    def set_progress_bar(step, inference_iterations=0):
+                        return self.process_update_progress(total_files=inputPath_total_len, step=(step + (inference_iterations)))
+                    def write_to_console(progress_text, base_text=base_text):
+                        return self.command_Text.write(base_text + progress_text)
 
                     audio_file_base = f"{file_num}_{os.path.splitext(os.path.basename(audio_file))[0]}"
                     audio_file_base = audio_file_base if not self.is_testing_audio_var.get() or is_ensemble else f"{round(time.time())}_{audio_file_base}"
