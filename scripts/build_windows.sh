@@ -21,7 +21,7 @@ case "$(uname -s)" in
     echo ""
     echo "请使用以下方式之一："
     echo "  1. GitHub Actions（推荐）：推送 tag 自动构建"
-    echo "     git tag v5.6.0-fork && git push origin v5.6.0-fork"
+    echo "     git tag v1.0.0 && git push origin v1.0.0"
     echo ""
     echo "  2. Docker 交叉编译："
     echo "     docker run --rm -v \"\$PWD:/workspace\" \\"
@@ -64,7 +64,7 @@ echo "    输出目录: dist/UVR.exe"
 # 打包为 ZIP
 if command -v 7z &>/dev/null; then
     echo "[*] 创建 ZIP 压缩包..."
-    VERSION="${1:-v5.6.0-fork}"
+    VERSION="${1:-v1.0.0}"
     7z a "UVR_${VERSION}_Windows_x86_64.zip" ./dist/*
     echo "[✓] 压缩包: UVR_${VERSION}_Windows_x86_64.zip"
 fi

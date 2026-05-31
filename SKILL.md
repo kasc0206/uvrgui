@@ -185,7 +185,7 @@ python uvr_cli.py download-models --json   # ✅ AI 推荐
 
 ```bash
 python uvr_cli.py version
-# UVR CLI v5.6.0-fork (基于 v5.6.0)
+# UVR CLI v1.0.0 (基于 v5.6.0)
 # 仓库: https://github.com/kasc0206/uvrgui
 
 python uvr_cli.py version --json
@@ -193,7 +193,7 @@ python uvr_cli.py version --json
 
 **JSON 返回：**
 ```json
-{"version": "v5.6.0-fork", "base": "v5.6.0", "repo": "https://github.com/kasc0206/uvrgui"}
+{"version": "v1.0.0", "base": "v5.6.0", "repo": "https://github.com/kasc0206/uvrgui"}
 ```
 
 ---

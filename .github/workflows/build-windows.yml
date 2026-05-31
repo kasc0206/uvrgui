@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Release version tag (e.g., v5.6.0-fork)"
+        description: "Release version tag (e.g., v1.0.0)"
         required: false
         default: ""
   push:
@@ -81,7 +81,7 @@ jobs:
 
           # Create zip archive
           $version = "${{ github.event.inputs.version }}"
-          if (-not $version) { $version = "v5.6.0-fork" }
+          if (-not $version) { $version = "v1.0.0" }
           $zipName = "UVR_${version}_Windows_x86_64.zip"
           Compress-Archive -Path "dist/*" -DestinationPath $zipName
           Write-Host "Archive created: $zipName"

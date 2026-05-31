@@ -9,7 +9,7 @@ def test_version_module():
     assert VERSION is not None
     assert FORK_VERSION is not None
     assert FORK_REPO is not None
-    assert "fork" in FORK_VERSION.lower()
+    assert "kasc0206" in FORK_REPO
 
 
 def test_playsound_import():

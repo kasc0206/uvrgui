@@ -343,8 +343,8 @@ This fork provides automated Windows EXE builds via GitHub Actions:
 Push a version tag to trigger an automated build:
 
 ```bash
-git tag v5.6.0-fork
-git push origin v5.6.0-fork
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
 The workflow will:

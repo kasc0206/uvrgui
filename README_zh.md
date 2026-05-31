@@ -79,8 +79,8 @@ python UVR.py
 
 方法一：推送 tag 自动构建
 ```bash
-git tag v5.6.0-fork
-git push origin v5.6.0-fork
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
 方法二：手动触发 [Actions 页面](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
@@ -391,7 +391,7 @@ sudo pacman -S ffmpeg    # Arch
 
 | 项目 | 信息 |
 | --- | --- |
-| 版本 | `v5.6.0-fork`（基于上游 `v5.6.0`） |
+| 版本 | `v1.0.0`（基于上游 `v5.6.0`） |
 | Fork 仓库 | [kasc0206/uvrgui](https://github.com/kasc0206/uvrgui) |
 | 原始仓库 | [Anjok07/ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui) |
 | 测试 | ✅ 32/32 全部通过（pytest + coverage） |
