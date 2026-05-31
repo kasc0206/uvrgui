@@ -726,7 +726,7 @@ if getattr(sys, 'frozen', False):
     # If the application is run as a bundle, the PyInstaller bootloader
     # extends the sys module by a flag frozen=True and sets the app
     # path into variable _MEIPASS'.
-    BASE_PATH = sys._MEIPASS
+    BASE_PATH = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 else:
     BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -748,6 +748,8 @@ PREVIOUS_PATCH_WIN = 'UVR_Patch_10_6_23_4_27'
 
 is_dnd_compatible = True
 banner_placement = -2
+is_windows = False
+is_macos = False
 
 if OPERATING_SYSTEM=="Darwin":
     OPEN_FILE_func = lambda input_string: subprocess.Popen(["open", input_string])  # noqa: E731
@@ -769,7 +771,7 @@ elif OPERATING_SYSTEM=="Linux":
     application_extension = ".zip"
 elif OPERATING_SYSTEM=="Windows":
     def OPEN_FILE_func(input_string):
-        return os.startfile(input_string)
+        return os.startfile(input_string)  # type: ignore[attr-defined]
     dnd_path_check = WINDOWS_DND_CHECK
     current_patch = PATCH
     is_windows = True
@@ -787,7 +789,7 @@ if not is_windows:
     import ssl
     ssl._create_default_https_context = ssl._create_unverified_context
 else:
-    from ctypes import windll, wintypes
+    from ctypes import windll, wintypes  # type: ignore[attr-defined]
 
 def close_process(q:queue.Queue):
     def close_splash():
@@ -1125,6 +1127,7 @@ class ModelData():
                 if self.model_data:
                     vr_model_param = os.path.join(VR_PARAM_DIR, "{}.json".format(self.model_data["vr_model_param"]))
                     self.primary_stem = self.model_data["primary_stem"]
+                    assert self.primary_stem is not None
                     self.secondary_stem = secondary_stem(self.primary_stem)
                     self.vr_model_param = ModelParameters(vr_model_param)
                     self.model_samplerate = self.vr_model_param.param['sr']
@@ -1161,14 +1164,14 @@ class ModelData():
 
                             self.mdx_c_configs = config
 
-                            if self.mdx_c_configs.training.target_instrument:
+                            if self.mdx_c_configs.training.target_instrument:  # type: ignore[attr-defined]
                                 # Use target_instrument as the primary stem and set 4-stem ensemble to False
-                                target = self.mdx_c_configs.training.target_instrument
+                                target = self.mdx_c_configs.training.target_instrument  # type: ignore[attr-defined]
                                 self.mdx_model_stems = [target]
                                 self.primary_stem = target
                             else:
                                 # If no specific target_instrument, use all instruments in the training config
-                                self.mdx_model_stems = self.mdx_c_configs.training.instruments
+                                self.mdx_model_stems = self.mdx_c_configs.training.instruments  # type: ignore[attr-defined]
                                 self.mdx_stem_count = len(self.mdx_model_stems)
 
                                 # Set primary stem based on stem count
@@ -1191,6 +1194,7 @@ class ModelData():
                         self.primary_stem_native = self.model_data["primary_stem"]
                         self.check_if_karaokee_model()
 
+                    assert self.primary_stem is not None
                     self.secondary_stem = secondary_stem(self.primary_stem)
                 else:
                     self.model_status = False
@@ -1281,6 +1285,8 @@ class ModelData():
         #print("self.is_secondary_model_activated: ", self.is_secondary_model_activated)
 
     def check_if_karaokee_model(self):
+        if self.model_data is None:
+            return
         if IS_KARAOKEE in self.model_data.keys():
             self.is_karaoke = self.model_data[IS_KARAOKEE]
         if IS_BV_MODEL in self.model_data.keys():
@@ -1379,7 +1385,6 @@ class ModelData():
 
         if not os.path.isfile(self.model_path):
             self.model_status = False
-            self.model_hash is None
         else:
             if model_hash_table:
                 for (key, value) in model_hash_table.items():
@@ -1553,13 +1558,14 @@ class AudioTools():
         match.process(
             target=target,
             reference=reference,
-            results=[match.save_audiofile(save_path, wav_set=self.wav_type_set),
+            results=[match.save_audiofile(save_path, wav_set=self.wav_type_set),  # type: ignore[attr-defined]
             ],
         )
 
         self.save_format(save_path)
 
     def combine_audio(self, audio_inputs, audio_file_base):
+        assert self.wav_type_set is not None
         spec_utils.combine_audio(audio_inputs,
                                  os.path.join(self.main_export_path, f"{self.is_testing_audio}{audio_file_base}"),
                                  self.wav_type_set,
@@ -1643,22 +1649,24 @@ class ToolTip(object):
 class ListboxBatchFrame(tk.Frame):
     def __init__(self, master=None, name="Listbox", command=None, image_sel=None, img_mapper=None):
         super().__init__(master)
-        self.master = master
+        self.master = master  # type: ignore[assignment]
 
         self.path_list = []  # A list to keep track of the paths
         self.basename_to_path = {}  # A dict to map basenames to paths
 
-        self.label = tk.Label(self, text=name, font=(MAIN_FONT_NAME, f"{FONT_SIZE_5}"), foreground=FG_COLOR)
+        self.label = tk.Label(self, text=name, font=(MAIN_FONT_NAME, FONT_SIZE_5), foreground=FG_COLOR)
         self.label.pack(pady=(10, 8))  # add padding between label and listbox
 
         self.input_button = ttk.Button(self, text=SELECT_INPUTS, command=self.select_input)  # create button for selecting files
         self.input_button.pack(pady=(0, 10))  # add padding between button and next widget
 
-        self.listbox = tk.Listbox(self, activestyle='dotbox', font=(MAIN_FONT_NAME, f"{FONT_SIZE_4}"), foreground='#cdd3ce', background='#101414', exportselection=0, width=70, height=15)
+        self.listbox = tk.Listbox(self, activestyle='dotbox', font=(MAIN_FONT_NAME, FONT_SIZE_4), foreground='#cdd3ce', background='#101414', exportselection=0, width=70, height=15)
         self.listbox.pack(fill="both", expand=True)
 
         self.button_frame = tk.Frame(self)
         self.button_frame.pack()
+
+        img_mapper = img_mapper or {}
 
         self.up_button = ttk.Button(self.button_frame, image=img_mapper["up"], command=self.move_up)
         self.up_button.grid(row=0, column=0)
@@ -1776,8 +1784,10 @@ class ComboBoxEditableMenu(ttk.Combobox):
 
         if isinstance(default, (str, int)):
             self.default = default
-        else:
+        elif default:
             self.default = default[0]
+        else:
+            self.default = None
 
         self.menu_combobox_configure()
         self.var_validation(is_start_up=True)
@@ -1810,7 +1820,7 @@ class ComboBoxEditableMenu(ttk.Combobox):
         if is_focus_only and not self.is_stay_disabled:
             self.configure(state=READ_ONLY)
 
-        if re.fullmatch(self.pattern, self.textvariable.get()) is None:
+        if self.pattern and re.fullmatch(self.pattern, self.textvariable.get()) is None:
             if not is_start_up and self.textvariable.get() not in (OPT_SEPARATOR, USER_INPUT):
                 self.tooltip.showtip(INVALID_INPUT_E, True)
 
@@ -1925,7 +1935,9 @@ class ThreadSafeConsole(tk.Text):
     def select_all_text(self):
         self.tag_add('sel', '1.0', 'end')
 
-class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
+_MainWindowBase = TkinterDnD.Tk if is_dnd_compatible else tk.Tk
+
+class MainWindow(_MainWindowBase):  # type: ignore[misc]
     # --Constants--
     # Layout
 
@@ -1969,7 +1981,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
             xpad=int(self.winfo_screenwidth()/2 - width/2),
             ypad=int(self.winfo_screenheight()/2 - height/2 - 30)))
 
-        self.iconbitmap(ICON_IMG_PATH) if is_windows else self.tk.call('wm', 'iconphoto', self._w, tk.PhotoImage(file=MAIN_ICON_IMG_PATH))
+        self.iconbitmap(ICON_IMG_PATH) if is_windows else self.tk.call('wm', 'iconphoto', self._w, tk.PhotoImage(file=MAIN_ICON_IMG_PATH))  # type: ignore[attr-defined]
         self.protocol("WM_DELETE_WINDOW", self.save_values)
         self.resizable(False, False)
 
@@ -2161,9 +2173,9 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         #Model Update
         self.last_found_ensembles = ENSEMBLE_OPTIONS
-        self.last_found_settings = ENSEMBLE_OPTIONS
+        self.last_found_settings: list[str] = list(ENSEMBLE_OPTIONS)
         self.last_found_models = ()
-        self.model_data_table = ()
+        self.model_data_table: list = []
         self.ensemble_model_list = ()
         self.default_change_model_list = ()
 
@@ -2190,11 +2202,11 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
     # Menu Functions
     def main_window_LABEL_SET(self, master, text):return ttk.Label(master=master, text=text, background=BG_COLOR, font=self.font_set, foreground=FG_COLOR, anchor=tk.CENTER)
     def main_window_LABEL_SUB_SET(self, master, text_var):return ttk.Label(master=master, textvariable=text_var, background=BG_COLOR, font=self.font_set, foreground=FG_COLOR, anchor=tk.CENTER)
-    def menu_title_LABEL_SET(self, frame, text, width=35):return ttk.Label(master=frame, text=text, font=(SEC_FONT_NAME, f"{FONT_SIZE_5}", "underline"), justify="center", foreground="#13849f", width=width, anchor=tk.CENTER)
-    def menu_sub_LABEL_SET(self, frame, text, font_size=FONT_SIZE_2):return ttk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, f"{font_size}"), foreground=FG_COLOR, anchor=tk.CENTER)
-    def menu_FRAME_SET(self, frame, thickness=20):return tk.Frame(frame, highlightbackground=BG_COLOR, highlightcolor=BG_COLOR, highlightthicknes=thickness)
+    def menu_title_LABEL_SET(self, frame, text, width=35):return ttk.Label(master=frame, text=text, font=(SEC_FONT_NAME, FONT_SIZE_5, "underline"), justify="center", foreground="#13849f", width=width, anchor=tk.CENTER)
+    def menu_sub_LABEL_SET(self, frame, text, font_size=FONT_SIZE_2):return ttk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, font_size), foreground=FG_COLOR, anchor=tk.CENTER)
+    def menu_FRAME_SET(self, frame, thickness=20):return tk.Frame(frame, highlightbackground=BG_COLOR, highlightcolor=BG_COLOR, highlightthickness=thickness)
     def check_is_menu_settings_open(self):self.menu_settings() if not self.is_menu_settings_open else None
-    def spacer_label(self, frame): return tk.Label(frame, text='', font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground='#868687', justify="left").grid()
+    def spacer_label(self, frame): return tk.Label(frame, text='', font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground='#868687', justify="left").grid()
 
     #Ensemble Listbox Functions
     def ensemble_listbox_get_all_selected_models(self):return [self.ensemble_listbox_Option.get(i) for i in self.ensemble_listbox_Option.curselection()]
@@ -2258,8 +2270,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         if network == VR_ARCH_TYPE:
             dir = VR_HASH_DIR
-        if network == MDX_ARCH_TYPE:
+        elif network == MDX_ARCH_TYPE:
             dir = MDX_HASH_DIR
+        else:
+            return
 
         for filename in os.listdir(dir):
             filepath = os.path.join(dir, filename)
@@ -2318,7 +2332,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                             relx=0, rely=0, relwidth=1, relheight=0)
 
          # Select Music Files Option
-        self.console_Frame = tk.Frame(master=self, highlightbackground='#101012', highlightcolor='#101012', highlightthicknes=2)
+        self.console_Frame = tk.Frame(master=self, highlightbackground='#101012', highlightcolor='#101012', highlightthickness=2)
         self.console_Frame.place(x=15, y=self.IMAGE_HEIGHT + self.FILEPATHS_HEIGHT + self.OPTIONS_HEIGHT + self.CONVERSIONBUTTON_HEIGHT + self.PADDING + 5 *3, width=-30, height=self.COMMAND_HEIGHT+7,
                                 relx=0, rely=0, relwidth=1, relheight=0)
 
@@ -2516,8 +2530,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         # Ensemble Save Ensemble Outputs
         self.ensemble_listbox_Label = self.main_window_LABEL_SET(self.options_Frame, AVAILABLE_MODELS_MAIN_LABEL)
         self.ensemble_listbox_Label_place = lambda:self.ensemble_listbox_Label.place(x=MAIN_ROW_2_X[0], y=MAIN_ROW_2_Y[1], width=0, height=LABEL_HEIGHT, relx=2/3, rely=5/11, relwidth=1/3, relheight=1/self.COL1_ROWS)
-        self.ensemble_listbox_Frame = tk.Frame(self.options_Frame, highlightbackground='#04332c', highlightcolor='#04332c', highlightthicknes=1)
-        self.ensemble_listbox_Option = tk.Listbox(self.ensemble_listbox_Frame, selectmode=tk.MULTIPLE, activestyle='dotbox', font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), background='#070708', exportselection=0, relief=tk.SOLID, borderwidth=0)
+        self.ensemble_listbox_Frame = tk.Frame(self.options_Frame, highlightbackground='#04332c', highlightcolor='#04332c', highlightthickness=1)
+        self.ensemble_listbox_Option = tk.Listbox(self.ensemble_listbox_Frame, selectmode=tk.MULTIPLE, activestyle='dotbox', font=(MAIN_FONT_NAME, FONT_SIZE_1), background='#070708', exportselection=0, relief=tk.SOLID, borderwidth=0)
         self.ensemble_listbox_scroll = ttk.Scrollbar(self.options_Frame, orient=tk.VERTICAL)
         self.ensemble_listbox_Option.config(yscrollcommand=self.ensemble_listbox_scroll.set)
         self.ensemble_listbox_scroll.configure(command=self.ensemble_listbox_Option.yview)
@@ -2755,17 +2769,17 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         self.focus_out_widgets(all_widgets, self.options_Frame)
 
         if is_dnd_compatible:
-            self.filePaths_saveTo_Button.drop_target_register(DND_FILES)
-            self.filePaths_saveTo_Entry.drop_target_register(DND_FILES)
+            self.filePaths_saveTo_Button.drop_target_register(DND_FILES)  # type: ignore[attr-defined]
+            self.filePaths_saveTo_Entry.drop_target_register(DND_FILES)  # type: ignore[attr-defined]
             self.drop_target_register(DND_FILES)
             self.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode='files'))
-            self.filePaths_saveTo_Button.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode='folder'))
-            self.filePaths_saveTo_Entry.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode='folder'))
+            self.filePaths_saveTo_Button.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode='folder'))  # type: ignore[attr-defined]
+            self.filePaths_saveTo_Entry.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode='folder'))  # type: ignore[attr-defined]
 
-            self.fileOne_Entry.drop_target_register(DND_FILES)
-            self.fileTwo_Entry.drop_target_register(DND_FILES)
-            self.fileOne_Entry.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode=FILE_1))
-            self.fileTwo_Entry.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode=FILE_2))
+            self.fileOne_Entry.drop_target_register(DND_FILES)  # type: ignore[attr-defined]
+            self.fileTwo_Entry.drop_target_register(DND_FILES)  # type: ignore[attr-defined]
+            self.fileOne_Entry.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode=FILE_1))  # type: ignore[attr-defined]
+            self.fileTwo_Entry.dnd_bind('<<Drop>>', lambda e: drop(e, accept_mode=FILE_2))  # type: ignore[attr-defined]
 
         self.ensemble_listbox_Option.bind('<<ListboxSelect>>', lambda e: self.chosen_ensemble_var.set(CHOOSE_ENSEMBLE_OPTION))
         self.options_Frame.bind(right_click_button, lambda e:(self.right_click_menu_popup(e, main_menu=True), self.options_Frame.focus()))
@@ -2966,7 +2980,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
     def error_dialoge(self, message):
         """Template for messagebox that informs user of error"""
 
-        messagebox.showerror(master=self,
+        messagebox.showerror(master=self,  # type: ignore[call-overload]
                                   title=message[0],
                                   message=message[1],
                                   parent=root)
@@ -3333,7 +3347,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         window.resizable(False, False)
         window.wm_transient(top_window)
         window.title(title)
-        window.iconbitmap(ICON_IMG_PATH) if is_windows else self.tk.call('wm', 'iconphoto', window._w, tk.PhotoImage(file=MAIN_ICON_IMG_PATH))
+        window.iconbitmap(ICON_IMG_PATH) if is_windows else self.tk.call('wm', 'iconphoto', window._w, tk.PhotoImage(file=MAIN_ICON_IMG_PATH))  # type: ignore[attr-defined]
 
         root_location_x = root.winfo_x()
         root_location_y = root.winfo_y()
@@ -3504,7 +3518,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         def list_to_string(list1): return '\n'.join(''.join(sub) for sub in list1)
 
         def close_window():
-            self.verification_thread.kill() if self.thread_check(self.verification_thread) else None
+            if self.verification_thread and self.thread_check(self.verification_thread): self.verification_thread.kill()
             self.is_open_menu_view_inputs.set(False)
             menu_view_inputs_top.destroy()
 
@@ -3618,7 +3632,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                     input_files_listbox_Option.configure(state=tk.NORMAL)
                     varification_text_var.set(VERIFY_INPUTS_TEXT)
                     input_info_text_var.set('Process Stopped')
-                    self.verification_thread.kill()
+                    if self.verification_thread: self.verification_thread.kill()
             else:
                 input_info_text_var.set('You cannot verify inputs during an active process.')
 
@@ -3646,25 +3660,25 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         menu_view_inputs_Frame.grid(row=0)
 
         self.main_window_LABEL_SET(menu_view_inputs_Frame, SELECTED_INPUTS).grid(row=0,column=0,padx=0,pady=MENU_PADDING_1)
-        tk.Label(menu_view_inputs_Frame, textvariable=input_length_var, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground=FG_COLOR).grid(row=1, column=0, padx=0, pady=MENU_PADDING_1)
+        tk.Label(menu_view_inputs_Frame, textvariable=input_length_var, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground=FG_COLOR).grid(row=1, column=0, padx=0, pady=MENU_PADDING_1)
         if not OPERATING_SYSTEM == "Linux":
             ttk.Button(menu_view_inputs_Frame, text=SELECT_INPUTS, command=lambda:input_options()).grid(row=2,column=0,padx=0,pady=MENU_PADDING_2)
-        input_files_listbox_Option = tk.Listbox(menu_view_inputs_Frame, selectmode=tk.EXTENDED, activestyle='dotbox', font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), background='#101414', exportselection=0, width=110, height=17, relief=tk.SOLID, borderwidth=0)
+        input_files_listbox_Option = tk.Listbox(menu_view_inputs_Frame, selectmode=tk.EXTENDED, activestyle='dotbox', font=(MAIN_FONT_NAME, FONT_SIZE_1), background='#101414', exportselection=0, width=110, height=17, relief=tk.SOLID, borderwidth=0)
         input_files_listbox_vertical_scroll = ttk.Scrollbar(menu_view_inputs_Frame, orient=tk.VERTICAL)
         input_files_listbox_Option.config(yscrollcommand=input_files_listbox_vertical_scroll.set)
         input_files_listbox_vertical_scroll.configure(command=input_files_listbox_Option.yview)
         input_files_listbox_Option.grid(row=4, sticky=tk.W)
         input_files_listbox_vertical_scroll.grid(row=4, column=1, sticky=tk.NS)
 
-        tk.Label(menu_view_inputs_Frame, textvariable=input_info_text_var, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground=FG_COLOR).grid(row=5, column=0, padx=0, pady=0)
+        tk.Label(menu_view_inputs_Frame, textvariable=input_info_text_var, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground=FG_COLOR).grid(row=5, column=0, padx=0, pady=0)
         ttk.Checkbutton(menu_view_inputs_Frame, text=WIDEN_BOX, variable=is_widen_box_var, command=lambda:box_size()).grid(row=6,column=0,padx=0,pady=0)
         verify_audio_Button = ttk.Button(menu_view_inputs_Frame, textvariable=varification_text_var, command=lambda:verify_audio_start_thread())
         verify_audio_Button.grid(row=7,column=0,padx=0,pady=MENU_PADDING_1)
         ttk.Button(menu_view_inputs_Frame, text=CLOSE_WINDOW, command=lambda:menu_view_inputs_top.destroy()).grid(row=8,column=0,padx=0,pady=MENU_PADDING_1)
 
         if is_dnd_compatible:
-            menu_view_inputs_top.drop_target_register(DND_FILES)
-            menu_view_inputs_top.dnd_bind('<<Drop>>', lambda e: drag_n_drop(e))
+            menu_view_inputs_top.drop_target_register(DND_FILES)  # type: ignore[attr-defined]
+            menu_view_inputs_top.dnd_bind('<<Drop>>', lambda e: drag_n_drop(e))  # type: ignore[attr-defined]
         input_files_listbox_Option.bind(right_click_button, lambda e:right_click_menu(e))
         input_files_listbox_Option.bind('<Double-Button>', lambda e:pop_open_file_path())
         input_files_listbox_Option.bind('<Delete>', lambda e:selected_files(is_remove=True))
@@ -3769,12 +3783,12 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         right_frame = ListboxBatchFrame(menu_view_inputs_Frame, self.file_two_sub_var.get().title(), lambda:move_entry(False), self.left_img, self.img_mapper)
         right_frame.grid(row=0, column=1, sticky="nsew", padx=(5, 0))
 
-        left_frame.listbox.drop_target_register(DND_FILES)
-        right_frame.listbox.drop_target_register(DND_FILES)
-        left_frame.listbox.dnd_bind('<<Drop>>', lambda e: drag_n_drop(e, FILE_1_LB))
-        right_frame.listbox.dnd_bind('<<Drop>>', lambda e: drag_n_drop(e, FILE_2_LB))
-        left_frame.listbox.dnd_bind(right_click_button, lambda e: clear_all(e, FILE_1_LB))
-        right_frame.listbox.dnd_bind(right_click_button, lambda e: clear_all(e, FILE_2_LB))
+        left_frame.listbox.drop_target_register(DND_FILES)  # type: ignore[attr-defined]
+        right_frame.listbox.drop_target_register(DND_FILES)  # type: ignore[attr-defined]
+        left_frame.listbox.dnd_bind('<<Drop>>', lambda e: drag_n_drop(e, FILE_1_LB))  # type: ignore[attr-defined]
+        right_frame.listbox.dnd_bind('<<Drop>>', lambda e: drag_n_drop(e, FILE_2_LB))  # type: ignore[attr-defined]
+        left_frame.listbox.dnd_bind(right_click_button, lambda e: clear_all(e, FILE_1_LB))  # type: ignore[attr-defined]
+        right_frame.listbox.dnd_bind(right_click_button, lambda e: clear_all(e, FILE_2_LB))  # type: ignore[attr-defined]
 
         menu_view_inputs_bottom_Frame = self.menu_FRAME_SET(menu_batch_dual_top)
         menu_view_inputs_bottom_Frame.grid(row=1)
@@ -3894,7 +3908,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         def set_vars_for_sample_mode(event):
             value = int(float(event))
             value = round(value / 5) * 5
-            self.model_sample_mode_duration_var.set(value)
+            self.model_sample_mode_duration_var.set(str(value))
             self.model_sample_mode_duration_checkbox_var.set(SAMPLE_MODE_CHECKBOX(value))
             self.model_sample_mode_duration_label_var.set(f'{value} {SECONDS_TEXT}')
 
@@ -3938,7 +3952,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         self.app_update_button = ttk.Button(settings_menu_main_Frame, textvariable=self.app_update_button_Text_var, width=SETTINGS_BUT_WIDTH-2, command=lambda:self.pop_up_update_confirmation())
         self.app_update_button.grid(pady=MENU_PADDING_1)
 
-        self.app_update_status_Label = tk.Label(settings_menu_main_Frame, textvariable=self.app_update_status_Text_var, padx=3, pady=3, font=(MAIN_FONT_NAME,  f"{FONT_SIZE_4}"), width=UPDATE_LABEL_WIDTH, justify="center", relief="ridge", fg="#13849f")
+        self.app_update_status_Label = tk.Label(settings_menu_main_Frame, textvariable=self.app_update_status_Text_var, padx=3, pady=3, font=(MAIN_FONT_NAME,  FONT_SIZE_4), width=UPDATE_LABEL_WIDTH, justify="center", relief="ridge", fg="#13849f")
         self.app_update_status_Label.grid(pady=20)
 
         donate_Button = ttk.Button(settings_menu_main_Frame, image=self.donate_img, command=lambda:webbrowser.open_new_tab(DONATE_LINK_BMAC))
@@ -4026,8 +4040,8 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         model_sample_mode_duration_Label = self.menu_sub_LABEL_SET(settings_menu_format_Frame, SAMPLE_CLIP_DURATION_TEXT)
         model_sample_mode_duration_Label.grid(pady=MENU_PADDING_1)
 
-        tk.Label(settings_menu_format_Frame, textvariable=self.model_sample_mode_duration_label_var, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground=FG_COLOR).grid(pady=2)
-        model_sample_mode_duration_Option = ttk.Scale(settings_menu_format_Frame, variable=self.model_sample_mode_duration_var, from_=5, to=120, command=set_vars_for_sample_mode, orient='horizontal')
+        tk.Label(settings_menu_format_Frame, textvariable=self.model_sample_mode_duration_label_var, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground=FG_COLOR).grid(pady=2)
+        model_sample_mode_duration_Option = ttk.Scale(settings_menu_format_Frame, variable=self.model_sample_mode_duration_var, from_=5, to=120, command=set_vars_for_sample_mode, orient='horizontal')  # type: ignore[arg-type]
         model_sample_mode_duration_Option.grid(pady=2)
 
         #Settings Tab 3
@@ -4058,10 +4072,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         self.download_Button = ttk.Button(settings_menu_download_center_Frame, image=self.download_img, command=lambda:self.download_item())#, command=download_model)
         self.download_Button.grid(pady=MENU_PADDING_1)
 
-        self.download_progress_info_Label = tk.Label(settings_menu_download_center_Frame, textvariable=self.download_progress_info_var, font=(MAIN_FONT_NAME, f"{FONT_SIZE_2}"), foreground=FG_COLOR, borderwidth=0)
+        self.download_progress_info_Label = tk.Label(settings_menu_download_center_Frame, textvariable=self.download_progress_info_var, font=(MAIN_FONT_NAME, FONT_SIZE_2), foreground=FG_COLOR, borderwidth=0)
         self.download_progress_info_Label.grid(pady=MENU_PADDING_1)
 
-        self.download_progress_percent_Label = tk.Label(settings_menu_download_center_Frame, textvariable=self.download_progress_percent_var, font=(MAIN_FONT_NAME, f"{FONT_SIZE_2}"), wraplength=350, foreground=FG_COLOR)
+        self.download_progress_percent_Label = tk.Label(settings_menu_download_center_Frame, textvariable=self.download_progress_percent_var, font=(MAIN_FONT_NAME, FONT_SIZE_2), wraplength=350, foreground=FG_COLOR)
         self.download_progress_percent_Label.grid(pady=MENU_PADDING_1)
 
         self.download_progress_bar_Progressbar = ttk.Progressbar(settings_menu_download_center_Frame, variable=self.download_progress_bar_var)
@@ -4108,7 +4122,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
             settings_menu.update_idletasks()
 
         def close_window():
-            self.active_download_thread.terminate() if self.thread_check(self.active_download_thread) else None
+            if self.active_download_thread and self.thread_check(self.active_download_thread): self.active_download_thread.terminate()
             self.is_menu_settings_open = False
             self.select_download_var.set('')
             settings_menu.destroy()
@@ -4500,15 +4514,15 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         tab4.grid_columnconfigure(0, weight=1)
 
         def section_title_Label(place, frame, text, font_size=FONT_SIZE_4):
-            return tk.Label(master=frame, text=text,font=(MAIN_FONT_NAME, f"{font_size}", "bold"), justify="center", fg="#F4F4F4").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
+            return tk.Label(master=frame, text=text,font=(MAIN_FONT_NAME, font_size, "bold"), justify="center", fg="#F4F4F4").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
         def description_Label(place, frame, text, font=FONT_SIZE_2):
-            return tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, f"{font}"), justify="center", fg="#F6F6F7").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
+            return tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, font), justify="center", fg="#F6F6F7").grid(row=place,column=0,padx=0,pady=MENU_PADDING_4)
 
         def credit_label(place, frame, text, link=None, message=None, is_link=False, is_top=False):
             if is_top:
-                thank = tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, f"{FONT_SIZE_3}", "bold"), justify="center", fg="#13849f")
+                thank = tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, FONT_SIZE_3, "bold"), justify="center", fg="#13849f")
             else:
-                thank = tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, f"{FONT_SIZE_3}", "underline" if is_link else "normal"), justify="center", fg="#13849f")
+                thank = tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, FONT_SIZE_3, "underline" if is_link else "normal"), justify="center", fg="#13849f")
             thank.configure(cursor="hand2") if is_link else None
             thank.grid(row=place,column=0,padx=0,pady=1)
             if link:
@@ -4517,7 +4531,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                 description_Label(place+1, frame, message)
 
         def Link(place, frame, text, link, description, font=FONT_SIZE_2):
-            link_label = tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, f"{FONT_SIZE_4}", "underline"), foreground=FG_COLOR, justify="center", cursor="hand2")
+            link_label = tk.Label(master=frame, text=text, font=(MAIN_FONT_NAME, FONT_SIZE_4, "underline"), foreground=FG_COLOR, justify="center", cursor="hand2")
             link_label.grid(row=place,column=0,padx=0,pady=MENU_PADDING_1)
             link_label.bind("<Button-1>", lambda e:webbrowser.open_new_tab(link))
             description_Label(place+1, frame, description, font=font)
@@ -4534,7 +4548,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                     right_click_menu.grab_release()
 
         help_guide_opt.bind(right_click_button, lambda e:right_click_menu(e))
-        credits_Frame = tk.Frame(tab1, highlightthicknes=50)
+        credits_Frame = tk.Frame(tab1, highlightthickness=50)
         credits_Frame.grid(row=0, column=0, padx=0, pady=0)
         tk.Label(credits_Frame, image=self.credits_img).grid(row=1,column=0,padx=0,pady=MENU_PADDING_1)
 
@@ -4587,7 +4601,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
                      text="Audio Separation and CC Karaoke & Friends Discord Communities",
                      message="Thank you for the support!")
 
-        more_info_tab_Frame = tk.Frame(tab2, highlightthicknes=30)
+        more_info_tab_Frame = tk.Frame(tab2, highlightthickness=30)
         more_info_tab_Frame.grid(row=0,column=0,padx=0,pady=0)
 
         section_title_Label(place=3,
@@ -4651,10 +4665,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         appplication_license_tab_Frame = tk.Frame(tab3)
         appplication_license_tab_Frame.grid(row=0,column=0,padx=0,pady=0)
 
-        appplication_license_Label = tk.Label(appplication_license_tab_Frame, text='UVR License Information', font=(MAIN_FONT_NAME, f"{FONT_SIZE_6}", "bold"), justify="center", fg="#f4f4f4")
+        appplication_license_Label = tk.Label(appplication_license_tab_Frame, text='UVR License Information', font=(MAIN_FONT_NAME, FONT_SIZE_6, "bold"), justify="center", fg="#f4f4f4")
         appplication_license_Label.grid(row=0,column=0,padx=0,pady=25)
 
-        appplication_license_Text = tk.Text(appplication_license_tab_Frame, font=(MAIN_FONT_NAME, f"{FONT_SIZE_4}"), fg="white", bg="black", width=72, wrap=tk.WORD, borderwidth=0)
+        appplication_license_Text = tk.Text(appplication_license_tab_Frame, font=(MAIN_FONT_NAME, FONT_SIZE_4), fg="white", bg="black", width=72, wrap=tk.WORD, borderwidth=0)
         appplication_license_Text.grid(row=1,column=0,padx=0,pady=0)
         appplication_license_Text_scroll = ttk.Scrollbar(appplication_license_tab_Frame, orient=tk.VERTICAL)
         appplication_license_Text.config(yscrollcommand=appplication_license_Text_scroll.set)
@@ -4667,10 +4681,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         application_change_log_tab_Frame = tk.Frame(tab4)
         application_change_log_tab_Frame.grid(row=0,column=0,padx=0,pady=0)
 
-        application_change_log_Label = tk.Label(application_change_log_tab_Frame, text='Additional Information', font=(MAIN_FONT_NAME, f"{FONT_SIZE_6}", "bold"), justify="center", fg="#f4f4f4")
+        application_change_log_Label = tk.Label(application_change_log_tab_Frame, text='Additional Information', font=(MAIN_FONT_NAME, FONT_SIZE_6, "bold"), justify="center", fg="#f4f4f4")
         application_change_log_Label.grid(row=0,column=0,padx=0,pady=25)
 
-        application_change_log_Text = tk.Text(application_change_log_tab_Frame, font=(MAIN_FONT_NAME, f"{FONT_SIZE_4}"), fg="white", bg="black", width=72, wrap=tk.WORD, borderwidth=0)
+        application_change_log_Text = tk.Text(application_change_log_tab_Frame, font=(MAIN_FONT_NAME, FONT_SIZE_4), fg="white", bg="black", width=72, wrap=tk.WORD, borderwidth=0)
         application_change_log_Text.grid(row=1,column=0,padx=40 if is_macos else 30,pady=0)
         application_change_log_Text_scroll = ttk.Scrollbar(application_change_log_tab_Frame, orient=tk.VERTICAL)
         application_change_log_Text.config(yscrollcommand=application_change_log_Text_scroll.set)
@@ -4701,7 +4715,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         error_consol_title_Label = self.menu_title_LABEL_SET(error_log_frame, ERROR_CONSOLE_TEXT)
         error_consol_title_Label.grid(row=1,column=0,padx=20,pady=MENU_PADDING_2)
 
-        error_details_Text = tk.Text(error_log_frame, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), fg="#D37B7B", bg="black", width=110, wrap=tk.WORD, borderwidth=0)
+        error_details_Text = tk.Text(error_log_frame, font=(MAIN_FONT_NAME, FONT_SIZE_1), fg="#D37B7B", bg="black", width=110, wrap=tk.WORD, borderwidth=0)
         error_details_Text.grid(row=2,column=0,padx=0,pady=0)
         error_details_Text.insert("insert", self.error_log_var.get())
         error_details_Text.bind(right_click_button, lambda e:self.right_click_menu_popup(e, text_box=True))
@@ -4712,7 +4726,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         error_details_Text.grid(row=2,sticky=tk.W)
         error_details_Text_scroll.grid(row=2, column=1, sticky=tk.NS)
 
-        copy_text_Label = tk.Label(error_log_frame, textvariable=copied_var, font=(MAIN_FONT_NAME,  f"{FONT_SIZE_0}"), justify="center", fg="#f4f4f4")
+        copy_text_Label = tk.Label(error_log_frame, textvariable=copied_var, font=(MAIN_FONT_NAME,  FONT_SIZE_0), justify="center", fg="#f4f4f4")
         copy_text_Label.grid(padx=20,pady=0)
 
         copy_text_Button = ttk.Button(error_log_frame, text=COPY_ALL_TEXT_TEXT, width=14, command=lambda:(pyperclip.copy(error_details_Text.get(1.0, tk.END+"-1c")), copied_var.set('Copied!')))
@@ -4782,7 +4796,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
             secondary_model_Label.grid(pady=MENU_PADDING_1)
             secondary_model_Option = ComboBoxMenu(secondary_model_Frame, textvariable=option_var, values=model_list, dropdown_name=stem_pair, offset=310, width=READ_ONLY_COMBO_WIDTH)
             secondary_model_Option.grid(pady=MENU_PADDING_1)
-            secondary_scale_info_Label = tk.Label(secondary_model_Frame, textvariable=label_var, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground=FG_COLOR)
+            secondary_scale_info_Label = tk.Label(secondary_model_Frame, textvariable=label_var, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground=FG_COLOR)
             secondary_scale_info_Label.grid(pady=0)
             secondary_model_scale_Option = ttk.Scale(secondary_model_Frame, variable=scale_var, from_=0.01, to=0.99, command=lambda s:convert_to_percentage(s, scale_var, label_var), orient='horizontal')
             secondary_model_scale_Option.grid(pady=2)
@@ -5032,7 +5046,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         self.spacer_label(settings_save_Frame)
 
-        entry_rules_Label = tk.Label(settings_save_Frame, text=ENSEMBLE_INPUT_RULE, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground='#868687', justify="left")
+        entry_rules_Label = tk.Label(settings_save_Frame, text=ENSEMBLE_INPUT_RULE, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground='#868687', justify="left")
         entry_rules_Label.grid()
 
         settings_save_Button = ttk.Button(settings_save_Frame, text=SAVE_TEXT, command=lambda:save_func() if validation(settings_save_var.get()) else invalid_message())
@@ -5131,7 +5145,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         support_title_Label = self.menu_title_LABEL_SET(user_code_Frame, text=SUPPORT_UVR_TEXT, width=20)
         support_title_Label.grid(pady=MENU_PADDING_1)
 
-        support_sub_Label = tk.Label(user_code_Frame, text=GET_DL_VIP_CODE_TEXT, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground=FG_COLOR)
+        support_sub_Label = tk.Label(user_code_Frame, text=GET_DL_VIP_CODE_TEXT, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground=FG_COLOR)
         support_sub_Label.grid(pady=MENU_PADDING_1)
 
         uvr_patreon_Button = ttk.Button(user_code_Frame, text=UVR_PATREON_LINK_TEXT, command=lambda:webbrowser.open_new_tab(DONATE_LINK_PATREON))
@@ -5319,13 +5333,13 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         if is_compatible_model:
             mdx_model_set = tk.Toplevel(root)
-            mdx_n_fft_scale_set_var = tk.StringVar(value=n_fft)
-            mdx_dim_f_set_var = tk.StringVar(value=dim_f)
-            mdx_dim_t_set_var = tk.StringVar(value=dim_t)
+            mdx_n_fft_scale_set_var = tk.StringVar(value=str(n_fft))
+            mdx_dim_f_set_var = tk.StringVar(value=str(dim_f))
+            mdx_dim_t_set_var = tk.StringVar(value=str(dim_t))
             primary_stem_var = tk.StringVar(value=primary_stem)
-            mdx_compensate_var = tk.StringVar(value=1.035)
+            mdx_compensate_var = tk.StringVar(value=str(1.035))
 
-            balance_value_var = tk.StringVar(value=0)
+            balance_value_var = tk.StringVar(value=str(0))
             is_kara_model_var = tk.BooleanVar(value=False)
             is_bv_model_var = tk.BooleanVar(value=False)
 
@@ -5509,10 +5523,10 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         new_vr_params = get_vr_params(VR_PARAM_DIR, JSON)
         vr_model_param_var = tk.StringVar(value=NONE_SELECTED)
         vr_model_stem_var = tk.StringVar(value='Vocals')
-        vr_model_nout_var = tk.StringVar(value=32)
-        vr_model_nout_lstm_var = tk.StringVar(value=128)
+        vr_model_nout_var = tk.StringVar(value=str(32))
+        vr_model_nout_lstm_var = tk.StringVar(value=str(128))
         is_new_vr_model_var = tk.BooleanVar(value=False)
-        balance_value_var = tk.StringVar(value=0)
+        balance_value_var = tk.StringVar(value=str(0))
         is_kara_model_var = tk.BooleanVar(value=False)
         is_bv_model_var = tk.BooleanVar(value=False)
 
@@ -5701,7 +5715,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
         is_inverse_stem_Button = ttk.Checkbutton(stem_input_save_Frame, text=IS_INVERSE_STEM_TEXT, variable=is_inverse_stem_var)
         is_inverse_stem_Button.grid(pady=0)
 
-        entry_rules_Label = tk.Label(stem_input_save_Frame, text=STEM_INPUT_RULE, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground='#868687', justify="left")
+        entry_rules_Label = tk.Label(stem_input_save_Frame, text=STEM_INPUT_RULE, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground='#868687', justify="left")
         entry_rules_Label.grid(pady=MENU_PADDING_1)
 
         mdx_param_set_Button = ttk.Button(stem_input_save_Frame, text=DONE_MENU_TEXT, command=lambda:close_window(is_cancel=False) if validation(stem_input_save_var.get()) else invalid_message())
@@ -5753,7 +5767,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
             ensemble_name_Entry.focus_set()
             self.spacer_label(ensemble_save_Frame)
 
-            entry_rules_Label = tk.Label(ensemble_save_Frame, text=ENSEMBLE_INPUT_RULE, font=(MAIN_FONT_NAME, f"{FONT_SIZE_1}"), foreground='#868687', justify="left")
+            entry_rules_Label = tk.Label(ensemble_save_Frame, text=ENSEMBLE_INPUT_RULE, font=(MAIN_FONT_NAME, FONT_SIZE_1), foreground='#868687', justify="left")
             entry_rules_Label.grid()
 
             mdx_param_set_Button = ttk.Button(ensemble_save_Frame, text=SAVE_TEXT, command=lambda:save_func() if validation(ensemble_save_var.get()) else invalid_message())
@@ -5922,7 +5936,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
             self.app_update_status_Text_var.set(f'Version Status: {NO_CONNECTION}')
             self.download_progress_info_var.set(NO_CONNECTION)
             self.app_update_button_Text_var.set('Refresh')
-            self.refresh_list_Button.configure(state=tk.NORMAL)
+            if self.refresh_list_Button: self.refresh_list_Button.configure(state=tk.NORMAL)
             self.stop_download_Button_DISABLE()
             self.enable_tabs()
 
@@ -6193,7 +6207,7 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         for widget in self.download_center_Buttons:
             widget.configure(state=tk.NORMAL)
-        self.refresh_list_Button.configure(state=tk.NORMAL)
+        if self.refresh_list_Button: self.refresh_list_Button.configure(state=tk.NORMAL)
         self.manual_download_Button.configure(state=tk.NORMAL)
 
         self.enable_tabs()
@@ -6201,13 +6215,13 @@ class MainWindow(TkinterDnD.Tk if is_dnd_compatible else tk.Tk):
 
         if action == DOWNLOAD_FAILED:
             try:
-                self.active_download_thread.terminate()
+                if self.active_download_thread: self.active_download_thread.terminate()
             finally:
                 self.download_progress_info_var.set(DOWNLOAD_FAILED)
                 self.download_list_state(reset=False)
         if action == DOWNLOAD_STOPPED:
             try:
-                self.active_download_thread.terminate()
+                if self.active_download_thread: self.active_download_thread.terminate()
             finally:
                 self.download_progress_info_var.set(DOWNLOAD_STOPPED)
                 self.download_list_state(reset=False)
