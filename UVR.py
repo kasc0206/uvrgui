@@ -749,7 +749,7 @@ PREVIOUS_PATCH_WIN = 'UVR_Patch_10_6_23_4_27'
 is_dnd_compatible = True
 banner_placement = -2
 is_windows = False
-is_macos = False
+is_macos_os = False
 
 if OPERATING_SYSTEM=="Darwin":
     OPEN_FILE_func = lambda input_string: subprocess.Popen(["open", input_string])  # noqa: E731
@@ -757,7 +757,7 @@ if OPERATING_SYSTEM=="Darwin":
     banner_placement = -8
     current_patch = PATCH_MAC
     is_windows = False
-    is_macos = True
+    is_macos_os = True
     right_click_button = '<Button-2>'
     application_extension = ".dmg"
 elif OPERATING_SYSTEM=="Linux":
@@ -3521,7 +3521,8 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
         def list_to_string(list1): return '\n'.join(''.join(sub) for sub in list1)
 
         def close_window():
-            if self.verification_thread and self.thread_check(self.verification_thread): self.verification_thread.kill()
+            if self.verification_thread and self.thread_check(self.verification_thread):
+                self.verification_thread.kill()
             self.is_open_menu_view_inputs.set(False)
             menu_view_inputs_top.destroy()
 
@@ -3635,7 +3636,8 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
                     input_files_listbox_Option.configure(state=tk.NORMAL)
                     varification_text_var.set(VERIFY_INPUTS_TEXT)
                     input_info_text_var.set('Process Stopped')
-                    if self.verification_thread: self.verification_thread.kill()
+                    if self.verification_thread:
+                        self.verification_thread.kill()
             else:
                 input_info_text_var.set('You cannot verify inputs during an active process.')
 
@@ -4125,7 +4127,8 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
             settings_menu.update_idletasks()
 
         def close_window():
-            if self.active_download_thread and self.thread_check(self.active_download_thread): self.active_download_thread.terminate()
+            if self.active_download_thread and self.thread_check(self.active_download_thread):
+                self.active_download_thread.terminate()
             self.is_menu_settings_open = False
             self.select_download_var.set('')
             settings_menu.destroy()
@@ -5939,7 +5942,8 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
             self.app_update_status_Text_var.set(f'Version Status: {NO_CONNECTION}')
             self.download_progress_info_var.set(NO_CONNECTION)
             self.app_update_button_Text_var.set('Refresh')
-            if self.refresh_list_Button: self.refresh_list_Button.configure(state=tk.NORMAL)
+            if self.refresh_list_Button:
+                self.refresh_list_Button.configure(state=tk.NORMAL)
             self.stop_download_Button_DISABLE()
             self.enable_tabs()
 
@@ -6210,7 +6214,8 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
         for widget in self.download_center_Buttons:
             widget.configure(state=tk.NORMAL)
-        if self.refresh_list_Button: self.refresh_list_Button.configure(state=tk.NORMAL)
+        if self.refresh_list_Button:
+            self.refresh_list_Button.configure(state=tk.NORMAL)
         self.manual_download_Button.configure(state=tk.NORMAL)
 
         self.enable_tabs()
@@ -6218,13 +6223,15 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
         if action == DOWNLOAD_FAILED:
             try:
-                if self.active_download_thread: self.active_download_thread.terminate()
+                if self.active_download_thread:
+                    self.active_download_thread.terminate()
             finally:
                 self.download_progress_info_var.set(DOWNLOAD_FAILED)
                 self.download_list_state(reset=False)
         if action == DOWNLOAD_STOPPED:
             try:
-                if self.active_download_thread: self.active_download_thread.terminate()
+                if self.active_download_thread:
+                    self.active_download_thread.terminate()
             finally:
                 self.download_progress_info_var.set(DOWNLOAD_STOPPED)
                 self.download_list_state(reset=False)
