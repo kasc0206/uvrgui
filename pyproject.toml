@@ -57,6 +57,13 @@ Repository = "https://github.com/kasc0206/uvrgui.git"
 "Bug Tracker" = "https://github.com/kasc0206/uvrgui/issues"
 Original = "https://github.com/Anjok07/ultimatevocalremovergui"
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.11.0",
+]
+
 [project.scripts]
 uvr = "uvr_cli:main"
 
