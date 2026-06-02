@@ -80,6 +80,15 @@ line-length = 100
 select = ["E", "F", "I", "W"]
 ignore = ["E501"]
 
+[tool.ruff.lint.per-file-ignores]
+"UVR.py" = ["E722", "E731", "E741", "F401", "F541", "F811", "F841"]
+"separate.py" = ["E722", "E731", "E741", "F401", "F541", "F841"]
+"gui_data/*" = ["E722", "E731", "E741", "F401", "F541"]
+"lib_v5/*" = ["E722", "E731", "F401", "F541"]
+"demucs/*" = ["E722", "E731", "F401", "F541", "F811"]
+"playsound.py" = ["E722", "F401"]
+"tests/*" = ["E402", "F401"]
+
 [tool.ruff.format]
 quote-style = "double"
 

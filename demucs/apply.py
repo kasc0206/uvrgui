@@ -7,20 +7,20 @@
 Code to apply a model to a mix. It will handle chunking with overlaps and
 inteprolation between chunks, as well as the "shift trick".
 """
-from concurrent.futures import ThreadPoolExecutor
 import random
+import tkinter as tk
 import typing as tp
-from multiprocessing import Process,Queue,Pipe
+from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import Pipe, Process, Queue
 
 import torch as th
+import tqdm
 from torch import nn
 from torch.nn import functional as F
-import tqdm
-import tkinter as tk
 
 from .demucs import Demucs
 from .hdemucs import HDemucs
-from .utils import center_trim, DummyPoolExecutor
+from .utils import DummyPoolExecutor, center_trim
 
 Model = tp.Union[Demucs, HDemucs]
 
@@ -43,7 +43,7 @@ class BagOfModels(nn.Module):
             segment (None or float): overrides the `segment` attribute of each model
                 (this is performed inplace, be careful if you reuse the models passed).
         """
-        
+
         super().__init__()
         assert len(models) > 0
         first = models[0]
@@ -121,18 +121,18 @@ def tensor_chunk(tensor_or_chunk):
         assert isinstance(tensor_or_chunk, th.Tensor)
         return TensorChunk(tensor_or_chunk)
 
-def apply_model(model, 
-                mix, 
-                shifts=1, 
-                split=True, 
-                overlap=0.25, 
-                transition_power=1., 
-                static_shifts=1, 
-                set_progress_bar=None, 
-                device=None, 
-                progress=False, 
-                num_workers=0, 
-                pool=None): 
+def apply_model(model,
+                mix,
+                shifts=1,
+                split=True,
+                overlap=0.25,
+                transition_power=1.,
+                static_shifts=1,
+                set_progress_bar=None,
+                device=None,
+                progress=False,
+                num_workers=0,
+                pool=None):
     """
     Apply model to a given mixture.
 
@@ -150,11 +150,11 @@ def apply_model(model,
             When `device` is different from `mix.device`, only local computations will
             be on `device`, while the entire tracks will be stored on `mix.device`.
     """
-    
+
     global fut_length
     global bag_num
     global prog_bar
-    
+
     if device is None:
         device = mix.device
     else:
@@ -164,7 +164,7 @@ def apply_model(model,
             pool = ThreadPoolExecutor(num_workers)
         else:
             pool = DummyPoolExecutor()
-            
+
     kwargs = {
         'shifts': shifts,
         'split': split,
@@ -176,7 +176,7 @@ def apply_model(model,
         'set_progress_bar': set_progress_bar,
         'static_shifts': static_shifts,
     }
-    
+
     if isinstance(model, BagOfModels):
         # Special treatment for bag of model.
         # We explicitely apply multiple times `apply_model` so that the random shifts
@@ -209,7 +209,7 @@ def apply_model(model,
     model.eval()
     assert transition_power >= 1, "transition_power < 1 leads to weird behavior."
     batch, channels, length = mix.shape
-    
+
     if shifts:
         kwargs['shifts'] = 0
         max_shift = int(0.5 * model.samplerate)
@@ -270,9 +270,9 @@ def apply_model(model,
         with th.no_grad():
             out = model(padded_mix)
         return center_trim(out, length)
-    
+
 def demucs_segments(demucs_segment, demucs_model):
-    
+
     if demucs_segment == 'Default':
         segment = None
         if isinstance(demucs_model, BagOfModels):
@@ -301,5 +301,5 @@ def demucs_segments(demucs_segment, demucs_model):
             else:
                 if segment is not None:
                     sub.segment = segment
-                    
+
     return demucs_model
