@@ -20,14 +20,14 @@ def test_secondary_stem_instrumental():
 
 def test_stem_constants():
     """VOCAL_STEM and INST_STEM constants are defined."""
-    from gui_data.constants import VOCAL_STEM, INST_STEM
+    from gui_data.constants import INST_STEM, VOCAL_STEM
     assert VOCAL_STEM is not None
     assert INST_STEM is not None
 
 
 def test_arch_constants():
     """Architecture type constants are defined."""
-    from gui_data.constants import VR_ARCH_TYPE, MDX_ARCH_TYPE, DEMUCS_ARCH_TYPE
+    from gui_data.constants import DEMUCS_ARCH_TYPE, MDX_ARCH_TYPE, VR_ARCH_TYPE
     assert VR_ARCH_TYPE is not None
     assert MDX_ARCH_TYPE is not None
     assert DEMUCS_ARCH_TYPE is not None

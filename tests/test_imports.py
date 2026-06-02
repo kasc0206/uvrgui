@@ -4,7 +4,7 @@ import pytest
 
 def test_version_module():
     """Test that __version__.py can be imported and has required attributes."""
-    from __version__ import FORK_VERSION, VERSION, FORK_REPO
+    from __version__ import FORK_REPO, FORK_VERSION, VERSION
 
     assert VERSION is not None
     assert FORK_VERSION is not None
@@ -47,7 +47,7 @@ def test_secondary_stem():
 
 def test_secondary_stem_constants():
     """Test secondary_stem with constant values from gui_data."""
-    from gui_data.constants import VOCAL_STEM, INST_STEM
+    from gui_data.constants import INST_STEM, VOCAL_STEM
     from separate import secondary_stem
 
     assert secondary_stem(VOCAL_STEM) == INST_STEM
@@ -56,8 +56,8 @@ def test_secondary_stem_constants():
 
 def test_save_format_types():
     """Test that save_format handles known format types."""
+    from gui_data.constants import FLAC, MP3, WAV
     from separate import save_format
-    from gui_data.constants import WAV, MP3, FLAC
 
     # Should not raise for known types
     # (actual processing requires valid file, just test the function exists and accepts params)

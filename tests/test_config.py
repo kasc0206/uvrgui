@@ -56,7 +56,7 @@ def test_config_load_from_cli():
 
 def test_config_save_and_reload():
     """save_config() then load_config() should round-trip."""
-    from uvr_cli import save_config, load_config
+    from uvr_cli import load_config, save_config
 
     save_config({"test_key": "test_value"})
     cfg = load_config()

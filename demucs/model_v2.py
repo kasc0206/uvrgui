@@ -8,8 +8,8 @@ import math
 
 import julius
 from torch import nn
-from .tasnet_v2 import ConvTasNet
 
+from .tasnet_v2 import ConvTasNet
 from .utils import capture_init, center_trim
 
 
@@ -41,19 +41,19 @@ def rescale_module(module, reference):
             rescale_conv(sub, reference)
 
 def auto_load_demucs_model_v2(sources, demucs_model_name):
-    
+
     if '48' in demucs_model_name:
         channels=48
     elif 'unittest' in demucs_model_name:
         channels=4
     else:
         channels=64
-    
+
     if 'tasnet' in demucs_model_name:
         init_demucs_model = ConvTasNet(sources, X=10)
     else:
         init_demucs_model = Demucs(sources, channels=channels)
-        
+
     return init_demucs_model
 
 class Demucs(nn.Module):

@@ -14,7 +14,7 @@ class TestSeperateAttributes:
 
     def test_model_data_types(self):
         """Test model data type constants are accessible."""
-        from gui_data.constants import VR_ARCH_TYPE, MDX_ARCH_TYPE, DEMUCS_ARCH_TYPE
+        from gui_data.constants import DEMUCS_ARCH_TYPE, MDX_ARCH_TYPE, VR_ARCH_TYPE
 
         assert VR_ARCH_TYPE is not None
         assert MDX_ARCH_TYPE is not None

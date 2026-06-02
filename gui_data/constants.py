@@ -171,9 +171,9 @@ PRIMARY_STEM_ONLY = f'{PRIMARY_STEM} Only'
 IS_SAVE_INST_ONLY = f'save_only_inst'
 IS_SAVE_VOC_ONLY = f'save_only_voc'
 
-DEVERB_MAPPER = {'Main Vocals Only':VOCAL_STEM, 
-                 'Lead Vocals Only':LEAD_VOCAL_STEM_LABEL, 
-                 'Backing Vocals Only':BV_VOCAL_STEM_LABEL, 
+DEVERB_MAPPER = {'Main Vocals Only':VOCAL_STEM,
+                 'Lead Vocals Only':LEAD_VOCAL_STEM_LABEL,
+                 'Backing Vocals Only':BV_VOCAL_STEM_LABEL,
                  'All Vocal Types':'ALL'}
 
 BALANCE_VALUES = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
@@ -207,31 +207,31 @@ DEMUCS_UVR_MODEL = 'UVR_Model'
 
 CHOOSE_STEM_PAIR = 'Choose Stem Pair'
 
-STEM_SET_MENU = (VOCAL_STEM, 
-                 INST_STEM, 
-                 OTHER_STEM, 
-                 BASS_STEM, 
-                 DRUM_STEM, 
-                 GUITAR_STEM, 
-                 PIANO_STEM, 
-                 SYNTH_STEM, 
-                 STRINGS_STEM, 
-                 WOODWINDS_STEM, 
-                 BRASS_STEM, 
+STEM_SET_MENU = (VOCAL_STEM,
+                 INST_STEM,
+                 OTHER_STEM,
+                 BASS_STEM,
+                 DRUM_STEM,
+                 GUITAR_STEM,
+                 PIANO_STEM,
+                 SYNTH_STEM,
+                 STRINGS_STEM,
+                 WOODWINDS_STEM,
+                 BRASS_STEM,
                  WIND_INST_STEM)
 
 STEM_SET_MENU_ONLY = list(STEM_SET_MENU) + [OPT_SEPARATOR_SAVE, INPUT_STEM_NAME]
 
 STEM_SET_MENU_2 = (
-                 OTHER_STEM, 
-                 BASS_STEM, 
-                 DRUM_STEM, 
-                 GUITAR_STEM, 
-                 PIANO_STEM, 
-                 SYNTH_STEM, 
-                 STRINGS_STEM, 
-                 WOODWINDS_STEM, 
-                 BRASS_STEM, 
+                 OTHER_STEM,
+                 BASS_STEM,
+                 DRUM_STEM,
+                 GUITAR_STEM,
+                 PIANO_STEM,
+                 SYNTH_STEM,
+                 STRINGS_STEM,
+                 WOODWINDS_STEM,
+                 BRASS_STEM,
                  WIND_INST_STEM,
                  "Noise",
                  "Reverb")
@@ -325,12 +325,12 @@ DEF_OPT = 'Default'
 USER_INPUT = "User Input"
 OPT_SEPARATOR = '─'*65
 
-CHUNKS = (AUTO_SELECT, '1', '5', '10', '15', '20', 
-          '25', '30', '35', '40', '45', '50', 
-          '55', '60', '65', '70', '75', '80', 
+CHUNKS = (AUTO_SELECT, '1', '5', '10', '15', '20',
+          '25', '30', '35', '40', '45', '50',
+          '55', '60', '65', '70', '75', '80',
           '85', '90', '95', 'Full')
 
-BATCH_SIZE = (DEF_OPT, '2', '3', '4', '5', 
+BATCH_SIZE = (DEF_OPT, '2', '3', '4', '5',
           '6', '7', '8', '9', '10')
 
 VOL_COMPENSATION = (AUTO_SELECT, '1.035', '1.08')
@@ -346,7 +346,7 @@ ALIGN_INPUTS = 'Align Inputs'
 MATCH_INPUTS = 'Matchering'
 COMBINE_INPUTS = 'Combine Inputs'
 
-if OPERATING_SYSTEM == 'Windows' or OPERATING_SYSTEM == 'Darwin':  
+if OPERATING_SYSTEM == 'Windows' or OPERATING_SYSTEM == 'Darwin':
    AUDIO_TOOL_OPTIONS = (MANUAL_ENSEMBLE, TIME_STRETCH, CHANGE_PITCH, ALIGN_INPUTS, MATCH_INPUTS)
 else:
    AUDIO_TOOL_OPTIONS = (MANUAL_ENSEMBLE, ALIGN_INPUTS, MATCH_INPUTS)
@@ -355,14 +355,14 @@ MANUAL_ENSEMBLE_OPTIONS = (MIN_SPEC, MAX_SPEC, AUDIO_AVERAGE, COMBINE_INPUTS)
 
 PROCESS_METHODS = (VR_ARCH_PM, MDX_ARCH_TYPE, DEMUCS_ARCH_TYPE, ENSEMBLE_MODE, AUDIO_TOOLS)
 
-DEMUCS_SEGMENTS = (DEF_OPT, '1', '5', '10', '15', '20', 
-                  '25', '30', '35', '40', '45', '50', 
-                  '55', '60', '65', '70', '75', '80', 
+DEMUCS_SEGMENTS = (DEF_OPT, '1', '5', '10', '15', '20',
+                  '25', '30', '35', '40', '45', '50',
+                  '55', '60', '65', '70', '75', '80',
                   '85', '90', '95', '100')
 
-DEMUCS_SHIFTS = (0, 1, 2, 3, 4, 5, 
-                 6, 7, 8, 9, 10, 11, 
-                 12, 13, 14, 15, 16, 17, 
+DEMUCS_SHIFTS = (0, 1, 2, 3, 4, 5,
+                 6, 7, 8, 9, 10, 11,
+                 12, 13, 14, 15, 16, 17,
                  18, 19, 20)
 SEMI_DEF = ['0']
 SEMITONE_SEL = (-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10,11,12)
@@ -557,7 +557,7 @@ DEFAULT_DATA = {
         'window_size': 512,
         'mdx_segment_size': 256,
         'batch_size': DEF_OPT,
-        'crop_size': 256, 
+        'crop_size': 256,
         'is_tta': False,
         'is_output_image': False,
         'is_post_process': False,
@@ -567,12 +567,12 @@ DEFAULT_DATA = {
         'vr_other_secondary_model': NO_MODEL,
         'vr_bass_secondary_model': NO_MODEL,
         'vr_drums_secondary_model': NO_MODEL,
-        'vr_is_secondary_model_activate': False,        
+        'vr_is_secondary_model_activate': False,
         'vr_voc_inst_secondary_model_scale': 0.9,
         'vr_other_secondary_model_scale': 0.7,
         'vr_bass_secondary_model_scale': 0.5,
         'vr_drums_secondary_model_scale': 0.5,
-        'demucs_model': CHOOSE_MODEL, 
+        'demucs_model': CHOOSE_MODEL,
         'segment': DEMUCS_SEGMENTS[0],
         'overlap': DEMUCS_OVERLAP[0],
         'overlap_mdx': MDX_OVERLAP[0],
@@ -591,7 +591,7 @@ DEFAULT_DATA = {
         'demucs_other_secondary_model': NO_MODEL,
         'demucs_bass_secondary_model': NO_MODEL,
         'demucs_drums_secondary_model': NO_MODEL,
-        'demucs_is_secondary_model_activate': False,        
+        'demucs_is_secondary_model_activate': False,
         'demucs_voc_inst_secondary_model_scale': 0.9,
         'demucs_other_secondary_model_scale': 0.7,
         'demucs_bass_secondary_model_scale': 0.5,
@@ -608,7 +608,7 @@ DEFAULT_DATA = {
         'denoise_option': 'None',#
         'phase_option': AUTO_PHASE,
         'phase_shifts': NONE_P,#
-        'is_save_align': False,#, 
+        'is_save_align': False,#,
         'is_match_frequency_pitch': True,#
         'is_match_silence': True,#
         'is_spec_match': False,#
@@ -617,13 +617,13 @@ DEFAULT_DATA = {
         'is_deverb_vocals': False, #
         'deverb_vocal_opt': 'Main Vocals Only', #
         'voc_split_save_opt': 'Lead Only', #
-        'is_mixer_mode': False, 
+        'is_mixer_mode': False,
         'mdx_batch_size': DEF_OPT,
         'mdx_voc_inst_secondary_model': NO_MODEL,
         'mdx_other_secondary_model': NO_MODEL,
         'mdx_bass_secondary_model': NO_MODEL,
         'mdx_drums_secondary_model': NO_MODEL,
-        'mdx_is_secondary_model_activate': False,        
+        'mdx_is_secondary_model_activate': False,
         'mdx_voc_inst_secondary_model_scale': 0.9,
         'mdx_other_secondary_model_scale': 0.7,
         'mdx_bass_secondary_model_scale': 0.5,
@@ -789,12 +789,12 @@ NEW_LINES = "\n\n"
 NEW_LINE = "\n"
 NO_LINE = ''
 
-FFMPEG_EXT = (".aac", ".aiff", ".alac" ,".flac", ".FLAC", ".mov", ".mp4", ".MP4", 
-              ".m4a", ".M4A", ".mp2", ".mp3", "MP3", ".mpc", ".mpc8", 
+FFMPEG_EXT = (".aac", ".aiff", ".alac" ,".flac", ".FLAC", ".mov", ".mp4", ".MP4",
+              ".m4a", ".M4A", ".mp2", ".mp3", "MP3", ".mpc", ".mpc8",
               ".mpeg", ".ogg", ".OGG", ".tta", ".wav", ".wave", ".WAV", ".WAVE", ".wma", ".webm", ".eac3", ".mkv", ".opus", ".OPUS")
 
 FFMPEG_MORE_EXT = (".aa", ".aac", ".ac3", ".aiff", ".alac", ".avi", ".f4v",".flac", ".flic", ".flv",
-              ".m4v",".mlv", ".mov", ".mp4", ".m4a", ".mp2", ".mp3", ".mp4", ".mpc", ".mpc8", 
+              ".m4v",".mlv", ".mov", ".mp4", ".m4a", ".mp2", ".mp3", ".mp4", ".mpc", ".mpc8",
               ".mpeg", ".ogg", ".tta", ".tty", ".vcd", ".wav", ".wma")
 ANY_EXT = ""
 
@@ -928,8 +928,8 @@ PITCH_SHIFT_HELP = ('Choose the pitch for processing tracks:\n\n'
                 '• Dropping the pitch may take more processing time but works well for tracks with high-pitched vocals.')
 AGGRESSION_SETTING_HELP = ('Adjust the intensity of primary stem extraction:\n\n'
                            '• It ranges from -100 - 100.\n'
-                           '• Bigger values mean deeper extractions.\n' 
-                           '• Typically, it\'s set to 5 for vocals & instrumentals. \n' 
+                           '• Bigger values mean deeper extractions.\n'
+                           '• Typically, it\'s set to 5 for vocals & instrumentals. \n'
                            '• Values beyond 5 might muddy the sound for non-vocal models.')
 WINDOW_SIZE_HELP = ('Select window size to balance quality and speed:\n\n'
                     '• 1024 - Quick but lesser quality.\n'
@@ -952,50 +952,50 @@ SEGMENT_HELP = ('Adjust segments to manage RAM or V-RAM usage:\n\n'
 
 ENSEMBLE_MAIN_STEM_HELP = (
     'Select the stem type for ensembling:\n\n'
-    
+
     f'• {VOCAL_PAIR}:\n'
     '  - Primary Stem: Vocals\n'
     '  - Secondary Stem: Instrumental (mixture minus vocals)\n\n'
-    
+
     f'• {OTHER_PAIR}:\n'
     '  - Primary Stem: Other\n'
     '  - Secondary Stem: No Other (mixture minus "other")\n\n'
-    
+
     f'• {BASS_PAIR}:\n'
     '  - Primary Stem: Bass\n'
     '  - Secondary Stem: No Bass (mixture minus bass)\n\n'
-    
+
     f'• {DRUM_PAIR}:\n'
     '  - Primary Stem: Drums\n'
     '  - Secondary Stem: No Drums (mixture minus drums)\n\n'
-    
+
     f'• {FOUR_STEM_ENSEMBLE}:\n'
     '  - Gathers all 4-stem Demucs models and ensembles all outputs.\n\n'
-    
+
     f'• {MULTI_STEM_ENSEMBLE}:\n'
     '  - The "Jungle Ensemble" gathers all models and ensembles any related outputs.'
 )
 
 ENSEMBLE_TYPE_HELP = (
     'Choose the ensemble algorithm for generating the final output:\n\n'
-    
+
     f'• {MAX_MIN}:\n'
     '  - Primary stem processed with "Max Spec" algorithm.\n'
     '  - Secondary stem processed with "Min Spec" algorithm.\n\n'
-    
+
     'Note: For the "4 Stem Ensemble" option, only one algorithm will be displayed.\n\n'
-    
+
     'Algorithm Details:\n'
-    
+
     f'• {MAX_SPEC}:\n'
     '  - Produces the highest possible output.\n'
     '  - Ideal for vocal stems for a fuller sound, but might introduce unwanted artifacts.\n'
     '  - Works well with instrumental stems, but avoid using VR Arch models in the ensemble.\n\n'
-    
+
     f'• {MIN_SPEC}:\n'
     '  - Produces the lowest possible output.\n'
     '  - Ideal for instrumental stems for a cleaner result. Might result in a "muddy" sound.\n\n'
-    
+
     f'• {AUDIO_AVERAGE}:\n'
     '  - Averages all results together for the final output.'
 )
@@ -1048,8 +1048,8 @@ IS_SEGMENT_DEFAULT_HELP = '• The segment size is set based on the value provid
 IS_SPLIT_MODE_HELP = '• Enables \"Segments\". \n• Deselecting this option is only recommended for those with powerful PCs.'
 IS_DEMUCS_COMBINE_STEMS_HELP = 'The application will create the secondary stem by combining the remaining stems \ninstead of inverting the primary stem with the mixture.'
 COMPENSATE_HELP = 'Compensates the audio of the primary stems to allow for a better secondary stem.'
-IS_DENOISE_HELP = ('• Standard: This setting reduces the noise created by MDX-Net models.\n' 
-                   '       - This option only reduces noise in non-MDX23 models.\n' 
+IS_DENOISE_HELP = ('• Standard: This setting reduces the noise created by MDX-Net models.\n'
+                   '       - This option only reduces noise in non-MDX23 models.\n'
                    '• Denoise Model: This setting employs a special denoise model to eliminate noise produced by any MDX-Net model.\n'
                    '       - This option works on all MDX-Net models.\n'
                    '       - You must have the "UVR-DeNoise-Lite" VR Arch model installed to use this option.\n'
@@ -1122,7 +1122,7 @@ CHOSEN_PROCESS_METHOD_HELP = (
     '• Demucs v3: Also utilizes a Hybrid Spectrogram network for source separation.\n'
     '• Ensemble Mode: Combine results from multiple models and networks for optimal results.\n'
     '• Audio Tools: Additional utilities for added convenience.'
-)        
+)
 
 INPUT_FOLDER_ENTRY_HELP = (
     'Select Input:\n'
@@ -1176,7 +1176,7 @@ PRE_PROC_MODEL_ACTIVATE_HELP = (
     '• Expect an increase in total processing time.\n'
     '• Only the VR or MDX-Net Vocal Instrumental/Vocals models can be chosen for this process.'
 )
-      
+
 AUDIO_TOOLS_HELP = (
     'Select from various audio tools to process your track:\n'
     '\n'
@@ -1189,12 +1189,12 @@ AUDIO_TOOLS_HELP = (
     '    - Secondary Audio: This is usually an instrumental.\n'
     '• Matchering: Choose 2 audio files. The matchering algorithm will master the target audio to have the same RMS, FR, peak amplitude, and stereo width as the reference audio.'
 )
-             
-PRE_PROC_MODEL_INST_MIX_HELP = 'When enabled, the application will generate a third output without the selected stem and vocals.'         
+
+PRE_PROC_MODEL_INST_MIX_HELP = 'When enabled, the application will generate a third output without the selected stem and vocals.'
 MODEL_SAMPLE_MODE_HELP = ('Allows the user to process only part of a track to sample settings or a model without running a full conversion.\n\nNotes:\n\n'
                          '• The number in the parentheses is the current number of seconds the generated sample will be.\n'
                          '• You can choose the number of seconds to extract from the track in the \"Additional Settings\" menu.')
-                    
+
 POST_PROCESS_THREASHOLD_HELP = ('Allows the user to control the intensity of the Post_process option.\n\nNotes:\n\n'
                                '• Higher values potentially remove more artifacts. However, bleed might increase.\n'
                                '• Lower values limit artifact removal.')
@@ -1203,10 +1203,10 @@ BATCH_SIZE_HELP = ('Specify the number of batches to be processed at a time.\n\n
                                '• Higher values mean more RAM usage but slightly faster processing times.\n'
                                '• Lower values mean less RAM usage but slightly longer processing times.\n'
                                '• Batch size value has no effect on output quality.')
-         
+
 VR_MODEL_NOUT_HELP = ""
 VR_MODEL_NOUT_LSTM_HELP = ""
-  
+
 IS_PHASE_HELP = 'Select the phase for the secondary audio.\n• Note: Using the "Automatic" option is strongly recommended.'
 IS_ALIGN_TRACK_HELP = 'Enable this to save the secondary track once aligned.'
 IS_MATCH_SILENCE_HELP = (
@@ -1405,7 +1405,7 @@ BV_MODEL_TEXT = 'BV Model'
 CHANGE_MODEL_DEFAULT_TEXT = 'Change Model Default'
 CHANGE_MODEL_DEFAULTS_TEXT = 'Change Model Defaults'
 CHANGE_PARAMETERS_TEXT = 'Change Parameters'
-CHOOSE_ADVANCED_MENU_TEXT = 'Choose Advanced Menu' 
+CHOOSE_ADVANCED_MENU_TEXT = 'Choose Advanced Menu'
 CHOOSE_MODEL_PARAM_TEXT = 'Choose Model Param'
 CLEAR_AUTOSET_CACHE_TEXT = 'Clear Auto-Set Cache'
 COMBINE_STEMS_TEXT = 'Combine Stems'
@@ -1495,7 +1495,7 @@ SPECIFY_MDX_NET_MODEL_PARAMETERS_TEXT = 'Specify MDX-Net Model Parameters'
 SPECIFY_PARAMETERS_TEXT = 'Specify Parameters'
 SPECIFY_VR_MODEL_PARAMETERS_TEXT = 'Specify VR Model Parameters'
 SPECTRAL_INVERSION_TEXT = 'Spectral Inversion'
-SPECTRAL_MATCHING_TEXT = 'Spectral Matching'   
+SPECTRAL_MATCHING_TEXT = 'Spectral Matching'
 SPLIT_MODE_TEXT = 'Split Mode'
 STEM_NAME_TEXT = 'Stem Name'
 STOP_DOWNLOAD_TEXT = 'Stop Download'
@@ -1571,14 +1571,14 @@ ROLL_BACK_TEXT = 'Click Here to Roll Back'
 
 def secondary_stem(stem:str):
     """Determines secondary stem"""
-    
+
     stem = stem if stem else NO_STEM
-    
+
     if stem in STEM_PAIR_MAPPER.keys():
         for key, value in STEM_PAIR_MAPPER.items():
             if stem in key:
                 secondary_stem = value
     else:
         secondary_stem = stem.replace(NO_STEM, "") if NO_STEM in stem else f"{NO_STEM}{stem}"
-    
+
     return secondary_stem

@@ -6,16 +6,19 @@
 """
 This code contains the spectrogram and Hybrid version of Demucs.
 """
-from copy import deepcopy
 import math
 import typing as tp
+from copy import deepcopy
+
 import torch
 from torch import nn
 from torch.nn import functional as F
-from .filtering import wiener
+
 from .demucs import DConv, rescale_module
+from .filtering import wiener
+from .spec import ispectro, spectro
 from .states import capture_init
-from .spec import spectro, ispectro
+
 
 def pad1d(x: torch.Tensor, paddings: tp.Tuple[int, int], mode: str = 'constant', value: float = 0.):
     """Tiny wrapper around F.pad, just to allow for reflect padding on small input.
@@ -404,7 +407,7 @@ class HDemucs(nn.Module):
                  # Metadata
                  samplerate=44100,
                  segment=4 * 10):
-        
+
         """
         Args:
             sources (list[str]): list of source names.
@@ -449,7 +452,7 @@ class HDemucs(nn.Module):
 
         """
         super().__init__()
-        
+
         self.cac = cac
         self.wiener_residual = wiener_residual
         self.audio_channels = audio_channels
@@ -769,16 +772,16 @@ class HDemucs(nn.Module):
         S = len(self.sources)
         x = x.view(B, S, -1, Fq, T)
         x = x * std[:, None] + mean[:, None]
-        
+
         # to cpu as non-cuda GPUs don't support complex numbers
         # demucs issue #435 ##432
         # NOTE: in this case z already is on cpu
         # TODO: remove this when mps supports complex numbers
-        
+
         device_type = x.device.type
         device_load = f"{device_type}:{x.device.index}" if not device_type == 'mps' else device_type
-        x_is_other_gpu = not device_type in ["cuda", "cpu"]
-        
+        x_is_other_gpu = device_type not in ["cuda", "cpu"]
+
         if x_is_other_gpu:
             x = x.cpu()
 

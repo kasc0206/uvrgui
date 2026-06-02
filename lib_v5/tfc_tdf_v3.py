@@ -1,6 +1,8 @@
+from functools import partial
+
 import torch
 import torch.nn as nn
-from functools import partial
+
 
 class STFT:
     def __init__(self, n_fft, hop_length, dim_f, device):
@@ -11,8 +13,8 @@ class STFT:
         self.device = device
 
     def __call__(self, x):
-        
-        x_is_mps = not x.device.type in ["cuda", "cpu"]
+
+        x_is_mps = x.device.type not in ["cuda", "cpu"]
         if x_is_mps:
             x = x.cpu()
 
@@ -30,8 +32,8 @@ class STFT:
         return x[..., :self.dim_f, :]
 
     def inverse(self, x):
-        
-        x_is_mps = not x.device.type in ["cuda", "cpu"]
+
+        x_is_mps = x.device.type not in ["cuda", "cpu"]
         if x_is_mps:
             x = x.cpu()
 

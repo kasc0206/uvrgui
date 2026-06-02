@@ -45,7 +45,7 @@ def _require(tkroot):
             tkdnd_platform_rep = "win64"
         else:
             raise RuntimeError('Plaform not supported.')
-        
+
         module_path = os.path.join(os.path.dirname(__file__), 'tkdnd', tkdnd_platform_rep)
         tkroot.tk.call('lappend', 'auto_path', module_path)
         TkdndVersion = tkroot.tk.call('package', 'require', 'tkdnd')
@@ -138,7 +138,7 @@ class DnDWrapper:
         ev.x_root = getint_event(X)
         ev.y_root = getint_event(Y)
 
-        
+
 
         return (ev,)
     tkinter.BaseWidget._substitute_dnd = _substitute_dnd

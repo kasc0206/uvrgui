@@ -8,20 +8,19 @@
 This code contains the spectrogram and Hybrid version of Demucs.
 """
 import math
+from fractions import Fraction
 
-from .filtering import wiener
 import torch
+from einops import rearrange
 from torch import nn
 from torch.nn import functional as F
-from fractions import Fraction
-from einops import rearrange
-
-from .transformer import CrossTransformerEncoder
 
 from .demucs import rescale_module
+from .filtering import wiener
+from .hdemucs import HDecLayer, HEncLayer, MultiWrap, ScaledEmbedding, pad1d
+from .spec import ispectro, spectro
 from .states import capture_init
-from .spec import spectro, ispectro
-from .hdemucs import pad1d, ScaledEmbedding, HEncLayer, MultiWrap, HDecLayer
+from .transformer import CrossTransformerEncoder
 
 
 class HTDemucs(nn.Module):
@@ -629,11 +628,11 @@ class HTDemucs(nn.Module):
         # demucs issue #435 ##432
         # NOTE: in this case z already is on cpu
         # TODO: remove this when mps supports complex numbers
-        
+
         device_type = x.device.type
         device_load = f"{device_type}:{x.device.index}" if not device_type == 'mps' else device_type
-        x_is_other_gpu = not device_type in ["cuda", "cpu"]
-        
+        x_is_other_gpu = device_type not in ["cuda", "cpu"]
+
         if x_is_other_gpu:
             x = x.cpu()
 
