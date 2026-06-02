@@ -3,7 +3,7 @@
 
 [![Release](https://img.shields.io/github/release/anjok07/ultimatevocalremovergui.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
-[![Tests](https://img.shields.io/badge/tests-33%2F33-passing-brightgreen)](https://github.com/kasc0206/uvrgui)
+[![Tests](https://img.shields.io/badge/tests-63%2F63-passing-brightgreen)](https://github.com/kasc0206/uvrgui)
 [![Build Windows](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
 
 > 🎵 **Ultimate Vocal Remover** — A state-of-the-art AI-powered audio source separation tool.

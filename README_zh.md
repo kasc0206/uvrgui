@@ -4,7 +4,7 @@
 
 [![Release](https://img.shields.io/github/release/anjok07/ultimatevocalremovergui.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
-[![Tests](https://img.shields.io/badge/tests-32%2F32-%E9%80%9A%E8%BF%87-brightgreen)](https://github.com/kasc0206/uvrgui)
+[![Tests](https://img.shields.io/badge/tests-63%2F63-%E9%80%9A%E8%BF%87-brightgreen)](https://github.com/kasc0206/uvrgui)
 [![Ruff](https://img.shields.io/badge/ruff-%E9%9B%B6%E9%94%99%E8%AF%AF-brightgreen)](https://github.com/kasc0206/uvrgui)
 
 > 🎵 **终极人声移除图形界面** — 利用最先进的音源分离模型，从音频文件中提取或移除人声。
