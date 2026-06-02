@@ -19,7 +19,11 @@ def scale_values(value):
     else:
         return value
 
-SCREEN_HIGHT, SCREEN_WIDTH = get_screen_height()
+try:
+    SCREEN_HIGHT, SCREEN_WIDTH = get_screen_height()
+except Exception:
+    # Headless environment (CI, server) — use safe defaults
+    SCREEN_HIGHT, SCREEN_WIDTH = 1080, 1920
 SCALE_WIN_SIZE = 1920
 
 SCREEN_SIZE_VALUES = {
