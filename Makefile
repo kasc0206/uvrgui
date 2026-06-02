@@ -41,11 +41,11 @@ precommit:
 
 ## 运行代码检查
 lint:
-	$(ACTIVATE) && pip install ruff -q && ruff check --select=E,F,W,I --ignore=E501 uvr_cli.py playsound.py demucs/pretrained.py demucs/repo.py
+	$(ACTIVATE) && pip install ruff -q && ruff check .
 
 ## 自动修复 lint 问题
 fix:
-	$(ACTIVATE) && ruff check --select=E,F,W,I --ignore=E501 --fix uvr_cli.py playsound.py demucs/pretrained.py demucs/repo.py
+	$(ACTIVATE) && ruff check --fix .
 
 ## 清理缓存文件
 clean:
