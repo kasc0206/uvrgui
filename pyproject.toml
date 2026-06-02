@@ -36,6 +36,7 @@ dependencies = [
     "natsort>=8.2.0",
     "omegaconf>=2.2.0",
     "onnx>=1.15.0",
+    "onnx2pytorch>=0.3.0",
     "onnxruntime>=1.15.0",
     "opencv-python>=4.6.0",
     "Pillow>=9.3.0",
