@@ -1,7 +1,7 @@
 ---
 name: uvr-cli-skills
 description: UVR (Ultimate Vocal Remover) CLI 工具 — AI 人声/伴奏分离、模型管理、批量处理
-version: 1.0.0
+version: 1.1.0
 ---
 
 # UVR CLI — AI 音频源分离工具
@@ -22,6 +22,14 @@ version: 1.0.0
 | 搜索模型 | "帮我找找有没有去混响的模型" | `info reverb` / `info reverb --json` |
 | 查看版本 | "当前是什么版本" | `version` / `version --json` |
 | 设置输出格式 | "输出 flac 格式" | `--format flac` / `config --key output_format --value flac` |
+| 只显示已下载的模型 | "我已经下载了哪些模型" | `list --downloaded` |
+| 只显示未下载的模型 | "还有哪些模型没下载" | `list --missing` |
+| 预览处理 | "先看看会处理哪些文件" | `process 文件夹/ --dry-run` |
+| 跳过已完成 | "继续上次没处理完的" | `process 文件夹/ --resume` |
+| 高质量分离 | "我要最好的分离质量" | `process 歌曲.mp3 --shifts 5` |
+| 删除配置项 | "取消默认设置" | `config --delete 配置项名` |
+| 重置配置 | "恢复出厂设置" | `config --reset` |
+| 导出/导入配置 | "把我的配置备份一下" | `config --export 文件.json` |
 
 ## 快速开始
 
@@ -35,6 +43,12 @@ python uvr_cli.py process 输入歌曲.mp3 --two-stem vocals
 
 # 6-stem 分离（鼓/贝斯/其他/人声/吉他/钢琴）
 python uvr_cli.py process 输入歌曲.mp3 --model htdemucs_6s
+
+# 高质量分离（shifts=5 质量更高但更慢）
+python uvr_cli.py process 输入歌曲.mp3 --shifts 5
+
+# 预览但不实际处理
+python uvr_cli.py process 输入歌曲.mp3 --dry-run
 ```
 
 ## 命令参考
@@ -42,6 +56,14 @@ python uvr_cli.py process 输入歌曲.mp3 --model htdemucs_6s
 ### `list` — 列出所有模型
 
 列出所有可用模型及下载状态。
+
+```bash
+# 只显示已下载的模型
+python uvr_cli.py list --downloaded
+
+# 只显示未下载的模型
+python uvr_cli.py list --missing
+```
 
 ```bash
 # 人类可读
@@ -116,8 +138,20 @@ python uvr_cli.py process 歌曲.mp3 --out ./output/
 # 指定输出格式（wav/flac/mp3/aiff）
 python uvr_cli.py process 歌曲.mp3 --format flac
 
+# 高质量模式（shifts=5，质量更高但更慢）
+python uvr_cli.py process 歌曲.mp3 --shifts 5 --overlap 0.5
+
+# 跳过已完成的文件（断点续传）
+python uvr_cli.py process ./音乐文件夹/ --resume
+
+# 预览模式（不实际处理）
+python uvr_cli.py process 歌曲.mp3 --dry-run
+
 # 批量处理文件夹
 python uvr_cli.py process ./音乐文件夹/ --two-stem vocals
+
+# 指定分离架构
+python uvr_cli.py process 歌曲.mp3 --arch demucs
 
 # ✅ JSON 输出（AI 推荐）
 python uvr_cli.py process 歌曲.mp3 --json
@@ -134,6 +168,15 @@ python uvr_cli.py process 歌曲.mp3 --json
   "format": "wav"
 }
 ```
+
+**输出的 progress 参数说明：**
+
+| 参数 | 默认值 | 说明 |
+|------|--------|------|
+| `--shifts N` | 1 | 随机移位次数，越大质量越高（1-5），每增 1 约慢 N 倍 |
+| `--overlap N` | 0.25 | 分割重叠率 (0-1)，越大拼接越平滑但更慢 |
+| `--resume` | off | 跳过输出已存在的文件 |
+| `--dry-run` | off | 只列出要处理的文件，不实际执行 |
 
 **输出目录结构：**
 ```
@@ -185,7 +228,7 @@ python uvr_cli.py download-models --json   # ✅ AI 推荐
 
 ```bash
 python uvr_cli.py version
-# UVR CLI v1.0.0 (基于 v5.6.0)
+# UVR CLI v1.1.0 (基于 v5.6.0)
 # 仓库: https://github.com/kasc0206/uvrgui
 
 python uvr_cli.py version --json
@@ -193,7 +236,7 @@ python uvr_cli.py version --json
 
 **JSON 返回：**
 ```json
-{"version": "v1.0.0", "base": "v5.6.0", "repo": "https://github.com/kasc0206/uvrgui"}
+{"version": "v1.1.0", "base": "v5.6.0", "repo": "https://github.com/kasc0206/uvrgui"}
 ```
 
 ---
@@ -218,6 +261,18 @@ python uvr_cli.py config --key output_format --value flac
 
 # 设置默认输出音源
 python uvr_cli.py config --key two_stem --value vocals
+
+# 删除配置项
+python uvr_cli.py config --delete default_device
+
+# 重置所有配置
+python uvr_cli.py config --reset
+
+# 导出配置到文件
+python uvr_cli.py config --export my_config.json
+
+# 从文件导入配置
+python uvr_cli.py config --import my_config.json
 ```
 
 **优先级：** CLI 参数 > 配置文件 > 程序默认值

@@ -111,8 +111,18 @@ ruff format .
 python UVR.py
 
 # CLI 模式
-python uvr_cli.py list
-python uvr_cli.py process 歌曲.mp3 --two-stem vocals
+python uvr_cli.py list                    # 列出模型
+python uvr_cli.py list --downloaded       # 仅已下载
+python uvr_cli.py list --missing          # 仅未下载
+python uvr_cli.py process 歌曲.mp3 --two-stem vocals   # 分离人声
+python uvr_cli.py process 歌曲.mp3 --shifts 5          # 高质量
+python uvr_cli.py process 文件夹/ --resume              # 续传
+python uvr_cli.py process 歌曲.mp3 --dry-run            # 预览
+python uvr_cli.py config --key default_device --value mps  # 设默认设备
+python uvr_cli.py config --delete default_device        # 删配置项
+python uvr_cli.py config --reset                       # 重置配置
+python uvr_cli.py config --export backup.json           # 导出配置
+python uvr_cli.py config --import backup.json           # 导入配置
 python uvr_cli.py gui
 ```
 
@@ -130,9 +140,17 @@ Tkinter 主窗口类 `MainWindow`，继承自 `DownloadCenterMixin` 和 `_MainWi
 
 ### `uvr_cli.py` — 命令行
 
-CLI 入口，12 个命令：`list`, `info`, `process`, `demucs`, `download-models`, `config`, `gui`, `version`, `help`
+CLI 入口，14 个命令：`list`, `info`, `process`, `demucs`（已弃用）, `download-models`, `config`, `gui`, `version`, `help`
 
 输出支持 `--json` 参数（AI 友好模式）。
+
+新增 v1.1.0 特性：
+- `list --downloaded` / `--missing` 过滤已下载/未下载模型
+- `process --shifts N` / `--overlap N` 调节推理质量
+- `process --resume` 跳过已完成的文件
+- `process --dry-run` 预览不执行
+- `process --arch demucs|vr|mdx` 选择分离架构
+- `config --delete key` / `--reset` / `--export` / `--import` 增强配置管理
 
 ### `separate.py` — 分离引擎
 
