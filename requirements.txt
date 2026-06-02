@@ -1,6 +1,7 @@
 audioread==3.0.0
 certifi==2022.12.7
 cffi==1.15.1
+cryptography>=41.0.0
 diffq==0.2.4
 einops==0.6.0
 julius==0.2.7
@@ -10,7 +11,6 @@ matchering==2.0.6
 ml_collections==0.1.1
 natsort==8.2.0
 omegaconf==2.2.3
-opencv-python==4.6.0.66
 Pillow==9.3.0
 playsound3==3.3.1
 psutil==5.9.4
@@ -20,18 +20,15 @@ pyperclip==1.8.2
 pyrubberband==0.3.0
 pytorch-lightning>=2.4.0
 PyYAML==6.0
-PySoundFile==0.9.0.post1
 requests==2.32.5
 scipy==1.9.3
+six>=1.16.0
 soundfile==0.13.1
-soundstretch==1.2
 screeninfo>=0.8.1
 onnx>=1.15.0
 onnx2pytorch>=0.3.0
 onnxruntime>=1.15.0
 torch>=2.0.0
-torchmetrics==1.9.0
-torchvision>=0.15.0
 tqdm>=4.67.0
 wget==3.2
 
