@@ -25,6 +25,7 @@ requests==2.32.5
 scipy==1.9.3
 soundfile==0.13.1
 soundstretch==1.2
+screeninfo>=0.8.1
 torch>=2.0.0
 torchmetrics==1.9.0
 torchvision>=0.15.0
