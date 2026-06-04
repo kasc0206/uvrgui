@@ -444,9 +444,15 @@ The workflow will / 工作流将执行：
 2. Create a ZIP archive with all runtime files / 打包 ZIP
 3. Upload the artifact and create a GitHub Release
 
-### Method 2: Docker Cross-Compilation (macOS/Linux)
+### Method 2: OrbStack / Docker Cross-Compilation (macOS/Linux)
 
 ```bash
+# 使用 OrbStack (推荐，macOS)
+orb run --rm -v "$PWD:/workspace" \
+  -w /workspace cdrx/pyinstaller-windows:latest \
+  pyinstaller UVR.spec --clean --noconfirm
+
+# 使用 Docker
 docker run --rm -v "$PWD:/workspace" \
   -w /workspace cdrx/pyinstaller-windows:latest \
   pyinstaller UVR.spec --clean --noconfirm

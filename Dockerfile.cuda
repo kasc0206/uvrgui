@@ -1,47 +1,43 @@
 # =============================================================================
-# UVR OrbStack / Docker 构建
+# UVR OrbStack / Docker — CUDA 版 (NVIDIA GPU 加速)
 # =============================================================================
 # 前置条件:
 #   1. 安装 OrbStack (推荐): https://orbstack.dev
 #      或 Docker Desktop: https://docker.com
 #
-# 构建方式:
-#   orb build -t uvr:latest .
-#   docker build -t uvr:latest .
+# 构建:
+#   orb build -t uvr:cuda -f Dockerfile.cuda .
 #
 # 运行:
-#   orb run --rm -v "$PWD/input:/input" -v "$PWD/output:/output" uvr process /input/song.mp3 --out /output
-#   docker run --rm -v "$PWD/input:/input" -v "$PWD/output:/output" uvr process /input/song.mp3 --out /output
-#
-# GPU 加速 (NVIDIA):
-#   orb build -t uvr:cuda -f Dockerfile.cuda .
-#   orb run --rm --gpus all -v ... uvr process ...
+#   orb run --rm --gpus all -v "$PWD/input:/input" -v "$PWD/output:/output" uvr:cuda process /input/song.mp3 --device cuda --out /output
 # =============================================================================
 
-# ─── Stage 1: 安装纯 Python 依赖 ──────────────────────────────────────────────
+# ─── Stage 1: 安装 CUDA PyTorch ──────────────────────────────────────────────
 FROM python:3.10-slim AS builder
 
 WORKDIR /build
 COPY requirements.txt .
 
-# 安装编译依赖 & Python 包
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     g++ \
     curl \
     && rm -rf /var/lib/apt/lists/* \
     && pip install --no-cache-dir --prefix=/install \
-        torch --index-url https://download.pytorch.org/whl/cpu \
+        torch --index-url https://download.pytorch.org/whl/cu124 \
     && pip install --no-cache-dir --prefix=/install -r requirements.txt \
     && pip install --no-cache-dir --prefix=/install tqdm
 
-# ─── Stage 2: 运行时镜像 ──────────────────────────────────────────────────────
-FROM python:3.10-slim AS runtime
+# ─── Stage 2: CUDA 运行时 ────────────────────────────────────────────────────
+FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04 AS runtime
 
 WORKDIR /app
 
-# 仅安装运行时系统依赖
+# 安装系统依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-pip \
+    python3-venv \
     ffmpeg \
     curl \
     libsndfile1 \
@@ -50,7 +46,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 从 builder 复制已安装的 Python 包
 COPY --from=builder /install /usr/local
 
-# 复制项目代码（最后复制以利用缓存）
+# 复制项目代码
 COPY . .
 
 # 创建非 root 用户
@@ -59,9 +55,6 @@ RUN useradd -m -u 1000 uvr \
     && mkdir -p /input /output \
     && chown uvr:uvr /input /output
 USER uvr
-
-# 预下载模型（构建时可选）
-# RUN python uvr_cli.py download-models
 
 ENTRYPOINT ["python", "uvr_cli.py"]
 CMD ["--help"]
