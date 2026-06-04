@@ -1,6 +1,6 @@
 # Ultimate Vocal Remover GUI v5.6 / 终极人声移除图形界面
 
-<img src="https://raw.githubusercontent.com/Anjok07/ultimatevocalremovergui/master/gui_data/img/UVR_v5.6.png?raw=true" />
+![UVR v5.6 Banner](https://raw.githubusercontent.com/Anjok07/ultimatevocalremovergui/master/gui_data/img/UVR_v5.6.png?raw=true)
 
 [![Release](https://img.shields.io/github/release/anjok07/ultimatevocalremovergui.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
@@ -127,11 +127,12 @@ Also can be triggered manually from the [Actions page](https://github.com/kasc02
 #### Build Variants / 构建变体
 
 | Variant / 变体 | File / 文件 | Size / 体积 | GPU | Release Asset | Artifact |
-|------|------|------|-----|:---:|:---:|
+| --- | --- | --- | --- | :---: | :---: |
 | **CPU Edition** | `UVR_*_CPU.zip` | ~400 MB | ❌ | ✅ Direct download | ✅ |
 | **CUDA Edition** | `UVR_*_CUDA.zip` | ~2.5 GB | ✅ NVIDIA | ❌ Exceeds 2GB limit | ✅ |
 
 **CI Flow / CI 流程：**
+
 1. Install CPU PyTorch → Build CPU edition → Package ZIP → Upload Artifact
 2. Install CUDA PyTorch → Rebuild CUDA edition → Package ZIP → Upload Artifact
 3. Release page: CPU edition as direct download, CUDA edition via Artifact link
@@ -156,9 +157,9 @@ pyinstaller UVR.spec --clean --noconfirm
 
 #### Prerequisites / 前置条件
 
-- macOS Big Sur (11) or later / 或更高版本
-- ~10 GB disk space (including PyTorch runtime) / 约 10 GB 磁盘空间（含 PyTorch 运行时）
-- Xcode Command Line Tools
+* macOS Big Sur (11) or later / 或更高版本
+* ~10 GB disk space (including PyTorch runtime) / 约 10 GB 磁盘空间（含 PyTorch 运行时）
+* Xcode Command Line Tools
 
 #### Steps / 编译步骤
 
@@ -196,6 +197,7 @@ python UVR.py
 > **Apple Silicon (M1/M2/M3)**: PyTorch MPS acceleration is automatically enabled. / PyTorch MPS 加速自动启用，无需额外配置。
 >
 > **If you see "Cannot verify developer" / 如果遇到「无法验证开发者」提示**：
+>
 > ```bash
 > sudo spctl --master-disable
 > sudo xattr -rd com.apple.quarantine /Applications/Ultimate\ Vocal\ Remover.app
@@ -205,11 +207,11 @@ python UVR.py
 
 ### 🐧 Linux Build from Source / Linux 从源码编译
 
-#### Prerequisites / 前置条件
+#### Linux Prerequisites / Linux 前置条件
 
-- 64-bit Linux distribution / 64 位 Linux 发行版
-- ~10 GB disk space / 约 10 GB 磁盘空间
-- NVIDIA GPU: CUDA Toolkit 11.8+ (optional)
+* 64-bit Linux distribution / 64 位 Linux 发行版
+* ~10 GB disk space / 约 10 GB 磁盘空间
+* NVIDIA GPU: CUDA Toolkit 11.8+ (optional)
 
 #### Debian / Ubuntu
 
@@ -280,18 +282,22 @@ python UVR.py
 | **FFmpeg** | Process non-WAV audio | Package manager per platform |
 | **Rubber Band** | Time-stretch / pitch-shift | Optional / 可选 |
 
+<!-- markdownlint-disable MD033 -->
 <details id="CannotOpen">
   <summary>🍎 macOS: Having Trouble Opening UVR? / 无法打开 UVR？</summary>
+<!-- markdownlint-enable MD033 -->
 
 > Due to Apple's strict application security, you may need to follow these steps:
 > 由于 Apple 严格的应用安全策略，您可能需要执行以下步骤：
 >
 > 1. Allow apps from all sources / 允许从所有来源运行应用（建议解决问题后重新关闭）：
+>
 > ```bash
 > sudo spctl --master-disable
 > ```
 >
-> 2. Bypass notarization / 绕过公证检查：
+> 1. Bypass notarization / 绕过公证检查：
+>
 > ```bash
 > sudo xattr -rd com.apple.quarantine /Applications/Ultimate\ Vocal\ Remover.app
 > ```
@@ -311,9 +317,10 @@ python UVR.py
 | **Platform** | 64-bit only | 64-bit only |
 
 **Notes / 说明：**
-- AMD Radeon GPU support is limited. See [v5.6-amd-gpu branch](https://github.com/Anjok07/ultimatevocalremovergui/tree/v5.6-amd-gpu)
-- Conversion times depend significantly on your hardware / 转换时间取决于硬件配置
-- Models are computationally intensive / 模型计算强度大
+
+* AMD Radeon GPU support is limited. See [v5.6-amd-gpu branch](https://github.com/Anjok07/ultimatevocalremovergui/tree/v5.6-amd-gpu)
+* Conversion times depend significantly on your hardware / 转换时间取决于硬件配置
+* Models are computationally intensive / 模型计算强度大
 
 ---
 
@@ -403,9 +410,10 @@ Open-source source separation models from Meta, all versions integrated:
 
 ### Common Issues / 常见问题
 
-- **FFmpeg not installed**: The app will throw an error when processing non-WAV files. Install FFmpeg via your package manager.
-- **Memory errors**: Lower the "Segment" or "Window" size settings. / 降低"Segment"或"Window"大小即可。
-- **macOS Sonoma left-click bug**: Resolved in newer Tkinter. Update via: / 已修复，更新 Tkinter：
+* **FFmpeg not installed**: The app will throw an error when processing non-WAV files. Install FFmpeg via your package manager.
+* **Memory errors**: Lower the "Segment" or "Window" size settings. / 降低"Segment"或"Window"大小即可。
+* **macOS Sonoma left-click bug**: Resolved in newer Tkinter. Update via: / 已修复，更新 Tkinter：
+
   ```bash
   brew update && brew upgrade python-tk
   ```
@@ -431,6 +439,7 @@ git push origin v1.0.0
 ```
 
 The workflow will / 工作流将执行：
+
 1. Build `UVR.exe` with PyInstaller on `windows-latest`
 2. Create a ZIP archive with all runtime files / 打包 ZIP
 3. Upload the artifact and create a GitHub Release
@@ -539,10 +548,10 @@ The output `UVR.exe` will be in `dist/` / 输出文件位于 `dist/` 目录。
 
 ## 🤝 Contributing / 贡献指南
 
-- Pull requests are welcome! / 欢迎提交 Pull Request！
-- This project is 100% open-source under MIT. / 本项目完全开源（MIT 协议）。
-- We maintain development and support for UVR and provided models only. / 我们仅维护 UVR 软件及提供的模型。
+* Pull requests are welcome! / 欢迎提交 Pull Request！
+* This project is 100% open-source under MIT. / 本项目完全开源（MIT 协议）。
+* We maintain development and support for UVR and provided models only. / 我们仅维护 UVR 软件及提供的模型。
 
 ## 📚 References / 参考文献
 
-- [1] Takahashi et al., "Multi-scale Multi-band DenseNets for Audio Source Separation", https://arxiv.org/pdf/1706.09588.pdf
+* [1] Takahashi et al., "Multi-scale Multi-band DenseNets for Audio Source Separation", <https://arxiv.org/pdf/1706.09588.pdf>
