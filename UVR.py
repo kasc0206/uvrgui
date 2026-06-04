@@ -424,6 +424,7 @@ from gui_data.constants import (
     JSON,
     KARAOKE_MODEL_TEXT,
     KARAOKEE_CHECK,
+    LANGUAGE_TEXT,
     LEAD_VOCAL_STEM,
     LICENSE_TEXT,
     LINUX_DND_CHECK,
@@ -3932,6 +3933,34 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
         help_hints_Option = ttk.Checkbutton(settings_menu_main_Frame, text=ENABLE_HELP_HINTS_TEXT, variable=self.help_hints_var, width=HELP_HINT_CHECKBOX_WIDTH)
         help_hints_Option.grid(pady=MENU_PADDING_1)
+
+        # 语言切换
+        language_Label = self.menu_sub_LABEL_SET(settings_menu_main_Frame, LANGUAGE_TEXT)
+        language_Label.grid(pady=(MENU_PADDING_2, 0))
+        language_var = tk.StringVar()
+        from gui_data.l10n import get_available_languages, set_language, get_language
+        _lang_opts = get_available_languages()
+        _lang_values = [f"{l['label']}" for l in _lang_opts]
+        _lang_code_map = {f"{l['label']}": l['code'] for l in _lang_opts}
+        _current_lang = get_language()
+        _current_label = next((l['label'] for l in _lang_opts if l['code'] == _current_lang), _lang_opts[0]['label'])
+        language_var.set(_current_label)
+        def _on_language_change(event):
+            _selected = language_var.get()
+            _code = _lang_code_map.get(_selected, 'zh')
+            set_language(_code)
+            import json
+            try:
+                with open('uvr_config.json', 'r') as _f:
+                    _cfg = json.load(_f)
+                _cfg['language'] = _code
+                with open('uvr_config.json', 'w') as _f:
+                    json.dump(_cfg, _f, indent=2)
+            except Exception:
+                pass
+        language_Option = ComboBoxMenu(settings_menu_main_Frame, textvariable=language_var, values=_lang_values, width=GEN_SETTINGS_WIDTH)
+        language_Option.update_dropdown_size(_lang_values, command=_on_language_change)
+        language_Option.grid(pady=MENU_PADDING_1)
 
         open_app_dir_Button = ttk.Button(settings_menu_main_Frame, text=OPEN_APPLICATION_DIRECTORY_TEXT, command=lambda:OPEN_FILE_func(BASE_PATH), width=SETTINGS_BUT_WIDTH)
         open_app_dir_Button.grid(pady=MENU_PADDING_1)
