@@ -1,0 +1,147 @@
+name: Build Linux Binary
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version tag (e.g., v1.0.0)"
+        required: false
+        default: ""
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ffmpeg \
+            libsndfile1 \
+            python3-tk \
+            xvfb \
+            --no-install-recommends
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install PyInstaller
+        run: |
+          pip install pyinstaller
+
+      - name: Verify imports (CPU)
+        run: |
+          python -c "
+          import tkinter; import torch; import librosa
+          import soundfile; import numpy; import demucs
+          import gui_data.constants
+          print('Linux torch OK:', torch.device('cpu'))
+          print('CUDA available:', torch.cuda.is_available())
+          "
+
+      # ──────────── CPU Build ────────────
+      - name: Build binary (CPU)
+        run: |
+          pyinstaller UVR.spec --clean --noconfirm
+          du -sh dist/UVR
+
+      - name: Package CPU tarball
+        run: |
+          cp README.md dist/ 2>/dev/null || true
+          cp LICENSE dist/ 2>/dev/null || true
+          version="${{ github.event.inputs.version }}"
+          if [ -z "$version" ]; then
+            version=$(python -c "from __version__ import FORK_VERSION; print(FORK_VERSION)" 2>/dev/null || echo "v2.0.0")
+          fi
+          tar_name="UVR_${version}_Linux_x86_64.tar.gz"
+          # Package the dist/UVR directory as a portable tarball
+          cd dist
+          tar czf "../$tar_name" --transform="s/^UVR/UVR-${version}/" UVR README.md LICENSE 2>/dev/null || \
+          tar czf "../$tar_name" UVR
+          cd ..
+          echo "Archive: $tar_name"
+          echo "archive_name=$tar_name" >> $GITHUB_ENV
+
+      - name: Upload CPU artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UVR-Linux-x86_64-CPU
+          path: UVR_*.tar.gz
+          retention-days: 30
+
+      # ──────────── CUDA Build ────────────
+      - name: Install CUDA PyTorch
+        run: |
+          pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+      - name: Verify imports (CUDA)
+        run: |
+          python -c "
+          import torch; print('CUDA available:', torch.cuda.is_available())
+          import tkinter; import librosa; import soundfile; import numpy
+          import demucs; import gui_data.constants
+          print('CUDA imports OK')
+          "
+
+      - name: Rebuild binary (CUDA)
+        run: |
+          pyinstaller UVR.spec --clean --noconfirm
+          du -sh dist/UVR
+
+      - name: Package CUDA tarball
+        run: |
+          version="${{ github.event.inputs.version }}"
+          if [ -z "$version" ]; then
+            version=$(python -c "from __version__ import FORK_VERSION; print(FORK_VERSION)" 2>/dev/null || echo "v2.0.0")
+          fi
+          tar_name="UVR_${version}_Linux_x86_64_CUDA.tar.gz"
+          cd dist
+          tar czf "../$tar_name" --transform="s/^UVR/UVR-${version}-cuda/" UVR
+          cd ..
+          echo "Archive: $tar_name"
+          echo "cuda_archive_name=$tar_name" >> $GITHUB_ENV
+
+      - name: Upload CUDA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UVR-Linux-x86_64-CUDA
+          path: UVR_*_CUDA.tar.gz
+          retention-days: 30
+
+      # ──────────── Release (append files only) ────────────
+      - name: Upload to Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            UVR_*.tar.gz
+          # Do not generate release notes — Windows workflow is the primary
+          generate_release_notes: false
+          # Append files to existing release (do not replace body)
+          fail_on_unmatched_files: false

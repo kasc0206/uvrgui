@@ -1,0 +1,105 @@
+name: Build macOS App
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version tag (e.g., v1.0.0)"
+        required: false
+        default: ""
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build-macos:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        python-version: ["3.10"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install system dependencies
+        run: |
+          brew install ffmpeg libsndfile
+          echo "DYLD_LIBRARY_PATH=$(brew --prefix libsndfile)/lib:$DYLD_LIBRARY_PATH" >> $GITHUB_ENV
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip wheel setuptools
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install PyInstaller
+        run: |
+          pip install pyinstaller
+
+      - name: Verify imports
+        run: |
+          python -c "
+          import tkinter; import torch; import librosa
+          import soundfile; import numpy; import demucs
+          import gui_data.constants
+          print('macOS torch OK, MPS:', torch.backends.mps.is_available())
+          print('Arch:', __import__('platform').machine())
+          "
+
+      # ──────────── CPU/MPS Build ────────────
+      - name: Build .app (CPU/MPS)
+        run: |
+          pyinstaller UVR.spec --clean --noconfirm
+          # PyInstaller creates UVR.app on macOS when console=False
+          du -sh dist/UVR.app
+
+      - name: Package macOS .app
+        run: |
+          cp README.md dist/ 2>/dev/null || true
+          cp LICENSE dist/ 2>/dev/null || true
+          version="${{ github.event.inputs.version }}"
+          if [ -z "$version" ]; then
+            # Try to extract from pyproject or default
+            version=$(python -c "from __version__ import FORK_VERSION; print(FORK_VERSION)" 2>/dev/null || echo "v2.0.0")
+          fi
+          arch=$(uname -m)
+          zip_name="UVR_${version}_macOS_${arch}.zip"
+          ditto -c -k --sequesterRsrc --keepParent dist/UVR.app "$zip_name"
+          echo "Archive: $zip_name"
+          echo "archive_name=$zip_name" >> $GITHUB_ENV
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: UVR-macOS-${{ runner.arch }}
+          path: UVR_*.zip
+          retention-days: 30
+
+      # ──────────── CUDA Not Available on macOS ────────────
+      # macOS uses MPS (Metal Performance Shaders) which is built into PyTorch
+
+      # ──────────── Release (append files only) ────────────
+      - name: Upload to Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: UVR_*.zip
+          # Do not generate release notes — Windows workflow is the primary
+          generate_release_notes: false
+          # Append files to existing release (do not replace body)
+          fail_on_unmatched_files: false

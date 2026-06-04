@@ -368,3 +368,15 @@ source venv/bin/activate
 pip install -r requirements.txt
 python uvr_cli.py --help
 ```
+
+## CI/CD 构建工作流
+
+推送 tag `v*` 自动触发三平台构建：
+
+| 工作流 | 平台 | 产物 |
+|--------|------|------|
+| `build-windows.yml` | 🪟 Windows | `UVR_*_CPU.zip` / `UVR_*_CUDA.zip` |
+| `build-macos.yml` | 🍎 macOS | `UVR_*_macOS_*.zip`（.app 包） |
+| `build-linux.yml` | 🐧 Linux | `UVR_*_Linux_x86_64.tar.gz` / `*_CUDA.tar.gz` |
+
+Windows 工作流负责创建 GitHub Release 和发布说明，macOS/Linux 自动附加产物。

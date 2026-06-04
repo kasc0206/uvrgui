@@ -6,6 +6,8 @@
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
 [![Tests](https://img.shields.io/badge/tests-63%2F63-passing-brightgreen)](https://github.com/kasc0206/uvrgui)
 [![Build Windows](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
+[![Build macOS](https://github.com/kasc0206/uvrgui/actions/workflows/build-macos.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/build-macos.yml)
+[![Build Linux](https://github.com/kasc0206/uvrgui/actions/workflows/build-linux.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/build-linux.yml)
 [![CI](https://github.com/kasc0206/uvrgui/actions/workflows/ci.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/ci.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
@@ -137,31 +139,40 @@ python UVR.py
 
 ### 🪟 Windows EXE Build / Windows EXE 构建
 
-**English:** This fork supports automated Windows EXE builds via GitHub Actions. Push a tag to trigger:
+**English:** This fork supports automated cross-platform builds via GitHub Actions (Windows, macOS, Linux). Push a tag to trigger all three:
 
-**中文：** 本 Fork 支持通过 GitHub Actions 自动构建 Windows EXE。推送 tag 即可触发：
+**中文：** 本 Fork 支持通过 GitHub Actions 自动构建多平台安装包（Windows / macOS / Linux）。推送 tag 即可触发全部构建：
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-Also can be triggered manually from the [Actions page](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml) / 也可手动触发 [Actions 页面](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
+Also can be triggered manually from the Actions page:
+- [Windows build](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
+- [macOS build](https://github.com/kasc0206/uvrgui/actions/workflows/build-macos.yml)
+- [Linux build](https://github.com/kasc0206/uvrgui/actions/workflows/build-linux.yml)
 
 #### Build Variants / 构建变体
 
-| Variant / 变体 | File / 文件 | Size / 体积 | GPU | Release Asset | Artifact |
-| --- | --- | --- | --- | :---: | :---: |
-| **CPU Edition** | `UVR_*_CPU.zip` | ~400 MB | ❌ | ✅ Direct download | ✅ |
-| **CUDA Edition** | `UVR_*_CUDA.zip` | ~2.5 GB | ✅ NVIDIA | ❌ Exceeds 2GB limit | ✅ |
+| Variant / 变体 | File / 文件 | Size / 体积 | GPU |
+| --- | --- | --- | :---: |
+| **Windows CPU** | `UVR_*_Windows_x86_64_CPU.zip` | ~400 MB | ❌ |
+| **Windows CUDA** | `UVR_*_Windows_x86_64_CUDA.zip` | ~2.5 GB | ✅ NVIDIA |
+| **macOS Universal** | `UVR_*_macOS_*.zip` | ~400 MB | ✅ MPS |
+| **Linux CPU** | `UVR_*_Linux_x86_64.tar.gz` | ~400 MB | ❌ |
+| **Linux CUDA** | `UVR_*_Linux_x86_64_CUDA.tar.gz` | ~2.5 GB | ✅ NVIDIA |
 
 **CI Flow / CI 流程：**
 
-1. Install CPU PyTorch → Build CPU edition → Package ZIP → Upload Artifact
-2. Install CUDA PyTorch → Rebuild CUDA edition → Package ZIP → Upload Artifact
-3. Release page: CPU edition as direct download, CUDA edition via Artifact link
+1. Push tag `v*` triggers `build-windows.yml`, `build-macos.yml`, `build-linux.yml` in parallel
+2. Each workflow: install PyTorch → PyInstaller build → package → upload artifact
+3. Windows workflow creates the GitHub Release + release notes; macOS/Linux append their files
+4. All artifacts available directly in the Release page
 
-#### Local Build / 本机构建
+> **Note / 注意**：CUDA 版体积较大（~2.5 GB），GitHub Release 有 2 GB 单文件限制。如果上传失败，请从 Actions Artifacts 手动下载。
+
+#### Windows Local Build / Windows 本机构建
 
 ```bash
 pip install -r requirements.txt
@@ -173,6 +184,25 @@ pyinstaller UVR.spec --clean --noconfirm
 # CUDA edition (install CUDA PyTorch first) / CUDA 版（需先安装 CUDA PyTorch）
 pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu121
 pyinstaller UVR.spec --clean --noconfirm
+```
+
+#### macOS Local Build / macOS 本机构建
+
+```bash
+pip install -r requirements.txt
+pip install pyinstaller
+pyinstaller UVR.spec --clean --noconfirm
+# Output: dist/UVR.app
+```
+
+#### Linux Local Build / Linux 本机构建
+
+```bash
+pip install -r requirements.txt
+pip install pyinstaller
+pyinstaller UVR.spec --clean --noconfirm
+# Output: dist/UVR (standalone binary)
+```
 ```
 
 ---
