@@ -21,13 +21,13 @@ FG_COLOR = '#13849f'
 VR_ARCH_TYPE = 'VR Arc'
 MDX_ARCH_TYPE = 'MDX-Net'
 DEMUCS_ARCH_TYPE = 'Demucs'
-VR_ARCH_PM = 'VR Architecture'
-ENSEMBLE_MODE = 'Ensemble Mode'
-ENSEMBLE_STEM_CHECK = 'Ensemble Stem'
-SECONDARY_MODEL = 'Secondary Model'
+VR_ARCH_PM = 'VR 架构'
+ENSEMBLE_MODE = '集成模式'
+ENSEMBLE_STEM_CHECK = '集成音轨'
+SECONDARY_MODEL = '二级模型'
 DEMUCS_6_STEM_MODEL = 'htdemucs_6s'
-DEFAULT = "Default"
-ALIGNMENT_TOOL = 'Alignment Tool Options'
+DEFAULT = "默认"
+ALIGNMENT_TOOL = '对齐工具选项'
 
 SINGLE_FILE = 'SINGLE_FILE'
 MULTIPLE_FILE = 'MULTI_FILE'
@@ -36,7 +36,7 @@ CHOOSE_EXPORT_FIR = 'CHOOSE_EXPORT_FIR'
 
 DUAL = "dual"
 FOUR_STEM = "fourstem"
-ANY_STEM = "Any Stem"
+ANY_STEM = "任意音轨"
 
 DEMUCS_V3_ARCH_TYPE = 'Demucs v3'
 DEMUCS_V4_ARCH_TYPE = 'Demucs v4'
@@ -60,23 +60,23 @@ DEMUCS_VERSION_MAPPER = {
             DEMUCS_V4:DEMUCS_V4_TAG}
 
 #Download Center
-DOWNLOAD_FAILED = 'Download Failed'
-DOWNLOAD_STOPPED = 'Download Stopped'
-DOWNLOAD_COMPLETE = 'Download Complete'
-DOWNLOAD_UPDATE_COMPLETE = 'Update Download Complete'
+DOWNLOAD_FAILED = '下载失败'
+DOWNLOAD_STOPPED = '下载已停止'
+DOWNLOAD_COMPLETE = '下载完成'
+DOWNLOAD_UPDATE_COMPLETE = '更新下载完成'
 SETTINGS_MENU_EXIT = 'exit'
-NO_CONNECTION = 'No Internet Connection'
+NO_CONNECTION = '无网络连接'
 VIP_SELECTION = 'VIP:'
 DEVELOPER_SELECTION = 'VIP:'
-NO_NEW_MODELS = 'All Available Models Downloaded'
+NO_NEW_MODELS = '所有可用模型已下载'
 ENSEMBLE_PARTITION = ': '
-NO_MODEL = 'No Model Selected'
-CHOOSE_MODEL = 'Choose Model'
-SINGLE_DOWNLOAD = 'Downloading Item 1/1...'
-DOWNLOADING_ITEM = 'Downloading Item'
-FILE_EXISTS = 'File already exists!'
-DOWNLOADING_UPDATE = 'Downloading Update...'
-DOWNLOAD_MORE = 'Download More Models'
+NO_MODEL = '未选择模型'
+CHOOSE_MODEL = '选择模型'
+SINGLE_DOWNLOAD = '正在下载 1/1...'
+DOWNLOADING_ITEM = '正在下载'
+FILE_EXISTS = '文件已存在！'
+DOWNLOADING_UPDATE = '正在下载更新...'
+DOWNLOAD_MORE = '下载更多模型'
 IS_KARAOKEE = "is_karaoke"
 IS_BV_MODEL = "is_bv_model"
 IS_BV_MODEL_REBAL = "is_bv_model_rebalanced"
@@ -84,7 +84,7 @@ INPUT_STEM_NAME = 'Input Stem Name'
 
 #Menu Options
 
-AUTO_SELECT = 'Auto'
+AUTO_SELECT = '自动'
 
 #LINKS
 DOWNLOAD_CHECKS = "https://raw.githubusercontent.com/TRvlvr/application_data/main/filelists/download_checks.json"
@@ -122,47 +122,47 @@ TH_EXT = '.th'
 JSON = '.json'
 
 #GUI Buttons
-START_PROCESSING = 'Start Processing'
-WAIT_PROCESSING = 'Please wait...'
-STOP_PROCESSING = 'Halting process, please wait...'
-LOADING_MODELS = 'Loading models...'
+START_PROCESSING = '开始处理'
+WAIT_PROCESSING = '请稍候...'
+STOP_PROCESSING = '正在停止进程，请稍候...'
+LOADING_MODELS = '正在加载模型...'
 
 #---Messages and Logs----
 
-MISSING_MODEL = 'missing'
-MODEL_PRESENT = 'present'
+MISSING_MODEL = '缺失'
+MODEL_PRESENT = '存在'
 
-ALL_STEMS = 'All Stems'
-VOCAL_STEM = 'Vocals'
-INST_STEM = 'Instrumental'
-OTHER_STEM = 'Other'
-BASS_STEM = 'Bass'
-DRUM_STEM = 'Drums'
-GUITAR_STEM = 'Guitar'
-PIANO_STEM = 'Piano'
-SYNTH_STEM = 'Synthesizer'
-STRINGS_STEM = 'Strings'
-WOODWINDS_STEM = 'Woodwinds'
-BRASS_STEM = 'Brass'
-WIND_INST_STEM = 'Wind Inst'
-NO_OTHER_STEM = 'No Other'
-NO_BASS_STEM = 'No Bass'
-NO_DRUM_STEM = 'No Drums'
-NO_GUITAR_STEM = 'No Guitar'
-NO_PIANO_STEM = 'No Piano'
-NO_SYNTH_STEM = 'No Synthesizer'
-NO_STRINGS_STEM = 'No Strings'
-NO_WOODWINDS_STEM = 'No Woodwinds'
-NO_WIND_INST_STEM = 'No Wind Inst'
-NO_BRASS_STEM = 'No Brass'
-PRIMARY_STEM = 'Primary Stem'
-SECONDARY_STEM = 'Secondary Stem'
+ALL_STEMS = '全部音轨'
+VOCAL_STEM = '人声'
+INST_STEM = '伴奏'
+OTHER_STEM = '其他'
+BASS_STEM = '贝斯'
+DRUM_STEM = '鼓点'
+GUITAR_STEM = '吉他'
+PIANO_STEM = '钢琴'
+SYNTH_STEM = '合成器'
+STRINGS_STEM = '弦乐'
+WOODWINDS_STEM = '木管乐'
+BRASS_STEM = '铜管乐'
+WIND_INST_STEM = '管乐器'
+NO_OTHER_STEM = '无其他'
+NO_BASS_STEM = '无贝斯'
+NO_DRUM_STEM = '无鼓点'
+NO_GUITAR_STEM = '无吉他'
+NO_PIANO_STEM = '无钢琴'
+NO_SYNTH_STEM = '无合成器'
+NO_STRINGS_STEM = '无弦乐'
+NO_WOODWINDS_STEM = '无木管乐'
+NO_WIND_INST_STEM = '无管乐器'
+NO_BRASS_STEM = '无铜管乐'
+PRIMARY_STEM = '主音轨'
+SECONDARY_STEM = '次音轨'
 LEAD_VOCAL_STEM = 'lead_only'
 BV_VOCAL_STEM = 'backing_only'
 LEAD_VOCAL_STEM_I = 'with_lead_vocals'
 BV_VOCAL_STEM_I = 'with_backing_vocals'
-LEAD_VOCAL_STEM_LABEL = 'Lead Vocals'
-BV_VOCAL_STEM_LABEL = 'Backing Vocals'
+LEAD_VOCAL_STEM_LABEL = '主唱人声'
+BV_VOCAL_STEM_LABEL = '背景和声'
 
 VOCAL_STEM_ONLY = f'{VOCAL_STEM} Only'
 INST_STEM_ONLY = f'{INST_STEM} Only'
@@ -205,7 +205,7 @@ DEMUCS_6_SOURCE_LIST = [BASS_STEM, DRUM_STEM, OTHER_STEM, VOCAL_STEM, GUITAR_STE
 
 DEMUCS_UVR_MODEL = 'UVR_Model'
 
-CHOOSE_STEM_PAIR = 'Choose Stem Pair'
+CHOOSE_STEM_PAIR = '选择音轨对'
 
 STEM_SET_MENU = (VOCAL_STEM,
                  INST_STEM,
@@ -297,14 +297,14 @@ INST_PAIR = f'{INST_STEM}/{VOCAL_STEM}'
 OTHER_PAIR = f'{OTHER_STEM}/{NO_OTHER_STEM}'
 DRUM_PAIR = f'{DRUM_STEM}/{NO_DRUM_STEM}'
 BASS_PAIR = f'{BASS_STEM}/{NO_BASS_STEM}'
-FOUR_STEM_ENSEMBLE = '4 Stem Ensemble'
-MULTI_STEM_ENSEMBLE = 'Multi-stem Ensemble'
+FOUR_STEM_ENSEMBLE = '4 音轨集成'
+MULTI_STEM_ENSEMBLE = '多音轨集成'
 
 ENSEMBLE_MAIN_STEM = (CHOOSE_STEM_PAIR, VOCAL_PAIR, OTHER_PAIR, DRUM_PAIR, BASS_PAIR, FOUR_STEM_ENSEMBLE, MULTI_STEM_ENSEMBLE)
 
-MIN_SPEC = 'Min Spec'
-MAX_SPEC = 'Max Spec'
-AUDIO_AVERAGE = 'Average'
+MIN_SPEC = '最小频谱'
+MAX_SPEC = '最大频谱'
+AUDIO_AVERAGE = '平均'
 
 MAX_MIN = f'{MAX_SPEC}/{MIN_SPEC}'
 MAX_MAX = f'{MAX_SPEC}/{MAX_SPEC}'
@@ -319,10 +319,10 @@ AVE_AVE = f'{AUDIO_AVERAGE}/{AUDIO_AVERAGE}'
 ENSEMBLE_TYPE = (MAX_MIN, MAX_MAX, MAX_AVE, MIN_MAX, MIN_MIX, MIN_AVE, AVE_MAX, AVE_MIN, AVE_AVE)
 ENSEMBLE_TYPE_4_STEM = (MAX_SPEC, MIN_SPEC, AUDIO_AVERAGE)
 
-BATCH_MODE = 'Batch Mode'
-BETA_VERSION = 'BETA'
-DEF_OPT = 'Default'
-USER_INPUT = "User Input"
+BATCH_MODE = '批量模式'
+BETA_VERSION = '测试版'
+DEF_OPT = '默认'
+USER_INPUT = "用户输入"
 OPT_SEPARATOR = '─'*65
 
 CHUNKS = (AUTO_SELECT, '1', '5', '10', '15', '20',
@@ -337,14 +337,14 @@ VOL_COMPENSATION = (AUTO_SELECT, '1.035', '1.08')
 
 MARGIN_SIZE = ('44100', '22050', '11025')
 
-AUDIO_TOOLS = 'Audio Tools'
+AUDIO_TOOLS = '音频工具'
 
-MANUAL_ENSEMBLE = 'Manual Ensemble'
-TIME_STRETCH = 'Time Stretch'
-CHANGE_PITCH = 'Change Pitch'
-ALIGN_INPUTS = 'Align Inputs'
-MATCH_INPUTS = 'Matchering'
-COMBINE_INPUTS = 'Combine Inputs'
+MANUAL_ENSEMBLE = '手动集成'
+TIME_STRETCH = '时间伸缩'
+CHANGE_PITCH = '变调'
+ALIGN_INPUTS = '对齐输入'
+MATCH_INPUTS = '匹配处理'
+COMBINE_INPUTS = '合并输入'
 
 if OPERATING_SYSTEM == 'Windows' or OPERATING_SYSTEM == 'Darwin':
    AUDIO_TOOL_OPTIONS = (MANUAL_ENSEMBLE, TIME_STRETCH, CHANGE_PITCH, ALIGN_INPUTS, MATCH_INPUTS)
@@ -416,13 +416,13 @@ PHASE_MAPPER = {
             "Shifts High": [0],
             "Shifts Very High": [0],}
 
-NONE_P = "None"
-VLOW_P = "Shifts: Very Low"
-LOW_P = "Shifts: Low"
-MED_P = "Shifts: Medium"
-HIGH_P = "Shifts: High"
-VHIGH_P = "Shifts: Very High"
-VMAX_P = "Shifts: Maximum"
+NONE_P = "无"
+VLOW_P = "偏移量: 极低"
+LOW_P = "偏移量: 低"
+MED_P = "偏移量: 中"
+HIGH_P = "偏移量: 高"
+VHIGH_P = "偏移量: 极高"
+VMAX_P = "偏移量: 最大"
 
 PHASE_SHIFTS_OPT = {
                      NONE_P:190,
@@ -438,66 +438,66 @@ VR_CROP = ('256', '512', '1024')
 POST_PROCESSES_THREASHOLD_VALUES = ('0.1', '0.2', '0.3')
 
 MDX_POP_PRO = ('MDX-NET_Noise_Profile_14_kHz', 'MDX-NET_Noise_Profile_17_kHz', 'MDX-NET_Noise_Profile_Full_Band')
-MDX_POP_STEMS = ('Vocals', 'Instrumental', 'Other', 'Drums', 'Bass')
+MDX_POP_STEMS = ('人声', '伴奏', '其他', '鼓点', '贝斯')
 MDX_POP_NFFT = ('4096', '5120', '6144', '7680', '8192', '16384')
 MDX_POP_DIMF = ('2048', '3072', '4096')
-DENOISE_NONE, DENOISE_S, DENOISE_M = 'None', 'Standard', 'Denoise Model'
+DENOISE_NONE, DENOISE_S, DENOISE_M = '无', '标准', '降噪模型'
 MDX_DENOISE_OPTION = [DENOISE_NONE, DENOISE_S, DENOISE_M]
 MDX_SEGMENTS = list(range(32, 4000+1, 32))
 
-SAVE_ENSEMBLE = 'Save Ensemble'
-CLEAR_ENSEMBLE = 'Clear Selection(s)'
+SAVE_ENSEMBLE = '保存集成'
+CLEAR_ENSEMBLE = '清除选择'
 MENU_SEPARATOR = 35*'•'
-CHOOSE_ENSEMBLE_OPTION = 'Choose Option'
-ALL_TYPES = 'ALL'
-INVALID_ENTRY = 'Invalid Input, Please Try Again'
-ENSEMBLE_INPUT_RULE = '1. Only letters, numbers, spaces, and dashes allowed.\n2. No dashes or spaces at the start or end of input.'
-STEM_INPUT_RULE = '1. Only words with no spaces are allowed.\n2. No spaces, numbers, or special characters.'
+CHOOSE_ENSEMBLE_OPTION = '选择选项'
+ALL_TYPES = '全部'
+INVALID_ENTRY = '无效输入，请重试'
+ENSEMBLE_INPUT_RULE = '1. 仅允许字母、数字、空格和短横线。\n2. 输入开头或结尾不能有短横线或空格。'
+STEM_INPUT_RULE = '1. 仅允许单词，不含空格。\n2. 不含空格、数字或特殊字符。'
 
 ENSEMBLE_OPTIONS = [OPT_SEPARATOR_SAVE, SAVE_ENSEMBLE, CLEAR_ENSEMBLE]
 ENSEMBLE_CHECK = 'ensemble check'
 KARAOKEE_CHECK = 'kara check'
 
-AUTO_PHASE = "Automatic"
-POSITIVE_PHASE = "Positive Phase"
-NEGATIVE_PHASE = "Negative Phase"
-OFF_PHASE = "Native Phase"
+AUTO_PHASE = "自动"
+POSITIVE_PHASE = "正相位"
+NEGATIVE_PHASE = "负相位"
+OFF_PHASE = "原始相位"
 
 ALIGN_PHASE_OPTIONS = [AUTO_PHASE, POSITIVE_PHASE, NEGATIVE_PHASE, OFF_PHASE]
 
-SELECT_SAVED_ENSEMBLE = 'Select Saved Ensemble'
-SELECT_SAVED_SETTING = 'Select Saved Setting'
-ENSEMBLE_OPTION = "Ensemble Customization Options"
-MDX_OPTION = "Advanced MDX-Net Options"
-DEMUCS_OPTION = "Advanced Demucs Options"
-VR_OPTION = "Advanced VR Options"
-HELP_OPTION = "Open Information Guide"
-ERROR_OPTION = "Open Error Log"
-VERIFY_BEGIN = 'Verifying file '
-SAMPLE_BEGIN = 'Creating Sample '
-MODEL_MISSING_CHECK = 'Model Missing:'
+SELECT_SAVED_ENSEMBLE = '选择已保存的集成'
+SELECT_SAVED_SETTING = '选择已保存的设置'
+ENSEMBLE_OPTION = "集成定制选项"
+MDX_OPTION = "高级 MDX-Net 选项"
+DEMUCS_OPTION = "高级 Demucs 选项"
+VR_OPTION = "高级 VR 选项"
+HELP_OPTION = "打开信息指南"
+ERROR_OPTION = "打开错误日志"
+VERIFY_BEGIN = '正在验证文件 '
+SAMPLE_BEGIN = '正在创建样本 '
+MODEL_MISSING_CHECK = '模型缺失:'
 OPTION_LIST = [VR_OPTION, MDX_OPTION, DEMUCS_OPTION, ENSEMBLE_OPTION, ALIGNMENT_TOOL, HELP_OPTION, ERROR_OPTION]
 
 #Menu Strings
-VR_MENU ='VR Menu'
-DEMUCS_MENU ='Demucs Menu'
-MDX_MENU ='MDX-Net Menu'
-ENSEMBLE_MENU ='Ensemble Menu'
-HELP_MENU ='Help Menu'
-ERROR_MENU ='Error Log'
-INPUTS_MENU ='Inputs Menu'
-ALIGN_MENU ='Align Menu'
+VR_MENU ='VR 菜单'
+DEMUCS_MENU ='Demucs 菜单'
+MDX_MENU ='MDX-Net 菜单'
+ENSEMBLE_MENU ='集成菜单'
+HELP_MENU ='帮助菜单'
+ERROR_MENU ='错误日志'
+INPUTS_MENU ='输入菜单'
+ALIGN_MENU ='对齐菜单'
 
 # Audio Player
-PLAYING_SONG = ": Playing"
-PAUSE_SONG = ": Paused"
-STOP_SONG = ": Stopped"
+PLAYING_SONG = ": 播放中"
+PAUSE_SONG = ": 已暂停"
+STOP_SONG = ": 已停止"
 
-SELECTED_VER = 'Selected'
-DETECTED_VER = 'Detected'
+SELECTED_VER = '已选择'
+DETECTED_VER = '已检测'
 
-SAMPLE_MODE_CHECKBOX = lambda v:f'Sample Mode ({v}s)'
-REMOVED_FILES = lambda r, e:f'Audio Input Verification Report:\n\nRemoved Files:\n\n{r}\n\nError Details:\n\n{e}'
+SAMPLE_MODE_CHECKBOX = lambda v:f'采样模式 ({v}秒)'
+REMOVED_FILES = lambda r, e:f'音频输入验证报告：\n\n已移除文件：\n\n{r}\n\n错误详情：\n\n{e}'
 ADVANCED_SETTINGS = (ENSEMBLE_OPTION, MDX_OPTION, DEMUCS_OPTION, VR_OPTION, HELP_OPTION, ERROR_OPTION)
 
 WAV = 'WAV'
@@ -508,11 +508,11 @@ MP3_BIT_RATES = ('96k', '128k', '160k', '224k', '256k', '320k')
 WAV_TYPE = ('PCM_U8', 'PCM_16', 'PCM_24', 'PCM_32', '32-bit Float', '64-bit Float')
 GPU_DEVICE_NUM_OPTS = (DEFAULT, '0', '1', '2', '3', '4', '5', '6', '7', '8')
 
-SELECT_SAVED_SET = 'Choose Option'
-SAVE_SETTINGS = 'Save Current Settings'
-RESET_TO_DEFAULT = 'Reset to Default'
-RESET_FULL_TO_DEFAULT = 'Reset to Default'
-RESET_PM_TO_DEFAULT = 'Reset All Application Settings to Default'
+SELECT_SAVED_SET = '选择选项'
+SAVE_SETTINGS = '保存当前设置'
+RESET_TO_DEFAULT = '重置为默认'
+RESET_FULL_TO_DEFAULT = '重置为默认'
+RESET_PM_TO_DEFAULT = '将所有应用设置重置为默认'
 
 SAVE_SET_OPTIONS = [OPT_SEPARATOR_SAVE, SAVE_SETTINGS, RESET_TO_DEFAULT]
 
@@ -543,10 +543,10 @@ REG_ALIGN = r'^[-+]?[0-9]\d*?$'
 REG_VOL_COMP = r'^\d+\.\d{1,9}$'
 
 # Sub Menu
-VR_ARCH_SETTING_LOAD = 'Load for VR Arch'
-MDX_SETTING_LOAD = 'Load for MDX-Net'
-DEMUCS_SETTING_LOAD = 'Load for Demucs'
-ALL_ARCH_SETTING_LOAD = 'Load for Full Application'
+VR_ARCH_SETTING_LOAD = '应用于 VR 架构'
+MDX_SETTING_LOAD = '应用于 MDX-Net'
+DEMUCS_SETTING_LOAD = '应用于 Demucs'
+ALL_ARCH_SETTING_LOAD = '应用于整个应用'
 
 # Mappers
 
@@ -833,7 +833,7 @@ FILE_2 = 'file2'
 
 FILE_1_LB = 'file1_lb'
 FILE_2_LB = 'file1_2b'
-BATCH_MODE_DUAL = " : Batch Mode"
+BATCH_MODE_DUAL = " : 批量模式"
 
 CODEC_DICT = {
     'PCM_U8':   {"sample_width": 1, "codec": None},        # 8-bit unsigned PCM
@@ -846,11 +846,11 @@ CODEC_DICT = {
 
 
 # Manual Downloads
-VR_PLACEMENT_TEXT = 'Place models in \"models/VR_Models\" directory.'
-MDX_PLACEMENT_TEXT = 'Place models in \"models/MDX_Net_Models\" directory.'
-DEMUCS_PLACEMENT_TEXT = 'Place models in \"models/Demucs_Models\" directory.'
-DEMUCS_V3_V4_PLACEMENT_TEXT = 'Place items in \"models/Demucs_Models/v3_v4_repo\" directory.'
-MDX_23_NAME = "MDX23C Model"
+VR_PLACEMENT_TEXT = '将模型放入 "models/VR_Models" 目录。'
+MDX_PLACEMENT_TEXT = '将模型放入 "models/MDX_Net_Models" 目录。'
+DEMUCS_PLACEMENT_TEXT = '将模型放入 "models/Demucs_Models" 目录。'
+DEMUCS_V3_V4_PLACEMENT_TEXT = '将项目放入 "models/Demucs_Models/v3_v4_repo" 目录。'
+MDX_23_NAME = "MDX23C 模型"
 
 # Liscense info
 if OPERATING_SYSTEM=="Darwin":
@@ -903,24 +903,24 @@ LICENSE_TEXT = lambda a, p:f'Current Application Version: Ultimate Vocal Remover
                'SOFTWARE.'
 
 # Message Box Text
-INVALID_INPUT = 'Invalid Input', 'The input is invalid.\n\nPlease verify the input still exists or is valid and try again.'
-INVALID_EXPORT = 'Invalid Export Directory', 'You have selected an invalid export directory.\n\nPlease make sure the selected directory still exists.'
-INVALID_ENSEMBLE = 'Not Enough Models', 'You must select 2 or more models to run ensemble.'
-INVALID_MODEL = 'No Model Chosen', 'You must select an model to continue.'
-MISSING_MODEL = 'Model Missing', 'The selected model is missing or not valid.'
-ERROR_OCCURED = 'Error Occured', '\n\nWould you like to open the error log for more details?\n'
-PROCESS_COMPLETE = '\nProcess complete\n'
-PROCESS_COMPLETE_2 = 'Process complete\n'
+INVALID_INPUT = '无效输入', '输入无效。\n\n请验证输入仍然存在或有效，然后重试。'
+INVALID_EXPORT = '无效导出目录', '您选择了一个无效的导出目录。\n\n请确保所选目录仍然存在。'
+INVALID_ENSEMBLE = '模型数量不足', '您必须选择 2 个或更多模型才能运行集成。'
+INVALID_MODEL = '未选择模型', '请先选择一个模型。'
+MISSING_MODEL = '模型缺失', '所选模型缺失或无效。'
+ERROR_OCCURED = '发生错误', '\n\n是否要打开错误日志查看详情？\n'
+PROCESS_COMPLETE = '\n处理完成\n'
+PROCESS_COMPLETE_2 = '处理完成\n'
 
 # GUI Text Constants
-BACK_TO_MAIN_MENU = 'Back to Main Menu'
+BACK_TO_MAIN_MENU = '返回主菜单'
 
 # Help Hint Text
-INTERNAL_MODEL_ATT = 'This is an internal model setting. \n\n***Avoid changing it unless you\'re certain about it!***'
-STOP_HELP = 'Stops ongoing tasks.\n• A confirmation pop-up will appear before stopping.'
-SETTINGS_HELP = 'Accesses the main settings and the "Download Center."'
-COMMAND_TEXT_HELP = 'Shows the status and progress of ongoing tasks.'
-SAVE_CURRENT_SETTINGS_HELP = 'Load or save the app\'s settings.'
+INTERNAL_MODEL_ATT = '这是内部模型设置。\n\n***除非确定，否则避免更改！***'
+STOP_HELP = '停止正在进行的任务。\n• 停止前会弹出确认对话框。'
+SETTINGS_HELP = '访问主设置和「下载中心」。'
+COMMAND_TEXT_HELP = '显示正在进行的任务的状态和进度。'
+SAVE_CURRENT_SETTINGS_HELP = '加载或保存应用的设置。'
 PITCH_SHIFT_HELP = ('Choose the pitch for processing tracks:\n\n'
                 '• Whole numbers indicate semitones.\n'
                 '• Using higher pitches may cut the upper bandwidth, even in high-quality models.\n'
@@ -1024,11 +1024,11 @@ else:
       '  - Only Nvidia GPUs can be used for GPU processing.'
    )
 
-IS_TIME_CORRECTION_HELP = ('When checked, the output will retain the original BPM of the input.')
-SAVE_STEM_ONLY_HELP = 'Allows the user to save only the selected stem.'
-IS_NORMALIZATION_HELP = 'Normalizes output to prevent clipping.'
-IS_CUDA_SELECT_HELP = "If you have more than one GPU, you can pick which one to use for processing."
-CROP_SIZE_HELP = '**Only compatible with select models only!**\n\n Setting should match training crop-size value. Leave as is if unsure.'
+IS_TIME_CORRECTION_HELP = ('选中后，输出将保留输入的原始 BPM。')
+SAVE_STEM_ONLY_HELP = '允许用户仅保存所选音轨。'
+IS_NORMALIZATION_HELP = '归一化输出以防止削波。'
+IS_CUDA_SELECT_HELP = "如果您有多个 GPU，可以选择用于处理的 GPU。"
+CROP_SIZE_HELP = '**仅兼容部分模型！**\n\n 设置应与训练裁剪值一致。如不确定请保留原样。'
 IS_TTA_HELP = ('This option performs Test-Time-Augmentation to improve the separation quality.\n\n'
                'Note: Having this selected will increase the time it takes to complete a conversion')
 IS_POST_PROCESS_HELP = ('This option can potentially identify leftover instrumental artifacts within the vocal outputs. \nThis option may improve the separation of some songs.\n\n' +\
@@ -1190,7 +1190,7 @@ AUDIO_TOOLS_HELP = (
     '• Matchering: Choose 2 audio files. The matchering algorithm will master the target audio to have the same RMS, FR, peak amplitude, and stereo width as the reference audio.'
 )
 
-PRE_PROC_MODEL_INST_MIX_HELP = 'When enabled, the application will generate a third output without the selected stem and vocals.'
+PRE_PROC_MODEL_INST_MIX_HELP = '启用后，应用将生成第三个输出，不包含所选音轨和人声。'
 MODEL_SAMPLE_MODE_HELP = ('Allows the user to process only part of a track to sample settings or a model without running a full conversion.\n\nNotes:\n\n'
                          '• The number in the parentheses is the current number of seconds the generated sample will be.\n'
                          '• You can choose the number of seconds to extract from the track in the \"Additional Settings\" menu.')
@@ -1291,21 +1291,21 @@ PHASE_SHIFTS_ALIGN_HELP = (
 )
 
 # Warning Messages
-STORAGE_ERROR = 'Insufficient Storage', 'There is not enough storage on main drive to continue. Your main drive must have at least 3 GB\'s of storage in order for this application function properly. \n\nPlease ensure your main drive has at least 3 GB\'s of storage and try again.\n\n'
-STORAGE_WARNING = 'Available Storage Low', 'Your main drive is running low on storage. Your main drive must have at least 3 GB\'s of storage in order for this application function properly.\n\n'
-CONFIRM_WARNING = '\nAre you sure you wish to continue?'
-PROCESS_FAILED = 'Process failed, please see error log\n'
-EXIT_PROCESS_ERROR = 'Active Process', 'Please stop the active process or wait for it to complete before you exit.'
-EXIT_HALTED_PROCESS_ERROR = 'Halting Process', 'Please wait for the application to finish halting the process before exiting.'
-EXIT_DOWNLOAD_ERROR = 'Active Download', 'Please stop the download or wait for it to complete before you exit.'
-SET_TO_DEFAULT_PROCESS_ERROR = 'Active Process', 'You cannot reset all of the application settings during an active process.'
-SET_TO_ANY_PROCESS_ERROR = 'Active Process', 'You cannot reset the application settings during an active process.'
-RESET_ALL_TO_DEFAULT_WARNING = 'Reset Settings Confirmation', 'All application settings will be set to factory default.\n\nAre you sure you wish to continue?'
-AUDIO_VERIFICATION_CHECK = lambda i, e:f'++++++++++++++++++++++++++++++++++++++++++++++++++++\n\nBroken File Removed: \n\n{i}\n\nError Details:\n\n{e}\n++++++++++++++++++++++++++++++++++++++++++++++++++++'
+STORAGE_ERROR = '存储空间不足', '主驱动器存储空间不足，无法继续。主驱动器必须至少有 3 GB 的可用空间才能正常运行。\n\n请确保主驱动器至少有 3 GB 可用空间，然后重试。\n\n'
+STORAGE_WARNING = '可用存储空间低', '主驱动器存储空间即将用尽。主驱动器必须至少有 3 GB 的可用空间才能正常运行。\n\n'
+CONFIRM_WARNING = '\n确定要继续吗？'
+PROCESS_FAILED = '进程失败，请查看错误日志\n'
+EXIT_PROCESS_ERROR = '活动进程', '请先停止活动进程或等待其完成后再退出。'
+EXIT_HALTED_PROCESS_ERROR = '正在停止进程', '请等待应用完成停止进程后再退出。'
+EXIT_DOWNLOAD_ERROR = '活动下载', '请先停止下载或等待其完成后再退出。'
+SET_TO_DEFAULT_PROCESS_ERROR = '活动进程', '无法在活动进程中重置所有应用设置。'
+SET_TO_ANY_PROCESS_ERROR = '活动进程', '无法在活动进程中重置应用设置。'
+RESET_ALL_TO_DEFAULT_WARNING = '重置设置确认', '所有应用设置将恢复为出厂默认值。\n\n确定要继续吗？'
+AUDIO_VERIFICATION_CHECK = lambda i, e:f'++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n已移除损坏文件：\n\n{i}\n\n错误详情：\n\n{e}\n++++++++++++++++++++++++++++++++++++++++++++++++++++'
 INVALID_ONNX_MODEL_ERROR = 'Invalid Model', 'The file selected is not a valid MDX-Net model. Please see the error log for more information.'
 INVALID_PARAM_MODEL_ERROR = 'Select Model Param', 'Please choose a model param or click \'Cancel\'.'
-UNRECOGNIZED_MODEL = 'Unrecognized Model Detected', ' is an unrecognized model.\n\n' + \
-                     'Would you like to select the correct parameters before continuing?'
+UNRECOGNIZED_MODEL = '检测到未知模型', ' 是未知模型。\n\n' + \
+                     '是否在继续之前选择正确的参数？'
 STOP_PROCESS_CONFIRM = 'Confirmation', 'You are about to stop all active processes.\n\nAre you sure you wish to continue?'
 NO_ENSEMBLE_SELECTED = 'No Models Selected', 'Please select ensemble and try again.'
 PICKLE_CORRU = 'File Corrupted', 'Unable to load this ensemble.\n\n' + \
@@ -1313,12 +1313,12 @@ PICKLE_CORRU = 'File Corrupted', 'Unable to load this ensemble.\n\n' + \
 DELETE_ENS_ENTRY = 'Confirm Removal', 'Are you sure you want to remove this entry?'
 
 # Separation Text
-LOADING_MODEL = 'Loading model...'
-INFERENCE_STEP_1 = 'Running inference...'
-INFERENCE_STEP_1_SEC = 'Running inference (secondary model)...'
-INFERENCE_STEP_1_4_STEM = lambda stem:f'Running inference (secondary model for {stem})...'
-INFERENCE_STEP_1_PRE = 'Running inference (pre-process model)...'
-INFERENCE_STEP_1_VOC_S = 'Splitting vocals...'
+LOADING_MODEL = '正在加载模型...'
+INFERENCE_STEP_1 = '正在推理...'
+INFERENCE_STEP_1_SEC = '正在推理（二级模型）...'
+INFERENCE_STEP_1_4_STEM = lambda stem:f'正在推理（{stem}的二级模型）...'
+INFERENCE_STEP_1_PRE = '正在推理（预处理模型）...'
+INFERENCE_STEP_1_VOC_S = '正在分离人声...'
 INFERENCE_STEP_2_PRE = lambda pm, m:f'Loading pre-process model ({pm}: {m})...'
 INFERENCE_STEP_2_SEC = lambda pm, m:f'Loading secondary model ({pm}: {m})...'
 INFERENCE_STEP_2_VOC_S = lambda pm, m:f'Loading vocal splitter model ({pm}: {m})...'
@@ -1328,205 +1328,205 @@ INFERENCE_STEP_2_SEC_CACHED = 'Loading cached secondary model source(s)... Done!
 INFERENCE_STEP_2_PRIMARY_CACHED = ' Model cache loaded.\n'
 INFERENCE_STEP_2 = 'Inference complete.'
 INFERENCE_STEP_DEVERBING = ' Deverbing...'
-SAVING_STEM = 'Saving ', ' stem...'
+SAVING_STEM = '正在保存 ', ' 音轨...'
 SAVING_ALL_STEMS = 'Saving all stems...'
 ENSEMBLING_OUTPUTS = 'Ensembling outputs...'
-DONE = ' Done!\n'
-ENSEMBLES_SAVED = 'Ensembled outputs saved!\n\n'
+DONE = ' 完成！\n'
+ENSEMBLES_SAVED = '集成输出已保存！\n\n'
 
 #Additional Text
-CHOOSE_PROC_METHOD_MAIN_LABEL = 'CHOOSE PROCESS METHOD'
-SELECT_SAVED_SETTINGS_MAIN_LABEL = 'SELECT SAVED SETTINGS'
-CHOOSE_MDX_MODEL_MAIN_LABEL = 'CHOOSE MDX-NET MODEL'
-BATCHES_MDX_MAIN_LABEL = 'BATCH SIZE'
-VOL_COMP_MDX_MAIN_LABEL = 'VOLUME COMPENSATION'
-SEGMENT_MDX_MAIN_LABEL = 'SEGMENT SIZE'
-SELECT_VR_MODEL_MAIN_LABEL = 'CHOOSE VR MODEL'
-AGGRESSION_SETTING_MAIN_LABEL = 'AGGRESSION SETTING'
-WINDOW_SIZE_MAIN_LABEL = 'WINDOW SIZE'
-CHOOSE_DEMUCS_MODEL_MAIN_LABEL = 'CHOOSE DEMUCS MODEL'
-CHOOSE_STEMS_MAIN_LABEL = 'CHOOSE STEM(S)'
-CHOOSE_SEGMENT_MAIN_LABEL = 'SEGMENT'
-ENSEMBLE_OPTIONS_MAIN_LABEL = 'ENSEMBLE OPTIONS'
-CHOOSE_MAIN_PAIR_MAIN_LABEL = 'MAIN STEM PAIR'
-CHOOSE_ENSEMBLE_ALGORITHM_MAIN_LABEL = 'ENSEMBLE ALGORITHM'
-AVAILABLE_MODELS_MAIN_LABEL = 'AVAILABLE MODELS'
-CHOOSE_AUDIO_TOOLS_MAIN_LABEL = 'CHOOSE AUDIO TOOL'
-CHOOSE_MANUAL_ALGORITHM_MAIN_LABEL = 'CHOOSE ALGORITHM'
-CHOOSE_RATE_MAIN_LABEL = 'RATE'
-CHOOSE_SEMITONES_MAIN_LABEL = 'SEMITONES'
-GPU_CONVERSION_MAIN_LABEL = 'GPU Conversion'
-CHANGE_LOG_HEADER = lambda patch:f"Patch Version:\n\n{patch}"
-INVALID_INPUT_E = ' Invalid input! '
-LB_UP = "Move Selection Up"
-LB_DOWN = "Move Selection Down"
-LB_CLEAR = "Clear Box"
-LB_MOVE_OVER_P = "Move Selection to Secondary List"
-LB_MOVE_OVER_S = "Move Selection to Primary List"
-FILE_ONE_MAIN_LABEL = "PRIMARY AUDIO"
-FILE_TWO_MAIN_LABEL = "SECONDARY AUDIO"
-FILE_ONE_MATCH_MAIN_LABEL = "TARGET AUDIO"
-FILE_TWO_MATCH_MAIN_LABEL = "REFERENCE AUDIO"
-TIME_WINDOW_MAIN_LABEL = "TIME ADJUSTMENT"
-INTRO_ANALYSIS_MAIN_LABEL = "INTRO ANALYSIS"
-VOLUME_ADJUSTMENT_MAIN_LABEL = "VOLUME ADJUSTMENT"
-SELECT_INPUTS = "Select Input(s)"
-SELECTED_INPUTS = 'Selected Inputs'
-WIDEN_BOX = 'Widen Box'
-CONFIRM_ENTRIES = 'Confirm Entries'
-CLOSE_WINDOW = 'Close Window'
-DUAL_AUDIO_PROCESSING = 'Dual Audio Batch Processing'
-CANCEL_TEXT = "Cancel"
-CONFIRM_TEXT = "Confirm"
-SELECT_MODEL_TEXT = 'Select Model'
-NONE_SELECTED = 'None Selected'
-SAVE_TEXT = 'Save'
-OVERLAP_TEXT = 'Overlap'
-ACCEPT_ANY_INPUT_TEXT = 'Accept Any Input'
-ACTIVATE_PRE_PROCESS_MODEL_TEXT = 'Activate Pre-process Model'
-ACTIVATE_SECONDARY_MODEL_TEXT = 'Activate Secondary Model'
-ADDITIONAL_MENUS_INFORMATION_TEXT = 'Additional Menus & Information'
-ADDITIONAL_SETTINGS_TEXT = 'Additional Settings'
-ADVANCED_ALIGN_TOOL_OPTIONS_TEXT = 'Advanced Align Tool Options'
-ADVANCED_DEMUCS_OPTIONS_TEXT = 'Advanced Demucs Options'
-ADVANCED_ENSEMBLE_OPTIONS_TEXT = 'Advanced Ensemble Options'
-ADVANCED_MDXNET23_OPTIONS_TEXT = 'Advanced MDX-NET23 Options'
-ADVANCED_MDXNET_OPTIONS_TEXT = 'Advanced MDX-Net Options'
-ADVANCED_OPTION_MENU_TEXT = 'Advanced Option Menu'
-ADVANCED_VR_OPTIONS_TEXT = 'Advanced VR Options'
-AGGRESSION_SETTING_TEXT = 'Aggression Setting'
-APPEND_ENSEMBLE_NAME_TEXT = 'Append Ensemble Name'
-APPLICATION_DOWNLOAD_CENTER_TEXT = 'Application Download Center'
-APPLICATION_UPDATES_TEXT = 'Application Updates'
-AUDIO_FORMAT_SETTINGS_TEXT = 'Audio Format Settings'
-BALANCE_VALUE_TEXT = 'Balance Value'
-BATCH_SIZE_TEXT = 'Batch Size'
-BV_MODEL_TEXT = 'BV Model'
-CHANGE_MODEL_DEFAULT_TEXT = 'Change Model Default'
-CHANGE_MODEL_DEFAULTS_TEXT = 'Change Model Defaults'
-CHANGE_PARAMETERS_TEXT = 'Change Parameters'
-CHOOSE_ADVANCED_MENU_TEXT = 'Choose Advanced Menu'
-CHOOSE_MODEL_PARAM_TEXT = 'Choose Model Param'
-CLEAR_AUTOSET_CACHE_TEXT = 'Clear Auto-Set Cache'
-COMBINE_STEMS_TEXT = 'Combine Stems'
-CONFIRM_UPDATE_TEXT = 'Confirm Update'
-COPIED_TEXT = 'Copied!'
-COPY_ALL_TEXT_TEXT = 'Copy All Text'
-DEFINED_PARAMETERS_DELETED_TEXT = 'Defined Parameters Deleted'
-DELETE_PARAMETERS_TEXT = 'Delete Parameters'
-DELETE_USER_SAVED_SETTING_TEXT = 'Delete User Saved Setting'
+CHOOSE_PROC_METHOD_MAIN_LABEL = '选择处理方法'
+SELECT_SAVED_SETTINGS_MAIN_LABEL = '选择已保存的设置'
+CHOOSE_MDX_MODEL_MAIN_LABEL = '选择 MDX-NET 模型'
+BATCHES_MDX_MAIN_LABEL = '批处理大小'
+VOL_COMP_MDX_MAIN_LABEL = '音量补偿'
+SEGMENT_MDX_MAIN_LABEL = '分段大小'
+SELECT_VR_MODEL_MAIN_LABEL = '选择 VR 模型'
+AGGRESSION_SETTING_MAIN_LABEL = '分离强度'
+WINDOW_SIZE_MAIN_LABEL = '窗口大小'
+CHOOSE_DEMUCS_MODEL_MAIN_LABEL = '选择 DEMUCS 模型'
+CHOOSE_STEMS_MAIN_LABEL = '选择音轨'
+CHOOSE_SEGMENT_MAIN_LABEL = '分段'
+ENSEMBLE_OPTIONS_MAIN_LABEL = '集成选项'
+CHOOSE_MAIN_PAIR_MAIN_LABEL = '主音轨对'
+CHOOSE_ENSEMBLE_ALGORITHM_MAIN_LABEL = '集成算法'
+AVAILABLE_MODELS_MAIN_LABEL = '可用模型'
+CHOOSE_AUDIO_TOOLS_MAIN_LABEL = '选择音频工具'
+CHOOSE_MANUAL_ALGORITHM_MAIN_LABEL = '选择算法'
+CHOOSE_RATE_MAIN_LABEL = '速率'
+CHOOSE_SEMITONES_MAIN_LABEL = '半音'
+GPU_CONVERSION_MAIN_LABEL = 'GPU 加速'
+CHANGE_LOG_HEADER = lambda patch:f"补丁版本：\n\n{patch}"
+INVALID_INPUT_E = ' 输入无效！ '
+LB_UP = "上移选中项"
+LB_DOWN = "下移选中项"
+LB_CLEAR = "清空列表框"
+LB_MOVE_OVER_P = "移至次列表"
+LB_MOVE_OVER_S = "移至主列表"
+FILE_ONE_MAIN_LABEL = "主音频"
+FILE_TWO_MAIN_LABEL = "次音频"
+FILE_ONE_MATCH_MAIN_LABEL = "目标音频"
+FILE_TWO_MATCH_MAIN_LABEL = "参考音频"
+TIME_WINDOW_MAIN_LABEL = "时间调整"
+INTRO_ANALYSIS_MAIN_LABEL = "前奏分析"
+VOLUME_ADJUSTMENT_MAIN_LABEL = "音量调整"
+SELECT_INPUTS = "选择输入文件"
+SELECTED_INPUTS = '已选输入'
+WIDEN_BOX = '加宽列表框'
+CONFIRM_ENTRIES = '确认输入'
+CLOSE_WINDOW = '关闭窗口'
+DUAL_AUDIO_PROCESSING = '双音频批处理'
+CANCEL_TEXT = "取消"
+CONFIRM_TEXT = "确认"
+SELECT_MODEL_TEXT = '选择模型'
+NONE_SELECTED = '未选择'
+SAVE_TEXT = '保存'
+OVERLAP_TEXT = '重叠率'
+ACCEPT_ANY_INPUT_TEXT = '接受任意输入'
+ACTIVATE_PRE_PROCESS_MODEL_TEXT = '启用预处理模型'
+ACTIVATE_SECONDARY_MODEL_TEXT = '启用二级模型'
+ADDITIONAL_MENUS_INFORMATION_TEXT = '附加菜单与信息'
+ADDITIONAL_SETTINGS_TEXT = '附加设置'
+ADVANCED_ALIGN_TOOL_OPTIONS_TEXT = '高级对齐工具选项'
+ADVANCED_DEMUCS_OPTIONS_TEXT = '高级 Demucs 选项'
+ADVANCED_ENSEMBLE_OPTIONS_TEXT = '高级集成选项'
+ADVANCED_MDXNET23_OPTIONS_TEXT = '高级 MDX-NET23 选项'
+ADVANCED_MDXNET_OPTIONS_TEXT = '高级 MDX-Net 选项'
+ADVANCED_OPTION_MENU_TEXT = '高级选项菜单'
+ADVANCED_VR_OPTIONS_TEXT = '高级 VR 选项'
+AGGRESSION_SETTING_TEXT = '分离强度'
+APPEND_ENSEMBLE_NAME_TEXT = '附加集成名称'
+APPLICATION_DOWNLOAD_CENTER_TEXT = '应用下载中心'
+APPLICATION_UPDATES_TEXT = '应用更新'
+AUDIO_FORMAT_SETTINGS_TEXT = '音频格式设置'
+BALANCE_VALUE_TEXT = '平衡值'
+BATCH_SIZE_TEXT = '批处理大小'
+BV_MODEL_TEXT = '背景人声模型'
+CHANGE_MODEL_DEFAULT_TEXT = '更改模型默认值'
+CHANGE_MODEL_DEFAULTS_TEXT = '更改模型默认值'
+CHANGE_PARAMETERS_TEXT = '更改参数'
+CHOOSE_ADVANCED_MENU_TEXT = '选择高级菜单'
+CHOOSE_MODEL_PARAM_TEXT = '选择模型参数'
+CLEAR_AUTOSET_CACHE_TEXT = '清除自动设置缓存'
+COMBINE_STEMS_TEXT = '合并音轨'
+CONFIRM_UPDATE_TEXT = '确认更新'
+COPIED_TEXT = '已复制！'
+COPY_ALL_TEXT_TEXT = '复制全部文本'
+DEFINED_PARAMETERS_DELETED_TEXT = '已删除定义的参数'
+DELETE_PARAMETERS_TEXT = '删除参数'
+DELETE_USER_SAVED_SETTING_TEXT = '删除用户保存的设置'
 DEMUCS_TEXT = 'Demucs'
-DENOISE_OUTPUT_TEXT = 'Denoise Output'
-DEVERB_VOCALS_TEXT = 'Deverb Vocals'
-DONE_TEXT = 'Done'
-DOWNLOAD_CENTER_TEXT = 'Download Center'
-DOWNLOAD_CODE_TEXT = 'Download Code'
-DOWNLOAD_LINKS_TEXT = 'Download Link(s)'
-DOWNLOAD_UPDATE_IN_APPLICATION_TEXT = 'Download Update in Application'
-ENABLE_HELP_HINTS_TEXT = 'Enable Help Hints'
-ENABLE_TTA_TEXT = 'Enable TTA'
-ENABLE_VOCAL_SPLIT_MODE_TEXT = 'Enable Vocal Split Mode'
-ENSEMBLE_NAME_TEXT = 'Ensemble Name'
-ENSEMBLE_WAVFORMS_TEXT = 'Ensemble Wavforms'
-ERROR_CONSOLE_TEXT = 'Error Console'
-GENERAL_MENU_TEXT = 'General Menu'
-GENERAL_PROCESS_SETTINGS_TEXT = 'General Process Settings'
-GENERATE_MODEL_FOLDER_TEXT = 'Generate Model Folder'
-HIGHEND_PROCESS_TEXT = 'High-End Process'
-INPUT_CODE_TEXT = 'Input Code'
-INPUT_STEM_NAME_TEXT = 'Input Stem Name'
-INPUT_UNIQUE_STEM_NAME_TEXT = 'Input Unique Stem Name'
-IS_INVERSE_STEM_TEXT = 'Is Inverse Stem'
-KARAOKE_MODEL_TEXT = 'Karaoke Model'
-MANUAL_DOWNLOADS_TEXT = 'Manual Downloads'
-MATCH_FREQ_CUTOFF_TEXT = 'Match Freq Cut-off'
-MDXNET_C_MODEL_PARAMETERS_TEXT = 'MDX-Net C Model Parameters'
-MDXNET_MODEL_SETTINGS_TEXT = 'MDX-Net Model Settings'
+DENOISE_OUTPUT_TEXT = '降噪输出'
+DEVERB_VOCALS_TEXT = '人声去混响'
+DONE_TEXT = '完成'
+DOWNLOAD_CENTER_TEXT = '下载中心'
+DOWNLOAD_CODE_TEXT = '下载代码'
+DOWNLOAD_LINKS_TEXT = '下载链接'
+DOWNLOAD_UPDATE_IN_APPLICATION_TEXT = '在应用中下载更新'
+ENABLE_HELP_HINTS_TEXT = '启用帮助提示'
+ENABLE_TTA_TEXT = '启用 TTA'
+ENABLE_VOCAL_SPLIT_MODE_TEXT = '启用人声分离模式'
+ENSEMBLE_NAME_TEXT = '集成名称'
+ENSEMBLE_WAVFORMS_TEXT = '波形集成'
+ERROR_CONSOLE_TEXT = '错误控制台'
+GENERAL_MENU_TEXT = '常规菜单'
+GENERAL_PROCESS_SETTINGS_TEXT = '常规处理设置'
+GENERATE_MODEL_FOLDER_TEXT = '生成模型文件夹'
+HIGHEND_PROCESS_TEXT = '高频处理'
+INPUT_CODE_TEXT = '输入代码'
+INPUT_STEM_NAME_TEXT = '输入音轨名称'
+INPUT_UNIQUE_STEM_NAME_TEXT = '输入唯一音轨名称'
+IS_INVERSE_STEM_TEXT = '反相音轨'
+KARAOKE_MODEL_TEXT = '卡拉 OK 模型'
+MANUAL_DOWNLOADS_TEXT = '手动下载'
+MATCH_FREQ_CUTOFF_TEXT = '匹配频率截止'
+MDXNET_C_MODEL_PARAMETERS_TEXT = 'MDX-Net C 模型参数'
+MDXNET_MODEL_SETTINGS_TEXT = 'MDX-Net 模型设置'
 MDXNET_TEXT = 'MDX-Net'
-MODEL_PARAMETERS_CHANGED_TEXT = 'Model Parameters Changed'
-MODEL_SAMPLE_MODE_SETTINGS_TEXT = 'Model Sample Mode Settings'
-MODEL_TEST_MODE_TEXT = 'Model Test Mode'
-MP3_BITRATE_TEXT = 'Mp3 Bitrate'
-NAME_SETTINGS_TEXT = 'Name Settings'
-NO_DEFINED_PARAMETERS_FOUND_TEXT = 'No Defined Parameters Found'
-NO_TEXT = 'No'
-NORMALIZE_OUTPUT_TEXT = 'Normalize Output'
-USE_OPENCL_TEXT = 'Use OpenCL'
-NOT_ENOUGH_MODELS_TEXT = 'Not Enough Models'
-NOTIFICATION_CHIMES_TEXT = 'Notification Chimes'
-OPEN_APPLICATION_DIRECTORY_TEXT = 'Open Application Directory'
-OPEN_LINK_TO_MODEL_TEXT = 'Open Link to Model'
-OPEN_MODEL_DIRECTORY_TEXT = 'Open Model Directory'
-OPEN_MODEL_FOLDER_TEXT = 'Open Model Folder'
-OPEN_MODELS_FOLDER_TEXT = 'Open Models Folder'
-PHASE_SHIFTS_TEXT = 'Phase Shifts'
-POST_PROCESS_TEXT = 'Post-Process'
-POST_PROCESS_THRESHOLD_TEXT = 'Post-process Threshold'
-PREPROCESS_MODEL_CHOOSE_TEXT = 'Pre-process Model'
-PRIMARY_STEM_TEXT = 'Primary Stem'
-REFRESH_LIST_TEXT = 'Refresh List'
-REMOVE_SAVED_ENSEMBLE_TEXT = 'Remove Saved Ensemble'
-REPORT_ISSUE_TEXT = 'Report Issue'
-RESET_ALL_SETTINGS_TO_DEFAULT_TEXT = 'Reset All Settings to Default'
-RESTART_APPLICATION_TEXT = 'Restart Application'
-SAMPLE_CLIP_DURATION_TEXT = 'Sample Clip Duration'
-SAVE_ALIGNED_TRACK_TEXT = 'Save Aligned Track'
-SAVE_ALL_OUTPUTS_TEXT = 'Save All Outputs'
-SAVE_CURRENT_ENSEMBLE_TEXT = 'Save Current Ensemble'
-SAVE_CURRENT_SETTINGS_TEXT = 'Save Current Settings'
-SAVE_INSTRUMENTAL_MIXTURE_TEXT = 'Save Instrumental Mixture'
-SAVE_SPLIT_VOCAL_INSTRUMENTALS_TEXT = 'Save Split Vocal Instrumentals'
-SECONDARY_MODEL_TEXT = 'Secondary Model'
-SECONDARY_PHASE_TEXT = 'Secondary Phase'
-SECONDS_TEXT = 'Seconds'
-SEGMENT_DEFAULT_TEXT = 'Segment Default'
-SEGMENT_SIZE_TEXT = 'Segment Size'
-SEGMENTS_TEXT = 'Segments'
-SELECT_DOWNLOAD_TEXT = 'Select Download'
-SELECT_MODEL_PARAM_TEXT = 'Select Model Param'
-SELECT_VOCAL_TYPE_TO_DEVERB_TEXT = 'Select Vocal Type to Deverb'
-SELECTED_MODEL_PLACEMENT_PATH_TEXT = 'Selected Model Placement Path'
-SETTINGS_GUIDE_TEXT = 'Settings Guide'
-SETTINGS_TEST_MODE_TEXT = 'Settings Test Mode'
-SHIFT_CONVERSION_PITCH_TEXT = 'Shift Conversion Pitch'
-SHIFTS_TEXT = 'Shifts'
-SILENCE_MATCHING_TEXT = 'Silence Matching'
-SPECIFY_MDX_NET_MODEL_PARAMETERS_TEXT = 'Specify MDX-Net Model Parameters'
-SPECIFY_PARAMETERS_TEXT = 'Specify Parameters'
-SPECIFY_VR_MODEL_PARAMETERS_TEXT = 'Specify VR Model Parameters'
-SPECTRAL_INVERSION_TEXT = 'Spectral Inversion'
-SPECTRAL_MATCHING_TEXT = 'Spectral Matching'
-SPLIT_MODE_TEXT = 'Split Mode'
-STEM_NAME_TEXT = 'Stem Name'
-STOP_DOWNLOAD_TEXT = 'Stop Download'
-SUPPORT_UVR_TEXT = 'Support UVR'
-TRY_MANUAL_DOWNLOAD_TEXT = 'Try Manual Download'
-UPDATE_FOUND_TEXT = 'Update Found'
-USER_DOWNLOAD_CODES_TEXT = 'User Download Codes'
-UVR_BUY_ME_A_COFFEE_LINK_TEXT = 'UVR \'Buy Me a Coffee\' Link'
-UVR_ERROR_LOG_TEXT = 'UVR Error Log'
-UVR_PATREON_LINK_TEXT = 'UVR Patreon Link'
-VOCAL_DEVERB_OPTIONS_TEXT = 'Vocal Deverb Options'
-VOCAL_SPLIT_MODE_OPTIONS_TEXT = 'Vocal Split Mode Options'
-VOCAL_SPLIT_OPTIONS_TEXT = 'Vocal Split Options'
-VOLUME_COMPENSATION_TEXT = 'Volume Compensation'
-VR_51_MODEL_TEXT = 'VR 5.1 Model'
-VR_ARCH_TEXT = 'VR Arch'
-WAV_TYPE_TEXT = 'Wav Type'
-CUDA_NUM_TEXT = 'GPU Device'
-WINDOW_SIZE_TEXT = 'Window Size'
-YES_TEXT = 'Yes'
-VERIFY_INPUTS_TEXT = 'Verify Inputs'
-AUDIO_INPUT_TOTAL_TEXT = 'Audio Input Total'
-MDX23C_ONLY_OPTIONS_TEXT = 'MDXNET23 Only Options'
-PROCESS_STARTING_TEXT = 'Process starting... '
-MISSING_MESS_TEXT = 'is missing or currupted.'
-SIMILAR_TEXT = "are the same."
-LOADING_VERSION_INFO_TEXT = 'Loading version information...'
-CHECK_FOR_UPDATES_TEXT = 'Check for Updates'
-INFO_UNAVAILABLE_TEXT = "Information unavailable."
-UPDATE_CONFIRMATION_TEXT = 'Are you sure you want to continue?\n\nThe application will need to be restarted.\n'
-BROKEN_OR_INCOM_TEXT = 'Broken or Incompatible File(s) Removed. Check Error Log for details.'
+MODEL_PARAMETERS_CHANGED_TEXT = '模型参数已更改'
+MODEL_SAMPLE_MODE_SETTINGS_TEXT = '模型采样模式设置'
+MODEL_TEST_MODE_TEXT = '模型测试模式'
+MP3_BITRATE_TEXT = 'MP3 比特率'
+NAME_SETTINGS_TEXT = '命名设置'
+NO_DEFINED_PARAMETERS_FOUND_TEXT = '未找到定义的参数'
+NO_TEXT = '否'
+NORMALIZE_OUTPUT_TEXT = '归一化输出'
+USE_OPENCL_TEXT = '使用 OpenCL'
+NOT_ENOUGH_MODELS_TEXT = '模型数量不足'
+NOTIFICATION_CHIMES_TEXT = '通知提示音'
+OPEN_APPLICATION_DIRECTORY_TEXT = '打开应用目录'
+OPEN_LINK_TO_MODEL_TEXT = '打开模型链接'
+OPEN_MODEL_DIRECTORY_TEXT = '打开模型目录'
+OPEN_MODEL_FOLDER_TEXT = '打开模型文件夹'
+OPEN_MODELS_FOLDER_TEXT = '打开模型文件夹'
+PHASE_SHIFTS_TEXT = '相位偏移'
+POST_PROCESS_TEXT = '后处理'
+POST_PROCESS_THRESHOLD_TEXT = '后处理阈值'
+PREPROCESS_MODEL_CHOOSE_TEXT = '预处理模型'
+PRIMARY_STEM_TEXT = '主音轨'
+REFRESH_LIST_TEXT = '刷新列表'
+REMOVE_SAVED_ENSEMBLE_TEXT = '移除已保存的集成'
+REPORT_ISSUE_TEXT = '报告问题'
+RESET_ALL_SETTINGS_TO_DEFAULT_TEXT = '将所有设置重置为默认'
+RESTART_APPLICATION_TEXT = '重启应用'
+SAMPLE_CLIP_DURATION_TEXT = '采样片段时长'
+SAVE_ALIGNED_TRACK_TEXT = '保存对齐音轨'
+SAVE_ALL_OUTPUTS_TEXT = '保存所有输出'
+SAVE_CURRENT_ENSEMBLE_TEXT = '保存当前集成'
+SAVE_CURRENT_SETTINGS_TEXT = '保存当前设置'
+SAVE_INSTRUMENTAL_MIXTURE_TEXT = '保存伴奏混合'
+SAVE_SPLIT_VOCAL_INSTRUMENTALS_TEXT = '保存分离的人声音轨'
+SECONDARY_MODEL_TEXT = '二级模型'
+SECONDARY_PHASE_TEXT = '次相位'
+SECONDS_TEXT = '秒'
+SEGMENT_DEFAULT_TEXT = '分段默认'
+SEGMENT_SIZE_TEXT = '分段大小'
+SEGMENTS_TEXT = '分段'
+SELECT_DOWNLOAD_TEXT = '选择下载'
+SELECT_MODEL_PARAM_TEXT = '选择模型参数'
+SELECT_VOCAL_TYPE_TO_DEVERB_TEXT = '选择要去混响的人声类型'
+SELECTED_MODEL_PLACEMENT_PATH_TEXT = '所选模型的放置路径'
+SETTINGS_GUIDE_TEXT = '设置指南'
+SETTINGS_TEST_MODE_TEXT = '设置测试模式'
+SHIFT_CONVERSION_PITCH_TEXT = '偏移转换音高'
+SHIFTS_TEXT = '偏移量'
+SILENCE_MATCHING_TEXT = '静音匹配'
+SPECIFY_MDX_NET_MODEL_PARAMETERS_TEXT = '指定 MDX-Net 模型参数'
+SPECIFY_PARAMETERS_TEXT = '指定参数'
+SPECIFY_VR_MODEL_PARAMETERS_TEXT = '指定 VR 模型参数'
+SPECTRAL_INVERSION_TEXT = '频谱反相'
+SPECTRAL_MATCHING_TEXT = '频谱匹配'
+SPLIT_MODE_TEXT = '分割模式'
+STEM_NAME_TEXT = '音轨名称'
+STOP_DOWNLOAD_TEXT = '停止下载'
+SUPPORT_UVR_TEXT = '支持 UVR'
+TRY_MANUAL_DOWNLOAD_TEXT = '尝试手动下载'
+UPDATE_FOUND_TEXT = '发现更新'
+USER_DOWNLOAD_CODES_TEXT = '用户下载代码'
+UVR_BUY_ME_A_COFFEE_LINK_TEXT = 'UVR「Buy Me a Coffee」链接'
+UVR_ERROR_LOG_TEXT = 'UVR 错误日志'
+UVR_PATREON_LINK_TEXT = 'UVR Patreon 链接'
+VOCAL_DEVERB_OPTIONS_TEXT = '人声去混响选项'
+VOCAL_SPLIT_MODE_OPTIONS_TEXT = '人声分离模式选项'
+VOCAL_SPLIT_OPTIONS_TEXT = '人声分离选项'
+VOLUME_COMPENSATION_TEXT = '音量补偿'
+VR_51_MODEL_TEXT = 'VR 5.1 模型'
+VR_ARCH_TEXT = 'VR 架构'
+WAV_TYPE_TEXT = 'WAV 类型'
+CUDA_NUM_TEXT = 'GPU 设备'
+WINDOW_SIZE_TEXT = '窗口大小'
+YES_TEXT = '是'
+VERIFY_INPUTS_TEXT = '验证输入'
+AUDIO_INPUT_TOTAL_TEXT = '音频输入总数'
+MDX23C_ONLY_OPTIONS_TEXT = 'MDXNET23 专用选项'
+PROCESS_STARTING_TEXT = '处理开始...'
+MISSING_MESS_TEXT = '缺失或已损坏。'
+SIMILAR_TEXT = "相同。"
+LOADING_VERSION_INFO_TEXT = '正在加载版本信息...'
+CHECK_FOR_UPDATES_TEXT = '检查更新'
+INFO_UNAVAILABLE_TEXT = "信息不可用。"
+UPDATE_CONFIRMATION_TEXT = '确定要继续吗？\n\n应用需要重启。\n'
+BROKEN_OR_INCOM_TEXT = '已移除损坏或不兼容的文件。查看错误日志了解详情。'
 BMAC_UVR_TEXT = 'UVR \"Buy Me a Coffee\" Link'
 MDX_MENU_WAR_TEXT = '(Leave this setting as is if you are unsure.)'
 NO_FILES_TEXT = 'No Files'
@@ -1552,22 +1552,21 @@ INPUT_STEM_NAME_TEXT = "Input Stem Name"
 INPUT_UNIQUE_STEM_NAME_TEXT = "Input Unique Stem Name"
 DONE_MENU_TEXT = "Done"
 OK_TEXT = "Ok"
-ENSEMBLE_WARNING_NOT_ENOUGH_SHORT_TEXT = "Not Enough Models"
-ENSEMBLE_WARNING_NOT_ENOUGH_TEXT = "You must select 2 or more models to save an ensemble."
-NOT_ENOUGH_ERROR_TEXT = "Not enough files to process.\n"
-INVALID_FOLDER_ERROR_TEXT = 'Invalid Folder', 'Your given export path is not a valid folder!'
+ENSEMBLE_WARNING_NOT_ENOUGH_SHORT_TEXT = "模型数量不足"
+ENSEMBLE_WARNING_NOT_ENOUGH_TEXT = "您必须选择 2 个或更多模型才能保存集成。"
+NOT_ENOUGH_ERROR_TEXT = "没有足够的文件可处理。\n"
+INVALID_FOLDER_ERROR_TEXT = '无效文件夹', '您指定的导出路径不是有效的文件夹！'
 
-GET_DL_VIP_CODE_TEXT = ("Obtain codes by visiting one of the following links below."
-                        "\nFrom there you can donate, pledge, "
-                        "or just obatain the code!\n (Donations are not required to obtain VIP code)")
-CONFIRM_RESTART_TEXT = 'Restart Confirmation', 'This will restart the application and halt any running processes. Your current settings will be saved. \n\n Are you sure you wish to continue?'
-ERROR_LOADING_FILE_TEXT = 'Error Loading the Following File', 'Raw Error Details'
-LOADING_MODEL_TEXT = 'Loading model'
-FULL_APP_SET_TEXT = 'Full Application Settings'
+GET_DL_VIP_CODE_TEXT = ("请访问以下链接之一获取代码。"
+                        "\n您可以捐赠、订阅或直接获取代码！\n（无需捐赠即可获取 VIP 代码）")
+CONFIRM_RESTART_TEXT = '重启确认', '这将重启应用并停止所有正在运行的进程。当前设置将被保存。\n\n确定要继续吗？'
+ERROR_LOADING_FILE_TEXT = '加载以下文件时出错', '原始错误详情'
+LOADING_MODEL_TEXT = '正在加载模型'
+FULL_APP_SET_TEXT = '完整应用设置'
 PROCESS_STARTING_TEXT = 'Process starting... '
-PROCESS_STOPPED_BY_USER = '\n\nProcess stopped by user.'
-NEW_UPDATE_FOUND_TEXT = lambda version:f"\n\nNew Update Found: {version}\n\nClick the update button in the \"Settings\" menu to download and install!"
-ROLL_BACK_TEXT = 'Click Here to Roll Back'
+PROCESS_STOPPED_BY_USER = '\n\n进程已被用户停止。'
+NEW_UPDATE_FOUND_TEXT = lambda version:f"\n\n发现新更新：{version}\n\n点击「设置」菜单中的更新按钮进行下载和安装！"
+ROLL_BACK_TEXT = '点击此处回滚'
 
 def secondary_stem(stem:str):
     """Determines secondary stem"""

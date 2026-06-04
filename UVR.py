@@ -2813,7 +2813,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
         style.configure('TRadiobutton', foreground='#F6F6F7')
         gui_data.sv_ttk.set_theme("dark", MAIN_FONT_NAME, 10, fg_color_set=fg_color_set)
 
-    def show_file_dialog(self, text='Select Audio files', dialoge_type=None):
+    def show_file_dialog(self, text='选择音频文件', dialoge_type=None):
         parent_win = root
         is_linux = not is_windows and not is_macos
 
@@ -2902,7 +2902,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
         file_path_var, file_basename_var, file_path_2_var, file_basename_2_var = vars[is_primary]
 
         if not path:
-            path = self.show_file_dialog(text='Select Audio file', dialoge_type=SINGLE_FILE)
+            path = self.show_file_dialog(text='选择音频文件', dialoge_type=SINGLE_FILE)
 
         if path:  # Path selected
             file_path_var.set(path)
@@ -3028,7 +3028,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
         def copy_help_hint(event):
             if self.help_hints_var.get():
                 right_click_menu = tk.Menu(self, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=0)
-                right_click_menu.add_command(label='Copy Help Hint Text', command=right_click_menu_copy_hint)
+                right_click_menu.add_command(label='复制帮助提示文本', command=right_click_menu_copy_hint)
 
                 try:
                     right_click_menu.tk_popup(event.x_root,event.y_root)
@@ -3065,7 +3065,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
     def input_right_click_menu(self, event):
 
         right_click_menu = tk.Menu(self, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=0)
-        right_click_menu.add_command(label='See All Inputs', command=lambda:self.check_is_menu_open(INPUTS_MENU))
+        right_click_menu.add_command(label='查看所有输入', command=lambda:self.check_is_menu_open(INPUTS_MENU))
 
         try:
             right_click_menu.tk_popup(event.x_root,event.y_root)
@@ -3219,16 +3219,16 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
         def add_text_edit_options(menu):
             """Add options related to text editing."""
-            menu.add_command(label='Copy', command=self.right_click_menu_copy)
-            menu.add_command(label='Paste', command=lambda: self.right_click_menu_paste(text_box=text_box))
-            menu.add_command(label='Delete', command=lambda: self.right_click_menu_delete(text_box=text_box))
+            menu.add_command(label='复制', command=self.right_click_menu_copy)
+            menu.add_command(label='粘贴', command=lambda: self.right_click_menu_paste(text_box=text_box))
+            menu.add_command(label='删除', command=lambda: self.right_click_menu_delete(text_box=text_box))
 
         def add_advanced_settings_options(menu, settings_mapper, var_mapper):
             """Add advanced settings options to the menu."""
             current_method = self.chosen_process_method_var.get()
 
             if current_method in settings_mapper and (var_mapper[current_method] or (current_method == DEMUCS_ARCH_TYPE and self.is_demucs_pre_proc_model_activate_var.get())):
-                menu.add_cascade(label='Select Saved Settings', menu=saved_settings_sub_load_for_menu)
+                menu.add_cascade(label='选择已保存的设置', menu=saved_settings_sub_load_for_menu)
                 menu.add_separator()
                 for method, option in settings_mapper.items():
                     if method != ENSEMBLE_MODE or current_method == ENSEMBLE_MODE:
@@ -3264,19 +3264,19 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
             add_text_edit_options(right_click_menu)
         else:
             if self.chosen_process_method_var.get() == AUDIO_TOOLS and self.chosen_audio_tool_var.get() == ALIGN_INPUTS:
-                right_click_menu.add_command(label='Advanced Align Tool Settings', command=lambda: self.check_is_menu_open(ALIGNMENT_TOOL))
+                right_click_menu.add_command(label='高级对齐工具设置', command=lambda: self.check_is_menu_open(ALIGNMENT_TOOL))
             else:
                 add_advanced_settings_options(right_click_menu, settings_mapper, var_mapper)
 
             # Additional Settings and Help Hints
             if not self.is_menu_settings_open:
-                right_click_menu.add_command(label='Additional Settings', command=lambda: self.menu_settings(select_tab_2=True))
+                right_click_menu.add_command(label='附加设置', command=lambda: self.menu_settings(select_tab_2=True))
 
             help_hints_label = 'Enable' if not self.help_hints_var.get() else 'Disable'
             right_click_menu.add_command(label=f'{help_hints_label} Help Hints', command=lambda: self.help_hints_var.set(not self.help_hints_var.get()))
 
             if self.error_log_var.get():
-                right_click_menu.add_command(label='Error Log', command=lambda: self.check_is_menu_open(ERROR_OPTION))
+                right_click_menu.add_command(label='错误日志', command=lambda: self.check_is_menu_open(ERROR_OPTION))
 
         try:
             right_click_menu.tk_popup(event.x_root, event.y_root)
@@ -3316,8 +3316,8 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
     def right_click_console(self, event):
         right_click_menu = tk.Menu(self, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=0)
-        right_click_menu.add_command(label='Copy', command=self.command_Text.copy_text)
-        right_click_menu.add_command(label='Select All', command=self.command_Text.select_all_text)
+        right_click_menu.add_command(label='复制', command=self.command_Text.copy_text)
+        right_click_menu.add_command(label='全选', command=self.command_Text.select_all_text)
 
         try:
             right_click_menu.tk_popup(event.x_root,event.y_root)
@@ -3375,7 +3375,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
             right_click_menu = tk.Menu(self, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=0)
             if is_help_hints:
                 right_click_menu.add_command(label=f'{help_hints_label} Help Hints', command=lambda:self.help_hints_var.set(help_hints_bool))
-            right_click_menu.add_command(label='Exit Window', command=close_function)
+            right_click_menu.add_command(label='退出窗口', command=close_function)
 
             try:
                 right_click_menu.tk_popup(event.x_root,event.y_root)
@@ -3475,7 +3475,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
             if load_screen:
                 # Step 1: Add "Loading..." label
-                loading_label = ttk.Label(tab, text="Updating model lists...", font=Font(family=MAIN_FONT_NAME, size=14))
+                loading_label = ttk.Label(tab, text="正在更新模型列表...", font=Font(family=MAIN_FONT_NAME, size=14))
                 loading_label.place(relx=0.5, rely=0.5, anchor=tk.CENTER)  # Assuming you want to center it
 
                 # Step 2: Update the UI to show the label
@@ -3643,17 +3643,17 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
         def right_click_menu(event):
                 right_click_menu = tk.Menu(self, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=0)
-                right_click_menu.add_command(label='Remove Selected Items Only', command=lambda:selected_files(is_remove=True))
-                right_click_menu.add_command(label='Keep Selected Items Only', command=lambda:selected_files(is_remove=False))
-                right_click_menu.add_command(label='Clear All Input(s)', command=lambda:input_options(is_select_inputs=False))
+                right_click_menu.add_command(label='仅移除选中项', command=lambda:selected_files(is_remove=True))
+                right_click_menu.add_command(label='仅保留选中项', command=lambda:selected_files(is_remove=False))
+                right_click_menu.add_command(label='清除所有输入', command=lambda:input_options(is_select_inputs=False))
                 right_click_menu.add_separator()
                 right_click_menu_sub = tk.Menu(right_click_menu, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=False)
-                right_click_menu.add_command(label='Verify and Create Samples of Selected Inputs', command=lambda:verify_audio_start_thread(is_create_samples=True))
-                right_click_menu.add_cascade(label='Preferred Double Click Action', menu=right_click_menu_sub)
+                right_click_menu.add_command(label='验证并创建所选输入的样本', command=lambda:verify_audio_start_thread(is_create_samples=True))
+                right_click_menu.add_cascade(label='首选双击操作', menu=right_click_menu_sub)
                 if is_play_file_var.get():
-                    right_click_menu_sub.add_command(label='Enable: Open Audio File Directory', command=lambda:(input_files_listbox_Option.bind('<Double-Button>', lambda e:pop_open_file_path()), is_play_file_var.set(False)))
+                    right_click_menu_sub.add_command(label='启用：打开音频文件目录', command=lambda:(input_files_listbox_Option.bind('<Double-Button>', lambda e:pop_open_file_path()), is_play_file_var.set(False)))
                 else:
-                    right_click_menu_sub.add_command(label='Enable: Open Audio File', command=lambda:(input_files_listbox_Option.bind('<Double-Button>', lambda e:pop_open_file_path(is_play_file=True)), is_play_file_var.set(True)))
+                    right_click_menu_sub.add_command(label='启用：打开音频文件', command=lambda:(input_files_listbox_Option.bind('<Double-Button>', lambda e:pop_open_file_path(is_play_file=True)), is_play_file_var.set(True)))
 
                 try:
                     right_click_menu.tk_popup(event.x_root,event.y_root)
@@ -3754,9 +3754,9 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
             right_click_menu = tk.Menu(self, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=0)
             if selected:
-                right_click_menu.add_command(label='Open Location', command=lambda:open_selected_path(lb))
-                right_click_menu.add_command(label='Open File', command=lambda:open_selected_path(lb, is_play_file=True))
-            right_click_menu.add_command(label='Clear All', command=lambda:clear_all_data(lb))
+                right_click_menu.add_command(label='打开位置', command=lambda:open_selected_path(lb))
+                right_click_menu.add_command(label='打开文件', command=lambda:open_selected_path(lb, is_play_file=True))
+            right_click_menu.add_command(label='清除全部', command=lambda:clear_all_data(lb))
 
             try:
                 right_click_menu.tk_popup(event.x_root,event.y_root)
@@ -4544,8 +4544,8 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
         def right_click_menu(event):
                 right_click_menu = tk.Menu(self, font=(MAIN_FONT_NAME, FONT_SIZE_1), tearoff=0)
-                right_click_menu.add_command(label='Return to Settings Menu', command=lambda:(self.menu_help_close_window(), self.check_is_menu_settings_open()))
-                right_click_menu.add_command(label='Exit Window', command=lambda:self.menu_help_close_window())
+                right_click_menu.add_command(label='返回设置菜单', command=lambda:(self.menu_help_close_window(), self.check_is_menu_settings_open()))
+                right_click_menu.add_command(label='退出窗口', command=lambda:self.menu_help_close_window())
 
                 try:
                     right_click_menu.tk_popup(event.x_root,event.y_root)
@@ -4560,7 +4560,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
 
         section_title_Label(place=0,
                             frame=credits_Frame,
-                            text="Core UVR Developers")
+                            text="UVR 核心开发团队")
 
         credit_label(place=2,
                      frame=credits_Frame,
@@ -4958,9 +4958,9 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
         manual_downloads_menu_select_VR_Option = tk.Menu(manual_downloads_menu_select_Option['menu'])
         manual_downloads_menu_select_MDX_Option = tk.Menu(manual_downloads_menu_select_Option['menu'])
         manual_downloads_menu_select_DEMUCS_Option = tk.Menu(manual_downloads_menu_select_Option['menu'])
-        manual_downloads_menu_select_Option['menu'].add_cascade(label='VR Models', menu= manual_downloads_menu_select_VR_Option)
-        manual_downloads_menu_select_Option['menu'].add_cascade(label='MDX-Net Models', menu= manual_downloads_menu_select_MDX_Option)
-        manual_downloads_menu_select_Option['menu'].add_cascade(label='Demucs Models', menu= manual_downloads_menu_select_DEMUCS_Option)
+        manual_downloads_menu_select_Option['menu'].add_cascade(label='VR 模型', menu= manual_downloads_menu_select_VR_Option)
+        manual_downloads_menu_select_Option['menu'].add_cascade(label='MDX-Net 模型', menu= manual_downloads_menu_select_MDX_Option)
+        manual_downloads_menu_select_Option['menu'].add_cascade(label='Demucs 模型', menu= manual_downloads_menu_select_DEMUCS_Option)
 
         for model_selection_vr in vr_download_list.keys():
             if not os.path.isfile(os.path.join(VR_MODELS_DIR, vr_download_list[model_selection_vr])):
