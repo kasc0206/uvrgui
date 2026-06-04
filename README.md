@@ -52,13 +52,15 @@
 
 ## 🖥️ CLI Tool (Fork Feature) / 命令行工具（Fork 特性）
 
-**English:** This fork adds `uvr_cli.py`, a full-featured command-line interface with 10 commands:
+**English:** This fork adds `uvr_cli.py`, a full-featured command-line interface with 13 commands:
 
-**中文：** 本 Fork 新增了 `uvr_cli.py` 命令行工具，支持 10 个命令：
+**中文：** 本 Fork 新增了 `uvr_cli.py` 命令行工具，支持 13 个命令：
 
 ```bash
 # List all available models with download status / 列出所有可用模型及下载状态
 python uvr_cli.py list
+python uvr_cli.py list --downloaded    # only downloaded / 仅已下载
+python uvr_cli.py list --missing       # only missing / 仅未下载
 
 # JSON format output (for programmatic use) / JSON 格式输出（适合程序化调用）
 python uvr_cli.py list --json
@@ -71,20 +73,40 @@ python uvr_cli.py gui
 
 # View or modify configuration / 查看或修改配置
 python uvr_cli.py config
+python uvr_cli.py config --list          # list all / 列出全部
+python uvr_cli.py config --init          # create default / 创建默认
 python uvr_cli.py config --key default_device --value mps
 
 # Process audio (auto-downloads models) / 分离音频（自动下载模型）
 python uvr_cli.py process song.mp3
+python uvr_cli.py process song.mp3 --no-progress          # hide progress bar
+python uvr_cli.py process song.mp3 --other-method add     # Demucs v4.1 stem mode
 python uvr_cli.py process input_dir/ --out output_dir/
+python uvr_cli.py process input_dir/ --resume             # skip existing
+python uvr_cli.py process input_dir/ --dry-run            # preview only
 
 # Download models via curl (500x faster) / 预下载模型（使用 curl，快 500 倍）
 python uvr_cli.py download-models
+
+# Sync latest model data from upstream / 同步上游模型数据
+python uvr_cli.py update-model-data
 
 # Check version / 查看版本
 python uvr_cli.py version
 
 # Show help / 显示帮助
 python uvr_cli.py help
+```
+
+### 🔤 Language Switch / 语言切换
+
+**English:** Switch between Chinese and English UI in Settings → Language dropdown, or via config:
+
+**中文：** 在设置菜单中通过 Language 下拉框切换中英文界面，也可通过配置文件切换：
+
+```bash
+python uvr_cli.py config --key language --value zh   # 中文
+python uvr_cli.py config --key language --value en   # English
 ```
 
 ## 🚀 Installation / 安装指南
@@ -501,8 +523,14 @@ The output `UVR.exe` will be in `dist/` / 输出文件位于 `dist/` 目录。
 
 | File / 文件 | Description / 说明 |
 | --- | --- |
-| `uvr_cli.py` | **CLI tool** — 10 commands (list/info/process/demucs/download-models/config/version/gui/help + --json) |
-| `tests/` | **Test suite** — 32 tests via pytest + coverage |
+| `uvr_cli.py` | **CLI tool** — 13 commands (list/info/process/download-models/update-model-data/config/version/gui/help + --json/filters) |
+| `tests/` | **Test suite** — 63 tests via pytest + coverage |
+| `gui_data/l10n.py` | **i18n module** — language switching (zh/en) |
+| `gui_data/locales/` | **Translation files** — en.json + zh.json (800+ strings) |
+| `CHANGELOG.md` | **Changelog** — Keep a Changelog format |
+| `Dockerfile.cuda` | **CUDA Docker build** — NVIDIA GPU support |
+| `Makefile` | **Build shortcuts** — install/run/lint/changelog |
+| `.github/workflows/ci.yml` | **CI workflow** — lint + test matrix (ubuntu/macos, 3.10/3.11) + coverage |
 | `playsound.py` | `playsound3` compatibility shim / 兼容垫片 |
 | `__version__.py` | Version info with `FORK_VERSION` and `FORK_REPO` |
 | `pyproject.toml` | Project metadata + ruff lint config |
@@ -518,7 +546,9 @@ The output `UVR.exe` will be in `dist/` / 输出文件位于 `dist/` 目录。
 
 | Improvement / 改进项 | Description / 说明 |
 | --- | --- |
-| **ruff zero errors / ruff 零错误** | All custom files pass F, E, W, I rulesets |
+| **i18n 国际化** | Full l10n framework with zh/en switching, `_()` translation function |
+| **Type annotations** | Full type hints on `separate.py` + `uvr_cli.py` (26 functions) |
+| **ruff zero errors / ruff 零错误** | All custom files pass F, E, W, I rulesets + `ruff format` |
 | **Pylance type fixes / 类型修复** | Reduced errors in `UVR.py` from 244 → 137 |
 | **Star imports / 星号导入替换** | Replaced `from gui_data.constants import *` with 862 explicit symbols |
 | **Bug fix / Bug 修复** | `highlightthicknes` typo → `highlightthickness` (5 occurrences) |
@@ -531,15 +561,26 @@ The output `UVR.exe` will be in `dist/` / 输出文件位于 `dist/` 目录。
 | --- | --- | --- |
 | CLI commands / CLI 命令测试 | 9 | ✅ Pass / 通过 |
 | Module imports / 模块导入测试 | 14 | ✅ Pass / 通过 |
+| Audio constants / 音频常量 | 4 | ✅ Pass / 通过 |
+| Path constants / 路径常量 | 8 | ✅ Pass / 通过 |
+| Config load/save / 配置测试 | 5 | ✅ Pass / 通过 |
+| Model registry / 模型注册表 | 9 | ✅ Pass / 通过 |
+| Download manager / 下载管理器 | 4 | ✅ Pass / 通过 |
+| Demucs model data / Demucs 模型 | 11 | ✅ Pass / 通过 |
 | `secondary_stem` mapping / 映射测试 | 3 | ✅ Pass / 通过 |
 | Version & constants / 版本与常量 | 6 | ✅ Pass / 通过 |
-| **Total / 合计** | **32** | **✅ All Pass / 全部通过** |
+| **Total / 合计** | **73** | **✅ All Pass / 全部通过** |
 
 ## 📜 License / 许可证
 
 **English:** The **Ultimate Vocal Remover GUI** code is [MIT-licensed](LICENSE). For all third-party application developers who wish to use our models, please honor the MIT license by providing credit to UVR and its developers.
 
 **中文：** 本项目代码采用 [MIT 许可证](LICENSE)。如需使用我们的模型，请保留 UVR 及开发者的署名。
+
+---
+
+> 📖 完整更新历史请参阅 [CHANGELOG.md](CHANGELOG.md)
+> 🤖 AI/Copilot 上下文请参阅 [SKILL.md](SKILL.md)
 
 ## 🙏 Credits / 鸣谢
 

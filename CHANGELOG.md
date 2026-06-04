@@ -9,16 +9,21 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### 新增
+- `update-model-data` 命令：从 TRvlvr/application_data 同步 4 个模型数据文件（MD5 校验）
+- `--other-method {add,minus,none}` 选项：Demucs v4.1 二级音源合成模式
 - i18n 国际化框架：`gui_data/l10n.py` + `en.json` / `zh.json` 语言包
 - 设置菜单添加语言切换下拉框（English/中文）
 - CLI 增强：`--no-progress` 隐藏进度条、`--output-format` 别名、argcomplete shell 补全
 - 配置系统升级：`config --init`、`config --list`、版本自动迁移
 - CUDA Dockerfile (`Dockerfile.cuda`)：NVIDIA GPU 容器构建
+- 类型标注：`separate.py` + `uvr_cli.py` 全部公有函数（26 个函数）
+- `ruff format`：全代码库 45 个文件统一格式化（8694 行变更）
 
 ### 变更
 - README 改为中英文混合文档
 - GUI 界面全面汉化（~350 处字符串）
 - 容器构建优先推荐 OrbStack（兼容 Docker CLI）
+- 文档更新：`README.md` 和 `SKILL.md` 同步新增命令和选项
 
 ### 修复
 - Pylance 类型警告：`menu_move_tab` 缺失 `self`、`secondary_stem` 未绑定变量

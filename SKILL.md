@@ -1,10 +1,10 @@
 ---
 name: uvr-cli-skills
 description: UVR (Ultimate Vocal Remover) CLI 工具 — AI 人声/伴奏分离、模型管理、批量处理
-version: 1.1.0
+version: 1.2.0
 ---
 
-# UVR CLI — AI 音频源分离工具
+# UVR CLI — AI 音频源分离工具 (v1.2.0)
 
 通过命令行调用 Demucs/MDX-Net/VR 模型，从音频文件中分离人声、伴奏、鼓、贝斯等音源。
 
@@ -18,7 +18,9 @@ version: 1.1.0
 | 批量处理 | "把这个文件夹里的歌全部分离" | `process 文件夹/` |
 | 查看可用模型 | "有哪些模型可以用" | `list` / `list --json` |
 | 下载模型 | "帮我预下载模型" | `download-models` |
+| 同步模型数据 | "更新模型数据库" | `update-model-data` |
 | 配置默认值 | "以后默认用 mps 设备" | `config --key default_device --value mps` |
+| 切换语言 | "切换成英文界面" | `config --key language --value en` |
 | 搜索模型 | "帮我找找有没有去混响的模型" | `info reverb` / `info reverb --json` |
 | 查看版本 | "当前是什么版本" | `version` / `version --json` |
 | 设置输出格式 | "输出 flac 格式" | `--format flac` / `config --key output_format --value flac` |
@@ -26,8 +28,12 @@ version: 1.1.0
 | 只显示未下载的模型 | "还有哪些模型没下载" | `list --missing` |
 | 预览处理 | "先看看会处理哪些文件" | `process 文件夹/ --dry-run` |
 | 跳过已完成 | "继续上次没处理完的" | `process 文件夹/ --resume` |
+| 隐藏进度条 | "不想看进度条" | `process 歌曲.mp3 --no-progress` |
 | 高质量分离 | "我要最好的分离质量" | `process 歌曲.mp3 --shifts 5` |
+| Demucs v4.1 二级模式 | "用 add 模式混合伴奏" | `process 歌曲.mp3 --other-method add` |
 | 删除配置项 | "取消默认设置" | `config --delete 配置项名` |
+| 初始化配置 | "生成默认配置" | `config --init` |
+| 列出全部配置 | "查看所有配置项" | `config --list` |
 | 重置配置 | "恢复出厂设置" | `config --reset` |
 | 导出/导入配置 | "把我的配置备份一下" | `config --export 文件.json` |
 
@@ -177,6 +183,8 @@ python uvr_cli.py process 歌曲.mp3 --json
 | `--overlap N` | 0.25 | 分割重叠率 (0-1)，越大拼接越平滑但更慢 |
 | `--resume` | off | 跳过输出已存在的文件 |
 | `--dry-run` | off | 只列出要处理的文件，不实际执行 |
+| `--no-progress` | off | 隐藏 tqdm 进度条 |
+| `--other-method` | none | Demucs v4.1 二级模式: `add`/`minus`/`none` |
 
 **输出目录结构：**
 ```
@@ -197,6 +205,31 @@ python uvr_cli.py process 歌曲.mp3 --json
 | `mdx_extra` | 4 | Demucs v3 混合模型 |
 | `mdx` | 4 | Demucs v3 基础版 |
 | `UVR_Model_1` | 2 | UVR 特调 2-stem |
+
+---
+
+### `update-model-data` — 同步模型数据
+
+从上游 TRvlvr/application_data 拉取最新模型数据文件。
+
+```bash
+python uvr_cli.py update-model-data
+python uvr_cli.py update-model-data --json   # ✅ AI 推荐
+```
+
+**JSON 返回：**
+```json
+{
+  "ok": true,
+  "updated": [
+    {"file": "MDX_Net_Models/model_data/model_data.json", "status": "updated"},
+    {"file": "MDX_Net_Models/model_data/model_name_mapper.json", "status": "unchanged"},
+    {"file": "VR_Models/model_data/model_data.json", "status": "updated"},
+    {"file": "Demucs_Models/model_data/model_name_mapper.json", "status": "unchanged"}
+  ],
+  "total": 4
+}
+```
 
 ---
 
@@ -228,7 +261,7 @@ python uvr_cli.py download-models --json   # ✅ AI 推荐
 
 ```bash
 python uvr_cli.py version
-# UVR CLI v1.1.0 (基于 v5.6.0)
+# UVR CLI v1.2.0 (基于 v5.6.0)
 # 仓库: https://github.com/kasc0206/uvrgui
 
 python uvr_cli.py version --json
@@ -236,7 +269,7 @@ python uvr_cli.py version --json
 
 **JSON 返回：**
 ```json
-{"version": "v1.1.0", "base": "v5.6.0", "repo": "https://github.com/kasc0206/uvrgui"}
+{"version": "v1.2.0", "base": "v5.6.0", "repo": "https://github.com/kasc0206/uvrgui"}
 ```
 
 ---
@@ -246,9 +279,15 @@ python uvr_cli.py version --json
 设置默认值，避免重复输入参数。
 
 ```bash
-# 查看配置
+# 显示配置
 python uvr_cli.py config
 python uvr_cli.py config --json
+
+# 初始化默认配置
+python uvr_cli.py config --init
+
+# 列出所有配置项及说明
+python uvr_cli.py config --list
 
 # 设置默认设备
 python uvr_cli.py config --key default_device --value mps
@@ -261,6 +300,10 @@ python uvr_cli.py config --key output_format --value flac
 
 # 设置默认输出音源
 python uvr_cli.py config --key two_stem --value vocals
+
+# 切换语言
+python uvr_cli.py config --key language --value en   # English
+python uvr_cli.py config --key language --value zh   # 中文
 
 # 删除配置项
 python uvr_cli.py config --delete default_device
