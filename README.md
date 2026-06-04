@@ -6,6 +6,8 @@
 [![Downloads](https://img.shields.io/github/downloads/anjok07/ultimatevocalremovergui/total.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases)
 [![Tests](https://img.shields.io/badge/tests-63%2F63-passing-brightgreen)](https://github.com/kasc0206/uvrgui)
 [![Build Windows](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
+[![CI](https://github.com/kasc0206/uvrgui/actions/workflows/ci.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/ci.yml)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 > 🎵 **Ultimate Vocal Remover** — A state-of-the-art AI-powered audio source separation tool.
 > 🎵 **终极人声移除图形界面** — 利用最先进的 AI 音源分离模型，从音频文件中提取或移除人声。
