@@ -505,6 +505,7 @@ def demucs_separate(
     resume: bool = False,
     dry_run: bool = False,
     no_progress: bool = False,
+    other_method: str | None = None,
 ):
     """使用 Demucs 模型分离音频（模型自动下载）
 
@@ -519,6 +520,8 @@ def demucs_separate(
         overlap: 分割重叠率（默认 0.25）
         resume: 跳过已存在的输出文件
         dry_run: 仅列出要处理的文件，不实际执行
+        no_progress: 隐藏进度条
+        other_method: 次音轨生成方式（add/minus/none，默认自动选择）
     """
     import subprocess
 
@@ -624,6 +627,9 @@ def demucs_separate(
         print(f"错误: 音源 '{two_stem}' 不在模型中。可用音源: {sources_list}")
         return
 
+    # --other-method: 选择次音轨生成策略
+    other_method = other_method or "auto"
+
     total_files = len(audio_files)
     pbar = tqdm(
         total=total_files,
@@ -709,17 +715,31 @@ def demucs_separate(
             # 只分离指定音源和其补集
             stem_idx = sources_list.index(two_stem)
             stem_audio = result[stem_idx]
-            other_audio = mix - stem_audio
+
+            # 根据 --other-method 生成次音轨
+            if other_method == "add":
+                # 叠加其余所有音轨
+                other_audio = sum(result[j] for j in range(len(sources_list)) if j != stem_idx)
+            elif other_method == "minus":
+                # 原始混音减去主音轨
+                other_audio = mix - stem_audio
+            elif other_method == "none":
+                # 不生成次音轨
+                other_audio = None
+            else:
+                # auto: 默认行为（与 Demucs v4 一致）
+                other_audio = mix - stem_audio
 
             out_path = file_out_dir / f"{stem_name}_({two_stem}){out_ext}"
             sf.write(str(out_path), stem_audio.T, sample_rate)
 
-            other_name = f"no_{two_stem}"
-            out_path2 = file_out_dir / f"{stem_name}_({other_name}){out_ext}"
-            sf.write(str(out_path2), other_audio.T, sample_rate)
+            if other_audio is not None:
+                other_name = f"no_{two_stem}"
+                out_path2 = file_out_dir / f"{stem_name}_({other_name}){out_ext}"
+                sf.write(str(out_path2), other_audio.T, sample_rate)
+                pbar.write(f"  ✅ {out_path2.name}")
 
             pbar.write(f"  ✅ {out_path.name}  ({elapsed:.1f}s)")
-            pbar.write(f"  ✅ {out_path2.name}")
         else:
             for s_idx, source_name in enumerate(sources_list):
                 out_path = file_out_dir / f"{stem_name}_({source_name}){out_ext}"
@@ -790,6 +810,7 @@ def run_process(args: argparse.Namespace) -> None:
         resume=args.resume or False,
         dry_run=args.dry_run or False,
         no_progress=args.no_progress or False,
+        other_method=args.other_method or None,
     )
 
 
@@ -1112,6 +1133,12 @@ def main() -> None:
     )
     proc_group.add_argument(
         "--no-progress", action="store_true", help="不显示进度条（用于脚本调用）"
+    )
+    proc_group.add_argument(
+        "--other-method",
+        default=None,
+        choices=["add", "minus", "none"],
+        help="次音轨生成方式: add=叠加其余音轨, minus=混音减主音轨, none=不生成（仅 --two-stem 时有效）",
     )
     proc_group.add_argument("--resume", action="store_true", help="跳过已存在的输出文件")
     proc_group.add_argument("--dry-run", action="store_true", help="仅列出要处理的文件，不实际执行")
