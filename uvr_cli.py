@@ -9,6 +9,7 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
     python uvr_cli.py process <音频> [选项]      分离人声/伴奏
     python uvr_cli.py demucs <音频>             同 process（旧名称，建议改用 process）
     python uvr_cli.py download-models           预下载 Demucs 模型（使用 curl）
+    python uvr_cli.py update-model-data         同步最新模型数据（从上游仓库）
     python uvr_cli.py config                    查看/修改配置
     python uvr_cli.py config --key x --value y  设置配置项
     python uvr_cli.py config --delete key       删除配置项
@@ -981,6 +982,90 @@ def print_help() -> None:
     print(__doc__)
 
 
+# ─── 模型数据源映射（TRvlvr/application_data → 本地路径） ───
+MODEL_DATA_SOURCES: dict[str, str] = {
+    "models/MDX_Net_Models/model_data/model_data.json":
+        "https://raw.githubusercontent.com/TRvlvr/application_data/main/mdx_model_data/model_data_new.json",
+    "models/VR_Models/model_data/model_data.json":
+        "https://raw.githubusercontent.com/TRvlvr/application_data/main/vr_model_data/model_data_new.json",
+    "models/Demucs_Models/model_data/model_name_mapper.json":
+        "https://raw.githubusercontent.com/TRvlvr/application_data/main/demucs_model_data/model_name_mapper.json",
+    "models/MDX_Net_Models/model_data/model_name_mapper.json":
+        "https://raw.githubusercontent.com/TRvlvr/application_data/main/mdx_model_data/model_name_mapper.json",
+}
+
+
+def cmd_update_model_data() -> None:
+    """从 TRvlvr/application_data 同步最新模型数据"""
+    import hashlib
+    import subprocess
+
+    total = len(MODEL_DATA_SOURCES)
+    updated = 0
+    skipped = 0
+    failed = 0
+    results = []
+
+    if not JSON_MODE:
+        print(f"正在检查 {total} 个模型数据文件...\n")
+
+    for i, (local_path, url) in enumerate(MODEL_DATA_SOURCES.items(), 1):
+        dest = BASE_DIR / local_path
+        dest.parent.mkdir(parents=True, exist_ok=True)
+
+        old_hash = ""
+        if dest.exists():
+            old_hash = hashlib.md5(dest.read_bytes()).hexdigest()
+
+        tmp = dest.with_suffix(".tmp")
+        try:
+            subprocess.run(
+                ["curl", "-s", "-L", "-o", str(tmp), url],
+                check=True, capture_output=True, timeout=120,
+            )
+        except (subprocess.CalledProcessError, OSError) as e:
+            failed += 1
+            results.append((local_path, "download_failed", str(e)))
+            if not JSON_MODE:
+                print(f"  [{i}/{total}] ❌ {local_path}")
+                print(f"     错误: {e}")
+            continue
+
+        new_hash = hashlib.md5(tmp.read_bytes()).hexdigest()
+
+        if old_hash == new_hash:
+            tmp.unlink(missing_ok=True)
+            skipped += 1
+            results.append((local_path, "unchanged", ""))
+            if not JSON_MODE:
+                print(f"  [{i}/{total}] ⬜ {local_path} (无变化)")
+        else:
+            tmp.replace(dest)
+            updated += 1
+            size_kb = dest.stat().st_size / 1024
+            results.append((local_path, "updated", f"{size_kb:.0f}KB  {old_hash[:12]}->{new_hash[:12]}"))
+            if not JSON_MODE:
+                print(f"  [{i}/{total}] ✅ {local_path}  ({size_kb:.0f}KB)")
+                print(f"     {old_hash[:12]} → {new_hash[:12]}")
+
+    if not JSON_MODE:
+        print(f"\n{'='*50}")
+        print(f"  总计: {total}  |  更新: {updated}  |  跳过: {skipped}  |  失败: {failed}")
+        print(f"{'='*50}")
+
+    if JSON_MODE:
+        Output.json({
+            "ok": failed == 0,
+            "total": total,
+            "updated": updated,
+            "skipped": skipped,
+            "failed": failed,
+            "files": [
+                {"path": r[0], "status": r[1], "detail": r[2]} for r in results
+            ],
+        })
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Ultimate Vocal Remover CLI 工具",
@@ -990,7 +1075,7 @@ def main() -> None:
     parser.add_argument(
         "command",
         nargs="?",
-        help="list | gui | info | process | demucs | download-models | config | version | help",
+        help="list | gui | info | process | demucs | download-models | update-model-data | config | version | help",
     )
     parser.add_argument("input", nargs="?", help="输入音频文件或目录")
 
@@ -1103,6 +1188,8 @@ def main() -> None:
         run_process(args)
     elif command == "download-models":
         download_models()
+    elif command == "update-model-data":
+        cmd_update_model_data()
     elif command == "version":
         if JSON_MODE:
             Output.json({"version": FORK_VERSION, "base": VERSION, "repo": FORK_REPO})
