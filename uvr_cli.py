@@ -13,6 +13,8 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
     python uvr_cli.py config --key x --value y  设置配置项
     python uvr_cli.py config --delete key       删除配置项
     python uvr_cli.py config --reset            重置配置
+    python uvr_cli.py config --init             创建默认配置文件
+    python uvr_cli.py config --list             列出所有配置项
     python uvr_cli.py config --export 文件.json  导出配置
     python uvr_cli.py config --import 文件.json  导入配置
     python uvr_cli.py version                   查看版本信息
@@ -92,16 +94,48 @@ class Output:
         sys.exit(0)
 
 
+# 配置版本迁移映射
+_CONFIG_MIGRATIONS = {
+    1: lambda cfg: cfg,  # v1 → v2: 添加新字段
+}
+
+# 默认配置模板
+DEFAULT_CONFIG = {
+    "config_version": 2,
+    "default_device": None,
+    "default_arch": "demucs",
+    "default_model": "htdemucs",
+    "output_format": "wav",
+    "two_stem": None,
+    "shifts": 1,
+    "overlap": 0.25,
+    "language": "zh",
+}
+
+
 def load_config():
     """加载用户配置文件，不存在时返回空字典"""
     if not CONFIG_FILE.exists():
         return {}
     try:
         with open(CONFIG_FILE) as f:
-            cfg = json.load(f)
+            cfg: dict = json.load(f)
+            # 配置版本迁移
+            ver = cfg.get("config_version", 1)
+            while ver < max(_CONFIG_MIGRATIONS.keys()):
+                if ver in _CONFIG_MIGRATIONS:
+                    cfg = _CONFIG_MIGRATIONS[ver](cfg)
+                ver += 1
+                cfg["config_version"] = ver
             return {k: v for k, v in cfg.items() if v is not None}
     except (json.JSONDecodeError, IOError):
         return {}
+
+
+def init_config():
+    """创建默认配置文件"""
+    save_config(DEFAULT_CONFIG)
+    return DEFAULT_CONFIG
 
 
 def save_config(config: dict):
@@ -706,6 +740,15 @@ def cmd_config(args):
     """查看或修改配置"""
     cfg_path = args.config or CONFIG_FILE
 
+    if args.init:
+        cfg = init_config()
+        if JSON_MODE:
+            Output.json({"ok": True, "action": "init", "config": cfg})
+        else:
+            print("✅ 已创建默认配置文件")
+            print(json.dumps(cfg, indent=2, ensure_ascii=False))
+        return
+
     if args.reset:
         # 重置配置
         if cfg_path.exists():
@@ -770,11 +813,15 @@ def cmd_config(args):
             print(f"✅ 已设置 {args.key} = {args.value}")
 
     cfg = load_config()
-    if JSON_MODE:
-        Output.json({"config": cfg})
-    else:
-        print("当前配置:")
-        print(json.dumps(cfg, indent=2, ensure_ascii=False))
+    if args.list_config or not (args.key or args.reset or args.export_to or args.import_from or args.delete or args.init):
+        if JSON_MODE:
+            Output.json({"config": cfg})
+        else:
+            print("当前配置:")
+            print(json.dumps(cfg, indent=2, ensure_ascii=False))
+
+    if args.list_config or not (args.key or args.reset or args.export_to or args.import_from or args.delete or args.init):
+        return
 
 
 def download_models():
@@ -905,6 +952,9 @@ def main():
     cfg_group.add_argument("--value", help="配置项值 (config 命令)")
     cfg_group.add_argument("--delete", help="删除指定配置项")
     cfg_group.add_argument("--reset", action="store_true", help="重置配置到默认值")
+    cfg_group.add_argument("--init", action="store_true", help="创建默认配置文件")
+    cfg_group.add_argument("--list", action="store_true", dest="list_config",
+                            help="列出所有配置项")
     cfg_group.add_argument("--export", dest="export_to", help="导出配置到文件")
     cfg_group.add_argument("--import", dest="import_from", help="从文件导入配置")
     cfg_group.add_argument("--config", help="指定配置文件路径")
