@@ -6,7 +6,7 @@ build-backend = "setuptools.backends._legacy:_Backend"
 name = "ultimatevocalremovergui"
 version = "5.6.0"
 description = "终极人声移除图形界面 — AI 音频源分离工具"
-readme = "README_zh.md"
+readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [

@@ -1,4 +1,5 @@
-# Ultimate Vocal Remover GUI v5.6
+# Ultimate Vocal Remover GUI v5.6 / 终极人声移除图形界面
+
 <img src="https://raw.githubusercontent.com/Anjok07/ultimatevocalremovergui/master/gui_data/img/UVR_v5.6.png?raw=true" />
 
 [![Release](https://img.shields.io/github/release/anjok07/ultimatevocalremovergui.svg)](https://github.com/anjok07/ultimatevocalremovergui/releases/latest)
@@ -7,182 +8,194 @@
 [![Build Windows](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml/badge.svg)](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
 
 > 🎵 **Ultimate Vocal Remover** — A state-of-the-art AI-powered audio source separation tool.
+> 🎵 **终极人声移除图形界面** — 利用最先进的 AI 音源分离模型，从音频文件中提取或移除人声。
 
 ---
 
-## 📖 About
+## 📖 About / 关于本项目
 
-This application uses state-of-the-art source separation models to remove vocals from audio files. UVR's core developers trained all of the models provided in this package (except for the Demucs v3 and v4 4-stem models).
+**English:** This application uses state-of-the-art source separation models to remove vocals from audio files. UVR's core developers trained all of the models provided in this package (except for the Demucs v3 and v4 4-stem models). It supports **VR Architecture**, **MDX-Net**, and **Demucs**三大 AI 架构，可将音乐中的人声、伴奏、鼓、贝斯等音源分离为独立音轨。
 
-### 👥 Core Developers
+**中文：** **Ultimate Vocal Remover GUI (UVR)** 是一款基于深度学习的音频源分离桌面工具，支持将音乐中的**人声**、**伴奏**、**鼓点**、**贝斯**等多种音源分离为独立音轨。除 Demucs v3/v4 的 4-stem 模型外，本软件包提供的所有模型均由 UVR 核心开发团队自行训练。
 
-| Role | Developer |
+### 👥 Core Developers / 核心开发团队
+
+| 角色 (Role) | 开发者 (Developer) |
 | --- | --- |
-| Original Author | [Anjok07](https://github.com/anjok07) |
-| Original Author | [aufr33](https://github.com/aufr33) |
-| Fork Maintainer | [kasc0206](https://github.com/kasc0206) |
+| 原作者 (Original Author) | [Anjok07](https://github.com/anjok07) |
+| 原作者 (Original Author) | [aufr33](https://github.com/aufr33) |
+| Fork 维护者 (Fork Maintainer) | [kasc0206](https://github.com/kasc0206) |
 
-### ☕ Support the Project
+### ☕ Support the Project / 支持项目
 
 * [Buy Me a Coffee](https://www.buymeacoffee.com/uvr5)
 
-### 🔗 Fork Repository
+---
 
-This fork ([kasc0206/uvrgui](https://github.com/kasc0206/uvrgui)) extends the original UVR with:
+## ✨ Features / 特性概览
 
-- 🖥️ **CLI Tool** — `uvr_cli.py` with 10 commands for headless operation
-- ✅ **Lint Clean** — All ruff checks pass (zero errors on custom code)
-- 🧪 **Test Suite** — 32 tests with pytest + coverage reporting
-- 🐛 **Bug Fixes** — Fixed `highlightthicknes` typo, star imports, Pylance type errors
-- 📖 **Chinese Documentation** — Full README_zh.md
+| English | 中文 |
+| --- | --- |
+| ✅ **Three AI Architectures**: VR, MDX-Net, Demucs (v1~v4) | ✅ **三种主流 AI 架构**：VR Architecture、MDX-Net、Demucs（v1~v4） |
+| ✅ **New model support**: BS-Roformer, Mel-Roformer, SCNet, Bandit, etc. | ✅ **支持多种新型模型**：BS-Roformer、Mel-Roformer、SCNet、Bandit 等 |
+| ✅ Vocal / Instrumental / Multi-stem separation | ✅ 人声 / 伴奏 / 多音源分离 |
+| ✅ Karaoke backing track creation | ✅ 卡拉 OK 伴奏制作 |
+| ✅ Denoising / De-reverb / De-echo | ✅ 去噪 / 去混响 / 去回声 |
+| ✅ **GPU Acceleration** (NVIDIA CUDA / Apple MPS) | ✅ **GPU 加速**（NVIDIA CUDA / Apple MPS） |
+| ✅ **Batch Processing** | ✅ **批量处理**（Batch Mode） |
+| ✅ **Secondary Model Mode** | ✅ **二级模型混合**（Secondary Model Mode） |
+| ✅ **Ensemble Mode** | ✅ **集成模式**（Ensemble Mode） |
+| ✅ Time-stretch & Pitch-shift (Rubber Band) | ✅ **变调变速**（需 Rubber Band 库） |
+| ✅ Drag-and-drop, sample preview, settings save/load | ✅ **拖拽导入**、**采样预览**、**设置保存与加载** |
 
-## CLI Tool (Fork Feature)
+## 🖥️ CLI Tool (Fork Feature) / 命令行工具（Fork 特性）
 
-This fork adds `uvr_cli.py`, a full-featured command-line interface:
+**English:** This fork adds `uvr_cli.py`, a full-featured command-line interface with 10 commands:
+
+**中文：** 本 Fork 新增了 `uvr_cli.py` 命令行工具，支持 10 个命令：
 
 ```bash
-# List all available models with download status
+# List all available models with download status / 列出所有可用模型及下载状态
 python uvr_cli.py list
 
-# List models as JSON (for programmatic use)
+# JSON format output (for programmatic use) / JSON 格式输出（适合程序化调用）
 python uvr_cli.py list --json
 
-# Show model details
-python uvr_cli.py info <keyword>
+# Show model details / 查看特定模型详情
+python uvr_cli.py info BS-Roformer
 
-# Launch the GUI
+# Launch the GUI / 启动图形界面
 python uvr_cli.py gui
 
-# View or modify configuration
+# View or modify configuration / 查看或修改配置
 python uvr_cli.py config
 python uvr_cli.py config --key default_device --value mps
 
-# Process audio with Demucs (auto-downloads models)
+# Process audio (auto-downloads models) / 分离音频（自动下载模型）
 python uvr_cli.py process song.mp3
-python uvr_cli.py demucs song.flac --two-stem vocals
 python uvr_cli.py process input_dir/ --out output_dir/
 
-# Download Demucs models via curl (500x faster)
+# Download models via curl (500x faster) / 预下载模型（使用 curl，快 500 倍）
 python uvr_cli.py download-models
 
-# Check version
+# Check version / 查看版本
 python uvr_cli.py version
 
-# Show help
+# Show help / 显示帮助
 python uvr_cli.py help
 ```
 
-## Installation (Fork)
+## 🚀 Installation / 安装指南
 
-> ⚠️ **注意**：本 Fork 不提供预编译安装包。请按照以下步骤从源码构建。
+> ⚠️ **Note / 注意**：This fork does not provide pre-built binaries. Please build from source. / 本 Fork 不提供预编译安装包，请按照以下步骤从源码构建。
 
-### Windows / macOS / Linux — 源码安装
+### 📦 Source Install (All Platforms) / 源码安装（所有平台通用）
 
 ```bash
-# 1. 克隆仓库
+# 1. Clone the repository / 克隆仓库
 git clone https://github.com/kasc0206/uvrgui.git
 cd uvrgui
 
-# 2. 创建虚拟环境
+# 2. Create virtual environment / 创建虚拟环境
 python3 -m venv venv
 source venv/bin/activate  # Linux/macOS
 # 或 venv\Scripts\activate  # Windows
 
-# 3. 安装依赖
+# 3. Install dependencies / 安装依赖
 pip install -r requirements.txt
 
-# 4. NVIDIA GPU 用户安装 CUDA PyTorch（可选）
+# 4. (Optional) NVIDIA GPU CUDA PyTorch / （可选）NVIDIA GPU 用户安装 CUDA 版 PyTorch
 pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu118
 
-# 5. 启动
+# 5. Launch / 启动
 python UVR.py
 ```
 
-### Windows EXE 构建
+### 🪟 Windows EXE Build / Windows EXE 构建
 
-本 Fork 支持通过 GitHub Actions 自动构建 Windows EXE。推送 tag 即可触发：
+**English:** This fork supports automated Windows EXE builds via GitHub Actions. Push a tag to trigger:
+
+**中文：** 本 Fork 支持通过 GitHub Actions 自动构建 Windows EXE。推送 tag 即可触发：
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-也可手动触发：[Actions 页面](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
+Also can be triggered manually from the [Actions page](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml) / 也可手动触发 [Actions 页面](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml)
 
-#### 构建变体
+#### Build Variants / 构建变体
 
-每次推送 tag 后，CI 会自动构建两个版本：
-
-| 变体 | 文件 | 体积 | GPU | Release 附件 | Artifact |
+| Variant / 变体 | File / 文件 | Size / 体积 | GPU | Release Asset | Artifact |
 |------|------|------|-----|:---:|:---:|
-| **CPU 版** | `UVR_*_CPU.zip` | ~400 MB | ❌ | ✅ 直接下载 | ✅ |
-| **CUDA 版** | `UVR_*_CUDA.zip` | ~2.5 GB | ✅ NVIDIA | ❌ 超 2GB 限制 | ✅ |
+| **CPU Edition** | `UVR_*_CPU.zip` | ~400 MB | ❌ | ✅ Direct download | ✅ |
+| **CUDA Edition** | `UVR_*_CUDA.zip` | ~2.5 GB | ✅ NVIDIA | ❌ Exceeds 2GB limit | ✅ |
 
-CI 流程：
-1. 先安装 CPU PyTorch → 编译 CPU 版 → 打包 ZIP → 上传 Artifact
-2. 再安装 CUDA PyTorch → 重新编译 CUDA 版 → 打包 ZIP → 上传 Artifact
-3. Release 页面：CPU 版作为附件直接下载，CUDA 版提供 Artifact 链接
+**CI Flow / CI 流程：**
+1. Install CPU PyTorch → Build CPU edition → Package ZIP → Upload Artifact
+2. Install CUDA PyTorch → Rebuild CUDA edition → Package ZIP → Upload Artifact
+3. Release page: CPU edition as direct download, CUDA edition via Artifact link
 
-#### 本机构建
+#### Local Build / 本机构建
 
 ```bash
 pip install -r requirements.txt
 pip install pyinstaller
 
-# CPU 版（默认）
+# CPU edition (default) / CPU 版（默认）
 pyinstaller UVR.spec --clean --noconfirm
 
-# CUDA 版（需先安装 CUDA PyTorch）
+# CUDA edition (install CUDA PyTorch first) / CUDA 版（需先安装 CUDA PyTorch）
 pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu121
 pyinstaller UVR.spec --clean --noconfirm
 ```
 
 ---
 
-### 🍎 macOS 从源码编译
+### 🍎 macOS Build from Source / macOS 从源码编译
 
-#### 前置条件
+#### Prerequisites / 前置条件
 
-- macOS Big Sur (11) 或更高版本
-- 约 10 GB 磁盘空间（含 PyTorch 运行时）
+- macOS Big Sur (11) or later / 或更高版本
+- ~10 GB disk space (including PyTorch runtime) / 约 10 GB 磁盘空间（含 PyTorch 运行时）
 - Xcode Command Line Tools
 
-#### 步骤
+#### Steps / 编译步骤
 
 ```bash
-# 1. 安装 Xcode Command Line Tools
+# 1. Install Xcode Command Line Tools / 安装 Xcode Command Line Tools
 xcode-select --install
 
-# 2. 安装 Homebrew（如尚未安装）
+# 2. Install Homebrew (if not already) / 安装 Homebrew（如尚未安装）
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# 3. 安装系统依赖
+# 3. Install system dependencies / 安装系统依赖
 brew install ffmpeg python@3.10
 
-# 4. 可选 — 安装 Rubber Band（变调变速功能）
+# 4. (Optional) Rubber Band for pitch/time adjustment
 brew install rubberband
 
-# 5. 克隆仓库
+# 5. Clone repository / 克隆仓库
 git clone https://github.com/kasc0206/uvrgui.git
 cd uvrgui
 
-# 6. 创建虚拟环境
+# 6. Create virtual environment / 创建虚拟环境
 python3.10 -m venv venv
 source venv/bin/activate
 
-# 7. 安装依赖
+# 7. Install dependencies / 安装依赖
 pip install --upgrade pip wheel setuptools
 pip install -r requirements.txt
 
-# 8. 启动
+# 8. Launch / 启动
 python UVR.py
 ```
 
-> **首次启动可能需要 5-10 分钟**（模型初始化）。
+> **First launch may take 5-10 minutes** (model initialization). / **首次启动可能需要 5-10 分钟**（模型初始化）。
 >
-> **Apple Silicon (M1/M2/M3)**：PyTorch MPS 加速自动启用，无需额外配置。
+> **Apple Silicon (M1/M2/M3)**: PyTorch MPS acceleration is automatically enabled. / PyTorch MPS 加速自动启用，无需额外配置。
 >
-> **如果遇到「无法验证开发者」提示**：
+> **If you see "Cannot verify developer" / 如果遇到「无法验证开发者」提示**：
 > ```bash
 > sudo spctl --master-disable
 > sudo xattr -rd com.apple.quarantine /Applications/Ultimate\ Vocal\ Remover.app
@@ -190,307 +203,237 @@ python UVR.py
 
 ---
 
-### 🐧 Linux 从源码编译
+### 🐧 Linux Build from Source / Linux 从源码编译
 
-#### 前置条件
+#### Prerequisites / 前置条件
 
-- 64 位 Linux 发行版
-- 约 10 GB 磁盘空间（含 PyTorch 运行时）
-- NVIDIA GPU 用户：CUDA Toolkit 11.8+（可选）
+- 64-bit Linux distribution / 64 位 Linux 发行版
+- ~10 GB disk space / 约 10 GB 磁盘空间
+- NVIDIA GPU: CUDA Toolkit 11.8+ (optional)
 
-#### Debian / Ubuntu 系
+#### Debian / Ubuntu
 
 ```bash
-# 1. 更新系统
+# Update system / 更新系统
 sudo apt update && sudo apt upgrade -y
 
-# 2. 安装系统依赖
+# Install system dependencies / 安装系统依赖
 sudo apt install -y ffmpeg python3-pip python3-tk python3-venv
 
-# 3. 可选 — 安装 Rubber Band（变调变速功能）
+# (Optional) Rubber Band / 可选：安装 Rubber Band
 sudo apt install -y rubberband-cli
 
-# 4. 克隆仓库
+# Clone / 克隆仓库
 git clone https://github.com/kasc0206/uvrgui.git
 cd uvrgui
 
-# 5. 创建虚拟环境
+# Virtual environment / 创建虚拟环境
 python3 -m venv venv
 source venv/bin/activate
 
-# 6. 安装 Python 依赖
+# Install dependencies / 安装依赖
 pip install --upgrade pip wheel setuptools
 pip install -r requirements.txt
 
-# 7. NVIDIA GPU 用户安装 CUDA PyTorch（可选）
+# (Optional) CUDA PyTorch for NVIDIA GPU
 pip install --upgrade torch --extra-index-url https://download.pytorch.org/whl/cu118
 
-# 8. 启动
+# Launch / 启动
 python UVR.py
 ```
 
-#### Arch Linux 系
+#### Arch Linux
 
 ```bash
-# 1. 更新系统
 sudo pacman -Syu
-
-# 2. 安装系统依赖
 sudo pacman -S ffmpeg python-pip tk python-virtualenv
-
-# 3. 可选 — 安装 Rubber Band（变调变速功能）
-sudo pacman -S rubberband
-
-# 4. 克隆仓库
+sudo pacman -S rubberband  # optional / 可选
 git clone https://github.com/kasc0206/uvrgui.git
 cd uvrgui
-
-# 5. 创建虚拟环境
 python -m venv venv
 source venv/bin/activate
-
-# 6. 安装依赖
 pip install --upgrade pip wheel setuptools
 pip install -r requirements.txt
-
-# 7. 启动
 python UVR.py
 ```
 
-#### Fedora / RHEL 系
+#### Fedora / RHEL
 
 ```bash
-# 1. 安装系统依赖
 sudo dnf install -y ffmpeg python3-pip python3-tkinter python3-virtualenv
-
-# 2. 可选 — 安装 Rubber Band
-sudo dnf install -y rubberband
-
-# 3. 克隆仓库
+sudo dnf install -y rubberband  # optional / 可选
 git clone https://github.com/kasc0206/uvrgui.git
 cd uvrgui
-
-# 4. 创建虚拟环境
 python3 -m venv venv
 source venv/bin/activate
-
-# 5. 安装依赖
 pip install --upgrade pip wheel setuptools
 pip install -r requirements.txt
-
-# 6. 启动
 python UVR.py
 ```
 
 ---
 
-### 额外依赖
+### 🔧 Additional Dependencies / 额外依赖
 
-```bash
-sudo spctl --master-disable
-sudo xattr -rd com.apple.quarantine /path/to/UVR
-```
+| 依赖 (Dependency) | 用途 (Purpose) | 安装方式 (Installation) |
+| --- | --- | --- |
+| **FFmpeg** | Process non-WAV audio | Package manager per platform |
+| **Rubber Band** | Time-stretch / pitch-shift | Optional / 可选 |
 
 <details id="CannotOpen">
-  <summary>MacOS Users: Having Trouble Opening UVR?</summary>
+  <summary>🍎 macOS: Having Trouble Opening UVR? / 无法打开 UVR？</summary>
 
-> Due to Apples strict application security, you may need to follow these steps to open UVR.
+> Due to Apple's strict application security, you may need to follow these steps:
+> 由于 Apple 严格的应用安全策略，您可能需要执行以下步骤：
 >
-> First, run the following command via Terminal.app to allow applications to run from all sources (it's recommended that you re-enable this once UVR opens properly.)
-> 
+> 1. Allow apps from all sources / 允许从所有来源运行应用（建议解决问题后重新关闭）：
 > ```bash
 > sudo spctl --master-disable
 > ```
-> 
-> Second, run the following command to bypass Notarization: 
-> 
+>
+> 2. Bypass notarization / 绕过公证检查：
 > ```bash
 > sudo xattr -rd com.apple.quarantine /Applications/Ultimate\ Vocal\ Remover.app
 > ```
 
 </details>
 
-<details id="MacInstall">
-  <summary>Manual MacOS Installation</summary>
+---
 
-### Manual MacOS Installation
+## ⚙️ Hardware Requirements / 硬件要求
 
-- Download and save this repository [here](https://github.com/Anjok07/ultimatevocalremovergui/archive/refs/heads/master.zip)
-- Download and install Python 3.10 [here](https://www.python.org/ftp/python/3.10.9/python-3.10.9-macos11.pkg)
-- From the saved directory run the following - 
+| 项目 (Item) | 最低配置 (Minimum) | 推荐配置 (Recommended) |
+| --- | --- | --- |
+| **CPU** | 4-core x86_64 / ARM | 8-core+ |
+| **RAM** | 8 GB | 16 GB+ |
+| **NVIDIA GPU** | GTX 1060 6GB | RTX 8GB+ VRAM |
+| **macOS** | Big Sur+ | M1/M2/M3 |
+| **Platform** | 64-bit only | 64-bit only |
 
-```
-pip3 install -r requirements.txt
-```
-
-- If your Mac is running with an M1, please run the following command next. If not, skip this step. - 
-
-```
-cp /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/_soundfile_data/libsndfile_arm64.dylib /Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/_soundfile_data/libsndfile.dylib
-```
-
-**FFmpeg Installation**
-
-- Once everything is done installing, download the correct FFmpeg binary for your system [here](http://www.osxexperts.net) and place it into the main application directory.
-
-**Rubber Band Installation**
-
-In order to use the Time Stretch or Change Pitch tool, you'll need Rubber Band.
-
-- Download the precompiled build [here](https://breakfastquay.com/files/releases/rubberband-3.1.2-gpl-executable-windows.zip)
-- From the archive, extract the following files to the UVR/lib_v5 application directory:
-   - ```rubberband-3.1.2-gpl-executable-macos/rubberband```
-
-This process has been tested on a MacBook Pro 2021 (using M1) and a MacBook Air 2017 and is confirmed to be working on both.
-
-</details>
-
-
-### Linux Installation (Updated Instructions)
-
-<details id="LinuxInstall">
-  <summary>See Linux Installation Instructions</summary>
-
-<br />
-
-**These installation instructions are for Debian & Arch-based Linux systems.**
+**Notes / 说明：**
+- AMD Radeon GPU support is limited. See [v5.6-amd-gpu branch](https://github.com/Anjok07/ultimatevocalremovergui/tree/v5.6-amd-gpu)
+- Conversion times depend significantly on your hardware / 转换时间取决于硬件配置
+- Models are computationally intensive / 模型计算强度大
 
 ---
 
-#### **Step 1: Download the Repository**
-- Clone the [fork repository](https://github.com/kasc0206/uvrgui):
+## 🧠 Model Architecture / 模型架构详解
+
+UVR supports three core AI architectures with various pretrained models:
+UVR 支持三类核心 AI 架构，每类下有多种预训练模型：
+
+### 1️⃣ VR Architecture（VR 架构）
+
+UVR team's self-developed models, categorized by band count / 按频带数划分：
+
+| Bands / 频带 | Sample Rate / 采样率 | Use Case / 适用场景 |
+| --- | --- | --- |
+| 1-band | 16k~44.1k | Lightweight, fast / 轻量快速 |
+| 2-band | 32k | Medium quality / 中等人声提取 |
+| 3-band | 44.1k | Balanced speed & quality / 平衡速度与质量 |
+| **4-band** | **44.1k** | **⭐ Best quality / 主流选择，质量最佳** |
+
+**Special VR models / 特殊 VR 模型：**
+
+| Model | Purpose / 用途 |
+| --- | --- |
+| `HP-UVR` (1~9) | HP filter optimized vocal extraction / 高通滤波优化，提取人声 |
+| `SP-UVR` (10~16) | Spectral processing optimized / 频谱处理优化 |
+| `Karaoke` series | Karaoke backing tracks / 制作卡拉 OK 伴奏 |
+| `DeNoise / De-Echo / DeReverb` | Noise/echo/reverb removal / 降噪、去回声、去混响 |
+| `BVE` | Background vocal extraction / 提取背景和声 |
+| Specialized: `No Piano`, `No Woodwinds`, `No Echo`, etc. | Targeted stem removal / 专项移除 |
+
+### 2️⃣ MDX-Net Architecture（MDX-Net 架构）
+
+Hybrid spectral/temporal network models / 基于混合频谱/时域网络的分离模型：
+
+| Model Name | Output | Description / 说明 |
+| --- | --- | --- |
+| **UVR-MDX-NET Main** | Vocals | ⭐ Best all-round main model / 综合效果最佳的主模型 |
+| UVR-MDX-NET 1/2/3 | Vocals | General vocal extraction / 通用人声提取 |
+| UVR-MDX-NET Inst Main/HQ | Instrumentals | High-quality instrumental / 高质量伴奏提取 |
+| UVR-MDX-NET Karaoke | Instrumentals | Karaoke backing / 卡拉 OK 伴奏 |
+| Kim Vocal/Inst | Vocals/Inst | Community contributed / 社区贡献模型 |
+| MDX23C-InstVoc HQ | Vocals+Inst | New MDX23C architecture / 新版 MDX23C 架构 |
+
+**New derivative models (community contributed) / 新型衍生模型（社区贡献）：**
+
+| Series | Description / 说明 |
+| --- | --- |
+| **BS-Roformer** | Deconvolution spectral reconstruction, SDR > 12.9, excellent quality |
+| **Mel-Roformer** | Mel-spectrogram Roformer |
+| **MB-Roformer** | Mel-Band Roformer (Inst/Duality variants) |
+| **SCNet (4S-SCNet)** | 4-stem separation (drums/bass/other/vocals) |
+| **Cinematic Bandit** | Cinematic-grade separation |
+| **DrumSep** | Dedicated drum track extraction |
+| **Reverb HQ** | Professional de-reverb |
+
+### 3️⃣ Demucs Architecture（Demucs 架构，Facebook/Meta）
+
+Open-source source separation models from Meta, all versions integrated:
+
+| Version | Model | Description / 说明 |
+| --- | --- | --- |
+| v1 | Demucs / Tasnet / Light | First-gen, lightweight / 初代模型，轻量 |
+| v2 | Demucs / Tasnet / Demucs48_hq | Improved / 改进版 |
+| **v3** | **mdx / mdx_extra** | ⭐ Hybrid, recommended for daily use / 推荐日常使用 |
+| v3 UVR | UVR_Model_1 / 2 / Bag | UVR-tuned / UVR 特调版 |
+| **v4** | **htdemucs** | ⭐⭐ **4-stem (drums/bass/other/vocals)** |
+| v4 | htdemucs_ft | Fine-tuned / 微调版 |
+| **v4** | **htdemucs_6s** | ⭐ **6-stem (+ guitar, piano)** |
+
+---
+
+## 💡 Usage Recommendations / 使用建议
+
+| Your Need / 你的需求 | Recommended Model / 推荐模型 |
+| --- | --- |
+| 🎤 Extract vocals / 提取人声 | `UVR-MDX-NET Main` or `BS-Roformer-Viperx-1297` |
+| 🎵 Extract instrumental / 提取伴奏 | `UVR-MDX-NET Inst Main` or `MB-Roformer-Inst-v2` |
+| 🎧 Multi-instrument separation / 分离多乐器 | `htdemucs` (4-track) or `htdemucs_6s` (6-track) |
+| 🎤🎤 Background vocals / 提取背景和声 | `UVR-BVE-4B_SN-44100-1` |
+| 🎶 Karaoke / 制作卡拉 OK | `UVR-MDX-NET Karaoke` |
+| 🧹 Denoising / 去噪 | `UVR-DeNoise` |
+| 🧹 De-reverb / 去混响 | `Reverb HQ` or `BS-Ro-Dereverb-Anvuew` |
+
+---
+
+## 🐛 Troubleshooting / 常见问题
+
+### Common Issues / 常见问题
+
+- **FFmpeg not installed**: The app will throw an error when processing non-WAV files. Install FFmpeg via your package manager.
+- **Memory errors**: Lower the "Segment" or "Window" size settings. / 降低"Segment"或"Window"大小即可。
+- **macOS Sonoma left-click bug**: Resolved in newer Tkinter. Update via: / 已修复，更新 Tkinter：
   ```bash
-  git clone https://github.com/kasc0206/uvrgui.git
-  cd uvrgui
+  brew update && brew upgrade python-tk
   ```
-- Or download from the [original repository](https://github.com/Anjok07/ultimatevocalremovergui/archive/refs/heads/master.zip).
-- Extract the downloaded file to a directory of your choice.
 
----
+### Issue Reporting / 问题报告
 
-#### **Step 2: Install Dependencies**
-Use the following commands based on your system type:
+Please be as detailed as possible when posting a new issue. Click the "Settings" button → "Error Log" for detailed error information.
+请在提交问题时尽量详细描述。点击"Settings"按钮→"Error Log"获取详细错误信息。
 
-**For Debian-based systems (Ubuntu, Mint, etc.):**
-```bash
-sudo apt update && sudo apt upgrade
-sudo apt-get install -y ffmpeg python3-pip python3-tk
-```
+## 🏗️ Building Windows EXE / 构建 Windows EXE
 
-**For Arch-based systems (EndeavourOS):**
-```bash
-sudo pacman -Syu
-sudo pacman -S ffmpeg python-pip tk
-```
+**English:** This fork provides automated Windows EXE builds via GitHub Actions.
 
----
+**中文：** 本 Fork 提供多种 Windows EXE 构建方式。
 
-#### **Step 3: Set Up a Virtual Environment (Recommended)**
-Setting up a virtual environment (venv) ensures that the program's dependencies do not interfere with system-wide Python packages.
+### Method 1: GitHub Actions (Recommended / 推荐)
 
-1. **Navigate to the extracted repository directory:**
-   ```bash
-   cd /path/to/ultimatevocalremovergui
-   ```
-
-2. **Create a virtual environment:**
-   ```bash
-   python3 -m venv venv
-   ```
-
-3. **Activate the virtual environment:**
-   - For **Debian-based and Arch-based systems:**
-     ```bash
-     source venv/bin/activate
-     ```
-
-4. **Install dependencies in the virtual environment:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
----
-
-#### **Step 4: Run the Application**
-While the virtual environment is activated, start the application:
-```bash
-python UVR.py
-```
-
----
-
-#### **Important Notes**
-1. **Avoid Modifying System Files:**  
-   Previous instructions suggested deleting the `/usr/lib/python3.11/EXTERNALLY-MANAGED` file, which is dangerous and can break Python package management. Do **NOT** delete this file.
-
-2. **Why Use Virtual Environments?**  
-   Virtual environments isolate the program's dependencies, preventing conflicts with system Python packages. More information is available [here](https://stackoverflow.com/questions/75602063/pip-install-r-requirements-txt-is-failing-this-environment-is-externally-mana/75696359#75696359).
-
-3. **Known Issues and Discussions:**  
-   - [Issue #1578](https://github.com/Anjok07/ultimatevocalremovergui/issues/1578)  
-   - [Pull Request #1068](https://github.com/Anjok07/ultimatevocalremovergui/pull/1068)
-
----
-
-If you encounter issues, refer to the [GitHub Issues](https://github.com/Anjok07/ultimatevocalremovergui/issues) page for help. 
-
-</details>
-
-### Other Application Notes
-- Nvidia GTX 1060 6GB is the minimum requirement for GPU conversions.
-- Nvidia GPUs with at least 8GBs of V-RAM are recommended.
-- AMD Radeon GPU supported is limited at this time.
-   - There is currently a working branch for AMD GPU users [here](https://github.com/Anjok07/ultimatevocalremovergui/tree/v5.6-amd-gpu)
-- This application is only compatible with 64-bit platforms. 
-- This application relies on the Rubber Band library for the Time-Stretch and Pitch-Shift options.
-- This application relies on FFmpeg to process non-wav audio files.
-- The application will automatically remember your settings when closed.
-- Conversion times will significantly depend on your hardware. 
-- These models are computationally intensive. 
-
-### Performance:
-- Model load times are faster.
-- Importing/exporting audio files is faster.
-
-## Troubleshooting
-
-### Common Issues
-
-- If FFmpeg is not installed, the application will throw an error if the user attempts to convert a non-WAV file.
-- Memory allocation errors can usually be resolved by lowering the "Segment" or "Window" sizes.
-
-#### MacOS Sonoma Left-click Bug
-There's a known issue on MacOS Sonoma where left-clicks weren't registering correctly within Tkinter applications. This was caused by a Tkinter bug on Sonoma and has since been resolved. If you still experience this issue, updating Tkinter via Homebrew should resolve it:
-
-```bash
-brew update && brew upgrade python-tk
-```
-
-### Issue Reporting
-
-Please be as detailed as possible when posting a new issue. 
-
-If possible, click the "Settings Button" to the left of the "Start Processing" button and click the "Error Log" button for detailed error information that can be provided to us.
-
-## Building Windows EXE
-
-This fork provides automated Windows EXE builds via GitHub Actions:
-
-### Method 1: GitHub Actions (Recommended)
-
-Push a version tag to trigger an automated build:
+Push a version tag to trigger an automated build / 推送 tag 自动触发构建：
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-The workflow will:
+The workflow will / 工作流将执行：
 1. Build `UVR.exe` with PyInstaller on `windows-latest`
-2. Create a ZIP archive with all runtime files
+2. Create a ZIP archive with all runtime files / 打包 ZIP
 3. Upload the artifact and create a GitHub Release
-
-You can also trigger manually from the [Actions tab](https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml).
 
 ### Method 2: Docker Cross-Compilation (macOS/Linux)
 
@@ -500,7 +443,7 @@ docker run --rm -v "$PWD:/workspace" \
   pyinstaller UVR.spec --clean --noconfirm
 ```
 
-### Method 3: Native Windows Build
+### Method 3: Native Windows Build / 原生 Windows 构建
 
 ```bash
 pip install -r requirements.txt
@@ -508,21 +451,26 @@ pip install pyinstaller
 pyinstaller UVR.spec --clean --noconfirm
 ```
 
-The output `UVR.exe` will be in `dist/`.
+The output `UVR.exe` will be in `dist/` / 输出文件位于 `dist/` 目录。
 
-## Fork Changelog
+## 📋 Fork Changelog / Fork 修订记录
 
-This fork ([kasc0206/uvrgui](https://github.com/kasc0206/uvrgui)) encompasses the following improvements over the upstream:
+**English:** This fork ([kasc0206/uvrgui](https://github.com/kasc0206/uvrgui)) encompasses the following improvements over the upstream [Anjok07/ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui).
 
-### Model Data Updates
+**中文：** 本 Fork 相较于原仓库，做了以下修订。
 
-- **`models/MDX_Net_Models/model_data/model_data.json`** — Expanded with 80+ new MDX model configs (+830/-351)
-- **`models/MDX_Net_Models/model_data/model_name_mapper.json`** — 26 new model name mappings (+68/-66)
-- **`models/VR_Models/model_data/model_data.json`** — Refactored VR model parameters (+272/-137)
+### Model Data Updates / 模型数据更新
 
-### New MDX Models
+| File / 文件 | Change / 变更说明 |
+| --- | --- |
+| `models/MDX_Net_Models/model_data/model_data.json` | **Expanded** with 80+ new MDX models (+830/-351) / **大幅扩充** |
+| `models/MDX_Net_Models/model_data/model_name_mapper.json` | **26 new** name mappings (+68/-66) / **新增 26 个映射** |
+| `models/VR_Models/model_data/model_data.json` | Refactored VR parameters (+272/-137) / 重构 VR 参数 |
+| `models/Demucs_Models/model_data/model_name_mapper.json` | Format fix / 格式修正 |
 
-| Category | Models |
+#### New MDX Models / 新增 MDX 模型清单
+
+| Category / 类别 | Models / 模型 |
 | --- | --- |
 | **BS-Roformer** | `Viperx-1297`, `Viperx-1296`, `Viperx-1053` |
 | **Mel-Roformer** | `Viperx-1143` |
@@ -530,64 +478,71 @@ This fork ([kasc0206/uvrgui](https://github.com/kasc0206/uvrgui)) encompasses th
 | **SCNet** | `Starrytong`, `Large-Starrytong`, `Large`, `XL-ZFTurbo` |
 | **Bandit** | `Cinematic-Bandit-Plus`, `Cinematic-Bandit-Multi` |
 | **MDX23C** | `InstVoc HQ 2`, `InstVoc D1581` |
-| **Other** | `DrumSep`, `Phantom-Mid`, `Reverb HQ`, `BS-Ro-Dereverb`, `BS-Ro-Inst-EXP` |
+| **Other / 其他** | `DrumSep`, `Phantom-Mid`, `Reverb HQ`, `BS-Ro-Dereverb`, `BS-Ro-Inst-EXP` |
 
-### New/Improved Files
+### New / Improved Files / 新增文件
 
-| File | Description |
+| File / 文件 | Description / 说明 |
 | --- | --- |
 | `uvr_cli.py` | **CLI tool** — 10 commands (list/info/process/demucs/download-models/config/version/gui/help + --json) |
-| `tests/` | **Test suite** — 32 tests via pytest + coverage reporting |
-| `playsound.py` | `playsound3` compatibility shim |
+| `tests/` | **Test suite** — 32 tests via pytest + coverage |
+| `playsound.py` | `playsound3` compatibility shim / 兼容垫片 |
 | `__version__.py` | Version info with `FORK_VERSION` and `FORK_REPO` |
 | `pyproject.toml` | Project metadata + ruff lint config |
-| `.editorconfig` | Consistent coding style across editors |
+| `.editorconfig` | Consistent coding style / 统一编码风格 |
 | `.pre-commit-config.yaml` | Pre-commit hooks for code quality |
 | `.gitattributes` | LF line-ending normalization |
-| `Dockerfile` | Containerized deployment support |
-| `gui_data/cr_text.txt` | Custom text resource file |
-| `README_zh.md` | **Full Chinese documentation** |
+| `Dockerfile` | Containerized deployment / Docker 部署 |
+| `gui_data/cr_text.txt` | Custom text resource / 自定义文本资源 |
+| `.gitignore` | Exclude build artifacts / 排除构建产物 |
+| `requirements.txt` | **Rebuilt dependency list** / 重建依赖清单 |
 
-### Code Quality Improvements
+### Code Quality Improvements / 代码质量改进
 
-- **ruff**: Zero lint errors on all custom files (F, E, W, I rulesets)
-- **Pylance**: Reduced type errors in `UVR.py` from 244 → 137 (actual bugs fixed, remaining are upstream tkinter/PyTorch dynamic patterns)
-- **Star imports**: Replaced `from gui_data.constants import *` with 862 explicit symbols
-- **Bug fix**: `highlightthicknes` tkinter typo → `highlightthickness` (5 occurrences)
-- **Font tuples**: Fixed ~120 `font=(name, f"{size}")` → `font=(name, size)` for Pylance compliance
-- **Model download**: Replaced `torch.hub.load_state_dict_from_url` with `curl` (500x speedup)
+| Improvement / 改进项 | Description / 说明 |
+| --- | --- |
+| **ruff zero errors / ruff 零错误** | All custom files pass F, E, W, I rulesets |
+| **Pylance type fixes / 类型修复** | Reduced errors in `UVR.py` from 244 → 137 |
+| **Star imports / 星号导入替换** | Replaced `from gui_data.constants import *` with 862 explicit symbols |
+| **Bug fix / Bug 修复** | `highlightthicknes` typo → `highlightthickness` (5 occurrences) |
+| **Font tuples / 字体类型修复** | Fixed ~120 `font=(name, f"{size}")` → `font=(name, size)` |
+| **Model download / 模型下载提速** | `torch.hub` → `curl` (500x speedup / 快 500 倍) |
 
-### Test Coverage
+### Test Coverage / 测试覆盖
 
-| Area | Tests | Status |
+| Area / 测试范围 | Tests / 数量 | Status / 状态 |
 | --- | --- | --- |
-| CLI commands | 9 | ✅ Pass |
-| Module imports | 14 | ✅ Pass |
-| `secondary_stem` mapping | 3 | ✅ Pass |
-| Version & constants | 6 | ✅ Pass |
-| **Total** | **32** | **✅ All Pass** |
+| CLI commands / CLI 命令测试 | 9 | ✅ Pass / 通过 |
+| Module imports / 模块导入测试 | 14 | ✅ Pass / 通过 |
+| `secondary_stem` mapping / 映射测试 | 3 | ✅ Pass / 通过 |
+| Version & constants / 版本与常量 | 6 | ✅ Pass / 通过 |
+| **Total / 合计** | **32** | **✅ All Pass / 全部通过** |
 
-## License
+## 📜 License / 许可证
 
-The **Ultimate Vocal Remover GUI** code is [MIT-licensed](LICENSE). 
+**English:** The **Ultimate Vocal Remover GUI** code is [MIT-licensed](LICENSE). For all third-party application developers who wish to use our models, please honor the MIT license by providing credit to UVR and its developers.
 
-- **Please Note:** For all third-party application developers who wish to use our models, please honor the MIT license by providing credit to UVR and its developers.
+**中文：** 本项目代码采用 [MIT 许可证](LICENSE)。如需使用我们的模型，请保留 UVR 及开发者的署名。
 
-## Credits
-- [ZFTurbo](https://github.com/ZFTurbo) - Created & trained the weights for the new MDX23C models. 
-- [DilanBoskan](https://github.com/DilanBoskan) - Your contributions at the start of this project were essential to the success of UVR. Thank you!
-- [Bas Curtiz](https://www.youtube.com/user/bascurtiz) - Designed the official UVR logo, icon, banner, and splash screen.
-- [tsurumeso](https://github.com/tsurumeso) - Developed the original VR Architecture code. 
-- [Kuielab & Woosung Choi](https://github.com/kuielab) - Developed the original MDX-Net AI code. 
-- [Adefossez & Demucs](https://github.com/facebookresearch/demucs) - Developed the original Demucs AI code. 
-- [KimberleyJSN](https://github.com/KimberleyJensen) - Advised and aided the implementation of the training scripts for MDX-Net and Demucs. Thank you!
-- [Hv](https://github.com/NaJeongMo/Colab-for-MDX_B) - Helped implement chunks into the MDX-Net AI code. Thank you!
+## 🙏 Credits / 鸣谢
 
-## Contributing
+| Contributor | Contribution / 贡献 |
+| --- | --- |
+| [ZFTurbo](https://github.com/ZFTurbo) | MDX23C model training / 训练新 MDX23C 模型权重 |
+| [DilanBoskan](https://github.com/DilanBoskan) | Early project contributions / 项目早期关键贡献 |
+| [Bas Curtiz](https://www.youtube.com/user/bascurtiz) | Logo, icon, banner, splash screen design / 设计 Logo、图标等 |
+| [tsurumeso](https://github.com/tsurumeso) | Original VR Architecture code / VR 架构原始代码 |
+| [Kuielab & Woosung Choi](https://github.com/kuielab) | Original MDX-Net AI code / MDX-Net 原始代码 |
+| [Adefossez & Demucs](https://github.com/facebookresearch/demucs) | Original Demucs AI code / Demucs 原始代码 |
+| [KimberleyJSN](https://github.com/KimberleyJensen) | Training scripts guidance / 训练脚本指导 |
+| [Hv](https://github.com/NaJeongMo/Colab-for-MDX_B) | Chunk implementation in MDX-Net / 分块处理实现 |
 
-- For anyone interested in the ongoing development of **Ultimate Vocal Remover GUI**, please send us a pull request, and we will review it. 
-- This project is 100% open-source and free for anyone to use and modify as they wish. 
-- We only maintain the development and support for the **Ultimate Vocal Remover GUI** and the models provided. 
+## 🤝 Contributing / 贡献指南
 
-## References
+- Pull requests are welcome! / 欢迎提交 Pull Request！
+- This project is 100% open-source under MIT. / 本项目完全开源（MIT 协议）。
+- We maintain development and support for UVR and provided models only. / 我们仅维护 UVR 软件及提供的模型。
+
+## 📚 References / 参考文献
+
 - [1] Takahashi et al., "Multi-scale Multi-band DenseNets for Audio Source Separation", https://arxiv.org/pdf/1706.09588.pdf

@@ -75,7 +75,6 @@ jobs:
       - name: Package CPU ZIP
         run: |
           Copy-Item "README.md" "dist/" -ErrorAction SilentlyContinue
-          Copy-Item "README_zh.md" "dist/" -ErrorAction SilentlyContinue
           Copy-Item "LICENSE" "dist/" -ErrorAction SilentlyContinue
           $version = "${{ github.event.inputs.version }}"
           if (-not $version) { $version = "v1.0.0" }
@@ -113,7 +112,6 @@ jobs:
       - name: Package CUDA ZIP
         run: |
           Copy-Item "README.md" "dist/" -ErrorAction SilentlyContinue
-          Copy-Item "README_zh.md" "dist/" -ErrorAction SilentlyContinue
           Copy-Item "LICENSE" "dist/" -ErrorAction SilentlyContinue
           $version = "${{ github.event.inputs.version }}"
           if (-not $version) { $version = "v1.0.0" }
