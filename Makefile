@@ -54,6 +54,10 @@ clean:
 	rm -rf .ruff_cache
 	rm -rf tmp
 
+## 查看更新日志
+changelog:
+	@cat CHANGELOG.md | head -80
+
 ## 显示帮助
 help:
 	@echo "用法: make <target>"
@@ -68,4 +72,4 @@ help:
 	@echo "  lint            代码检查"
 	@echo "  fix             自动修复 lint"
 	@echo "  precommit       安装 git 提交钩子"
-	@echo "  clean           清理缓存"
+	@echo "  clean           清理缓存"        @echo "  changelog       查看更新日志 (cat CHANGELOG.md)"
