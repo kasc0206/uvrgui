@@ -2,5 +2,6 @@
   "default_device": null,
   "default_model": "htdemucs",
   "output_format": "wav",
-  "two_stem": null
+  "two_stem": null,
+  "language": "zh"
 }
