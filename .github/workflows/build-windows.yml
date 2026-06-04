@@ -134,6 +134,7 @@ jobs:
           files: |
             UVR_*_CPU.zip
           generate_release_notes: true
+          fail_on_unmatched_files: false
           body: |
             ## Ultimate Vocal Remover GUI ${{ github.ref_name }}
 
@@ -148,17 +149,12 @@ jobs:
             | 🐧 Linux | CUDA | `UVR_*_Linux_x86_64_CUDA.tar.gz` | ✅ NVIDIA |
 
             **CPU 版**（~400 MB，通用兼容）— 已附件在本 Release 中 👇
-            **CUDA 版**（~2.5 GB，NVIDIA GPU 加速）— 同上
 
+            > **CUDA 版**（~2.5 GB，NVIDIA GPU 加速）超过 GitHub 2GB 文件限制，
+            > 请从 Actions Artifact 手动下载：
+            > <https://github.com/kasc0206/uvrgui/actions/workflows/build-windows.yml>
+            > <https://github.com/kasc0206/uvrgui/actions/workflows/build-linux.yml>
             > macOS 和 Linux 构建产物由并行 workflow 自动附加到本 Release。
-            > 如未出现，请等待所有 workflow 完成，或从 Actions Artifact 手动下载。
-
-            ### ✅ 构建信息
-            - 提交: `${{ github.sha }}`
-            - Windows CPU: CPU-only PyTorch
-            - Windows CUDA: CUDA 12.1 PyTorch
-
-            ### 🏗️ 本机构建
             ```bash
             git clone https://github.com/kasc0206/uvrgui.git
             cd uvrgui

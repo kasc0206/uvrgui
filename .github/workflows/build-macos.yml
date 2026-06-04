@@ -62,24 +62,32 @@ jobs:
           "
 
       # ──────────── CPU/MPS Build ────────────
-      - name: Build .app (CPU/MPS)
+      - name: Build binary
         run: |
           pyinstaller UVR.spec --clean --noconfirm
-          # PyInstaller creates UVR.app on macOS when console=False
-          du -sh dist/UVR.app
+          # PyInstaller with .spec file produces dist/UVR (not .app bundle)
+          ls -la dist/
 
-      - name: Package macOS .app
+      - name: Package macOS binary
         run: |
           cp README.md dist/ 2>/dev/null || true
           cp LICENSE dist/ 2>/dev/null || true
           version="${{ github.event.inputs.version }}"
           if [ -z "$version" ]; then
-            # Try to extract from pyproject or default
             version=$(python -c "from __version__ import FORK_VERSION; print(FORK_VERSION)" 2>/dev/null || echo "v2.0.0")
           fi
           arch=$(uname -m)
           zip_name="UVR_${version}_macOS_${arch}.zip"
-          ditto -c -k --sequesterRsrc --keepParent dist/UVR.app "$zip_name"
+          # Package the dist/UVR directory (or dist/UVR.app if it exists)
+          if [ -d "dist/UVR.app" ]; then
+            ditto -c -k --sequesterRsrc --keepParent dist/UVR.app "$zip_name"
+          elif [ -d "dist/UVR" ]; then
+            cd dist && zip -r "../$zip_name" UVR README.md LICENSE 2>/dev/null || zip -r "../$zip_name" UVR && cd ..
+          else
+            echo "ERROR: No build output found in dist/"
+            ls -la dist/
+            exit 1
+          fi
           echo "Archive: $zip_name"
           echo "archive_name=$zip_name" >> $GITHUB_ENV
 

@@ -134,13 +134,14 @@ jobs:
           path: UVR_*_CUDA.tar.gz
           retention-days: 30
 
-      # ──────────── Release (append files only) ────────────
+      # ──────────── Release (append CPU only — CUDA > 2GB exceeds limit) ────
       - name: Upload to Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
+          # Only CPU build (~400 MB) — CUDA build (>2 GB) exceeds GitHub limit
           files: |
-            UVR_*.tar.gz
+            UVR_*_Linux_x86_64.tar.gz
           # Do not generate release notes — Windows workflow is the primary
           generate_release_notes: false
           # Append files to existing release (do not replace body)
