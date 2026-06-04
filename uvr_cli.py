@@ -24,6 +24,7 @@ UVR CLI 工具 — Ultimate Vocal Remover 命令行助手
     python uvr_cli.py process 歌曲.mp3 --model htdemucs_6s --shifts 2
     python uvr_cli.py process 歌曲.mp3 --arch demucs --resume
     python uvr_cli.py process 文件夹/ --out 输出/ --dry-run
+    python uvr_cli.py process 歌曲.mp3 --no-progress              # 脚本调用时不显示进度条
     python uvr_cli.py list --downloaded         只显示已下载的模型
     python uvr_cli.py list --json               以 JSON 格式输出
     python uvr_cli.py config --key default_device --value mps
@@ -38,6 +39,13 @@ import time
 from pathlib import Path
 
 import numpy as np
+
+# Shell 补全（可选）
+try:
+    import argcomplete  # type: ignore[import-untyped]
+    HAS_ARGCOMPLETE = True
+except ImportError:
+    HAS_ARGCOMPLETE = False
 
 from __version__ import FORK_REPO, FORK_VERSION, VERSION
 
@@ -438,7 +446,8 @@ def launch_gui():
 
 def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
                     model_name="htdemucs", output_format="wav",
-                    shifts=1, overlap=0.25, resume=False, dry_run=False):
+                    shifts=1, overlap=0.25, resume=False, dry_run=False,
+                    no_progress=False):
     """使用 Demucs 模型分离音频（模型自动下载）
 
     参数:
@@ -554,7 +563,7 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
 
     total_files = len(audio_files)
     pbar = tqdm(total=total_files, desc="处理音频", unit="个",
-                disable=JSON_MODE, file=sys.stderr)
+                disable=JSON_MODE or no_progress, file=sys.stderr)
     for idx, audio_path in enumerate(audio_files, 1):
         stem_name = audio_path.stem
         ext = audio_path.suffix.lower()
@@ -650,6 +659,10 @@ def run_process(args):
     """处理 process 和 demucs 命令"""
     cfg = load_config()
 
+    # 设置全局进度条开关
+    global _NO_PROGRESS
+    _NO_PROGRESS = getattr(args, 'no_progress', False)
+
     input_path = Path(args.input)
     if not input_path.exists():
         Output.error(f"找不到 {input_path}")
@@ -685,6 +698,7 @@ def run_process(args):
         overlap=args.overlap or 0.25,
         resume=args.resume or False,
         dry_run=args.dry_run or False,
+        no_progress=args.no_progress or False,
     )
 
 
@@ -869,7 +883,7 @@ def main():
                             help="运行设备 (cpu/mps/cuda)，默认自动选择")
     proc_group.add_argument("--model", "-m", default=None,
                             help="Demucs 模型 (htdemucs/htdemucs_6s/mdx_extra 等)")
-    proc_group.add_argument("--format", "-f", default=None,
+    proc_group.add_argument("--format", "-f", "--output-format", default=None,
                             help="输出格式 (wav/flac/mp3/aiff，默认 wav)")
     proc_group.add_argument("--arch", default=None,
                             choices=["demucs", "vr", "mdx"],
@@ -878,6 +892,8 @@ def main():
                             help="Demucs 随机移位次数（默认 1，越大质量越高）")
     proc_group.add_argument("--overlap", type=float, default=0.25,
                             help="Demucs 分割重叠率（默认 0.25）")
+    proc_group.add_argument("--no-progress", action="store_true",
+                            help="不显示进度条（用于脚本调用）")
     proc_group.add_argument("--resume", action="store_true",
                             help="跳过已存在的输出文件")
     proc_group.add_argument("--dry-run", action="store_true",
@@ -905,6 +921,10 @@ def main():
     parser.add_argument("--quiet", "-q", action="store_true", help="静默模式，仅输出关键信息")
 
     args = parser.parse_args()
+
+    # Shell 补全
+    if HAS_ARGCOMPLETE:
+        argcomplete.autocomplete(parser)
 
     # 设为全局
     global JSON_MODE  # noqa: PLW0603
