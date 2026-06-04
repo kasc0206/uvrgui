@@ -8,17 +8,17 @@ import pytest
 
 
 def test_secondary_stem_vocals():
-    """secondary_stem('Vocals') should return 'Instrumental'."""
-    from gui_data.constants import secondary_stem
+    """secondary_stem(VOCAL_STEM) should return INST_STEM."""
+    from gui_data.constants import INST_STEM, VOCAL_STEM, secondary_stem
 
-    assert secondary_stem("Vocals") == "Instrumental"
+    assert secondary_stem(VOCAL_STEM) == INST_STEM
 
 
 def test_secondary_stem_instrumental():
-    """secondary_stem('Instrumental') should return 'Vocals'."""
-    from gui_data.constants import secondary_stem
+    """secondary_stem(INST_STEM) should return VOCAL_STEM."""
+    from gui_data.constants import INST_STEM, VOCAL_STEM, secondary_stem
 
-    assert secondary_stem("Instrumental") == "Vocals"
+    assert secondary_stem(INST_STEM) == VOCAL_STEM
 
 
 def test_stem_constants():

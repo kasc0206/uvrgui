@@ -35,15 +35,30 @@ def test_core_imports():
 
 def test_secondary_stem():
     """Test the secondary_stem mapping function."""
+    from gui_data.constants import (
+        BASS_STEM,
+        DRUM_STEM,
+        GUITAR_STEM,
+        INST_STEM,
+        NO_BASS_STEM,
+        NO_DRUM_STEM,
+        NO_GUITAR_STEM,
+        NO_OTHER_STEM,
+        NO_PIANO_STEM,
+        OTHER_STEM,
+        PIANO_STEM,
+        VOCAL_STEM,
+    )
     from separate import secondary_stem
 
-    assert secondary_stem("Vocals") == "Instrumental"
-    assert secondary_stem("Instrumental") == "Vocals"
-    # Other stems map to "No {Stem}" via STEM_PAIR_MAPPER_FULL
-    assert secondary_stem("Drums") is not None
-    assert secondary_stem("Bass") is not None
-    assert secondary_stem("Other") is not None
-    assert secondary_stem("Guitar") is not None
+    assert secondary_stem(VOCAL_STEM) == INST_STEM
+    assert secondary_stem(INST_STEM) == VOCAL_STEM
+    # Other stems map via STEM_PAIR_MAPPER_FULL — use NO_* constants
+    assert secondary_stem(DRUM_STEM) == NO_DRUM_STEM
+    assert secondary_stem(BASS_STEM) == NO_BASS_STEM
+    assert secondary_stem(OTHER_STEM) == NO_OTHER_STEM
+    assert secondary_stem(GUITAR_STEM) == NO_GUITAR_STEM
+    assert secondary_stem(PIANO_STEM) == NO_PIANO_STEM
 
 
 def test_secondary_stem_constants():
