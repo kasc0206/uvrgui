@@ -1500,7 +1500,7 @@ class Ensembler():
             return save_format(save_path, root.save_format_var.get(), root.mp3_bit_set_var.get())
         spec_utils.combine_audio(audio_inputs,
                                  os.path.join(self.main_export_path, f"{self.is_testing_audio}{audio_file_base}"),
-                                 self.wav_type_set,
+                                 self.wav_type_set or "PCM_16",
                                  save_format=save_format_)
 
 class AudioTools():
@@ -3411,7 +3411,7 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
         resize_widget([widget for widget in frame.winfo_children() if isinstance(widget, tk.Button)])
         resize_widget([widget for widget in frame.winfo_children() if isinstance(widget, ttk.Combobox)])
 
-    def menu_move_tab(notebook: ttk.Notebook, tab_text, new_position):
+    def menu_move_tab(self, notebook: ttk.Notebook, tab_text, new_position):
         # Get the tab ID
         tab_id = None
         for tab in notebook.tabs():

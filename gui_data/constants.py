@@ -1572,6 +1572,7 @@ def secondary_stem(stem:str):
     """Determines secondary stem"""
 
     stem = stem if stem else NO_STEM
+    secondary_stem = stem
 
     if stem in STEM_PAIR_MAPPER.keys():
         for key, value in STEM_PAIR_MAPPER.items():
