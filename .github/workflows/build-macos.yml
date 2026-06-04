@@ -78,11 +78,11 @@ jobs:
           fi
           arch=$(uname -m)
           zip_name="UVR_${version}_macOS_${arch}.zip"
-          # Package the dist/UVR directory (or dist/UVR.app if it exists)
+          # Package the dist/UVR file (or dist/UVR.app directory)
           if [ -d "dist/UVR.app" ]; then
             ditto -c -k --sequesterRsrc --keepParent dist/UVR.app "$zip_name"
-          elif [ -d "dist/UVR" ]; then
-            cd dist && zip -r "../$zip_name" UVR README.md LICENSE 2>/dev/null || zip -r "../$zip_name" UVR && cd ..
+          elif [ -f "dist/UVR" ] || [ -d "dist/UVR" ]; then
+            cd dist && zip -r "../$zip_name" UVR README.md LICENSE && cd ..
           else
             echo "ERROR: No build output found in dist/"
             ls -la dist/
