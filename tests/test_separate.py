@@ -1,4 +1,5 @@
 """Tests for separate.py - audio separation logic."""
+
 import os
 import sys
 from pathlib import Path
@@ -33,11 +34,12 @@ class TestProcessSecondaryModel:
     def test_secondary_stem_mapping(self):
         """Test the secondary_stem function mapping."""
         from separate import secondary_stem
+        from gui_data.constants import VOCAL_STEM, INST_STEM
 
         # Test all defined mappings
         cases = {
-            "Vocals": "Instrumental",
-            "Instrumental": "Vocals",
+            VOCAL_STEM: INST_STEM,
+            INST_STEM: VOCAL_STEM,
         }
         for stem, expected in cases.items():
             assert secondary_stem(stem) == expected, f"stem='{stem}' expected={expected}"

@@ -45,6 +45,7 @@ import numpy as np
 # Shell 补全（可选）
 try:
     import argcomplete  # type: ignore[import-untyped]
+
     HAS_ARGCOMPLETE = True
 except ImportError:
     HAS_ARGCOMPLETE = False
@@ -113,7 +114,7 @@ DEFAULT_CONFIG = {
 }
 
 
-def load_config():
+def load_config() -> dict:
     """加载用户配置文件，不存在时返回空字典"""
     if not CONFIG_FILE.exists():
         return {}
@@ -132,7 +133,7 @@ def load_config():
         return {}
 
 
-def init_config():
+def init_config() -> dict:
     """创建默认配置文件"""
     save_config(DEFAULT_CONFIG)
     return DEFAULT_CONFIG
@@ -239,12 +240,12 @@ MODEL_EXTENSIONS = {
 }
 
 
-def get_model_hash(filename):
+def get_model_hash(filename: str) -> str:
     """从文件名提取 MD5 hash（不含扩展名）"""
     return Path(filename).stem
 
 
-def scan_downloaded_models():
+def scan_downloaded_models() -> dict[str, list[str]]:
     """扫描已下载的模型文件，返回 {架构: [模型文件名]}"""
     downloaded = {}
     for arch, exts in MODEL_EXTENSIONS.items():
@@ -262,7 +263,7 @@ def scan_downloaded_models():
     return downloaded
 
 
-def load_model_data(arch):
+def load_model_data(arch: str) -> dict:
     """加载指定架构的模型数据 JSON"""
     path = MODEL_DATA_FILES.get(arch)
     if not path or not path.exists():
@@ -274,7 +275,7 @@ def load_model_data(arch):
         return {}
 
 
-def load_model_name_mapper(arch):
+def load_model_name_mapper(arch: str) -> dict:
     """加载模型名称映射（MDX-Net 专用）"""
     path = MODEL_NAME_MAPPER.get(arch)
     if not path or not path.exists():
@@ -286,13 +287,13 @@ def load_model_name_mapper(arch):
         return {}
 
 
-def get_model_display_name(arch, model_key):
+def get_model_display_name(arch: str, model_key: str) -> str:
     """获取模型的可读名称"""
     mapper = load_model_name_mapper(arch)
     return mapper.get(model_key, model_key)
 
 
-def list_models(filter_downloaded=None):
+def list_models(filter_downloaded: bool | None = None) -> None:
     """列出所有可用模型及下载状态
 
     参数:
@@ -315,11 +316,13 @@ def list_models(filter_downloaded=None):
                 downloaded_flag = model_file in downloaded.get(arch, [])
                 if filter_downloaded is not None and downloaded_flag != filter_downloaded:
                     continue
-                arch_models.append({
-                    "name": display_name,
-                    "file": model_key,
-                    "downloaded": downloaded_flag,
-                })
+                arch_models.append(
+                    {
+                        "name": display_name,
+                        "file": model_key,
+                        "downloaded": downloaded_flag,
+                    }
+                )
         else:
             for model_hash, config in model_data.items():
                 display_name = mapper.get(model_hash, model_hash[:12] + "...")
@@ -354,9 +357,9 @@ def list_models(filter_downloaded=None):
         filter_label = " (仅未下载)"
 
     for arch, models in result.items():
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"  {arch}  ({len(models)} 个模型){filter_label}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         for m in models:
             status = "✅" if m["downloaded"] else "⬜"
             extra = ""
@@ -371,7 +374,7 @@ def list_models(filter_downloaded=None):
     print(f"\n共 {total_shown} 个模型{filter_label}")
 
 
-def show_model_info(search_term):
+def show_model_info(search_term: str) -> None:
     """查看特定模型的信息"""
     found = False
     search_lower = search_term.lower()
@@ -388,7 +391,7 @@ def show_model_info(search_term):
                     if JSON_MODE:
                         json_results.append(entry)
                     else:
-                        print(f"\n{'='*50}")
+                        print(f"\n{'=' * 50}")
                         print(f"  架构: {arch}")
                         print(f"  模型: {name}")
                         print(f"  文件: {key}")
@@ -397,9 +400,11 @@ def show_model_info(search_term):
 
         for model_key, config in model_data.items():
             display_name = mapper.get(model_key, model_key[:16] + "...")
-            matched = (search_lower in model_key.lower()
-                       or (display_name and search_lower in display_name.lower())
-                       or search_lower in config.get("primary_stem", "").lower())
+            matched = (
+                search_lower in model_key.lower()
+                or (display_name and search_lower in display_name.lower())
+                or search_lower in config.get("primary_stem", "").lower()
+            )
             if not matched:
                 continue
 
@@ -409,8 +414,13 @@ def show_model_info(search_term):
                 "key": model_key,
                 "output": config.get("primary_stem", "?"),
             }
-            for k in ("compensate", "mdx_dim_f_set", "mdx_dim_t_set",
-                      "mdx_n_fft_scale_set", "vr_model_param"):
+            for k in (
+                "compensate",
+                "mdx_dim_f_set",
+                "mdx_dim_t_set",
+                "mdx_n_fft_scale_set",
+                "vr_model_param",
+            ):
                 if config.get(k):
                     entry[k] = config[k]
             if config.get("is_karaoke"):
@@ -446,8 +456,12 @@ def show_model_info(search_term):
         for mapper_key, display_name in mapper.items():
             if search_lower in mapper_key.lower() or search_lower in display_name.lower():
                 if mapper_key not in model_data:
-                    entry = {"arch": arch, "name": display_name, "file": mapper_key,
-                             "note": "模型配置数据未加载"}
+                    entry = {
+                        "arch": arch,
+                        "name": display_name,
+                        "file": mapper_key,
+                        "note": "模型配置数据未加载",
+                    }
                     if JSON_MODE:
                         json_results.append(entry)
                     else:
@@ -463,10 +477,10 @@ def show_model_info(search_term):
         return
 
     if not found:
-        print(f"\n未找到匹配 \"{search_term}\" 的模型")
+        print(f'\n未找到匹配 "{search_term}" 的模型')
 
 
-def launch_gui():
+def launch_gui() -> None:
     """启动 UVR 图形界面"""
     gui_path = BASE_DIR / "UVR.py"
     if not gui_path.exists():
@@ -478,10 +492,19 @@ def launch_gui():
     os.execv(sys.executable, [sys.executable, str(gui_path)])
 
 
-def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
-                    model_name="htdemucs", output_format="wav",
-                    shifts=1, overlap=0.25, resume=False, dry_run=False,
-                    no_progress=False):
+def demucs_separate(
+    input_path: str | Path,
+    output_dir: str | Path | None = None,
+    two_stem: str | None = None,
+    device: str | None = None,
+    model_name: str = "htdemucs",
+    output_format: str = "wav",
+    shifts: int = 1,
+    overlap: float = 0.25,
+    resume: bool = False,
+    dry_run: bool = False,
+    no_progress: bool = False,
+):
     """使用 Demucs 模型分离音频（模型自动下载）
 
     参数:
@@ -562,9 +585,14 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
     # dry-run 模式：只列出文件不处理
     if dry_run:
         if JSON_MODE:
-            Output.json({"ok": True, "dry_run": True,
-                          "files": [str(f) for f in audio_files],
-                          "total": len(audio_files)})
+            Output.json(
+                {
+                    "ok": True,
+                    "dry_run": True,
+                    "files": [str(f) for f in audio_files],
+                    "total": len(audio_files),
+                }
+            )
         else:
             print(f"\n📋 Dry-Run 模式 — 将处理 {len(audio_files)} 个文件：")
             for f in audio_files:
@@ -596,8 +624,13 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
         return
 
     total_files = len(audio_files)
-    pbar = tqdm(total=total_files, desc="处理音频", unit="个",
-                disable=JSON_MODE or no_progress, file=sys.stderr)
+    pbar = tqdm(
+        total=total_files,
+        desc="处理音频",
+        unit="个",
+        disable=JSON_MODE or no_progress,
+        file=sys.stderr,
+    )
     for idx, audio_path in enumerate(audio_files, 1):
         stem_name = audio_path.stem
         ext = audio_path.suffix.lower()
@@ -611,7 +644,9 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
             expected_files = []
             if two_stem:
                 expected_files.append(file_out_dir / f"{stem_name}_({two_stem}){out_ext}")
-                expected_files.append(file_out_dir / f"{stem_name}_({stem_name}_no_{two_stem}){out_ext}")
+                expected_files.append(
+                    file_out_dir / f"{stem_name}_({stem_name}_no_{two_stem}){out_ext}"
+                )
             else:
                 expected_files.append(file_out_dir / f"{stem_name}_(*){out_ext}")
             # 检查子目录是否存在且有文件
@@ -627,12 +662,25 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
             mix, sr = librosa.load(str(audio_path), sr=sample_rate, mono=False)
         elif ffmpeg_available:
             import tempfile
+
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
                 tmp_wav = tmp.name
             subprocess.run(
-                ["ffmpeg", "-y", "-i", str(audio_path), "-ar", str(sample_rate),
-                 "-ac", "2", "-f", "wav", tmp_wav],
-                capture_output=True, check=True,
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-i",
+                    str(audio_path),
+                    "-ar",
+                    str(sample_rate),
+                    "-ac",
+                    "2",
+                    "-f",
+                    "wav",
+                    tmp_wav,
+                ],
+                capture_output=True,
+                check=True,
             )
             mix, sr = librosa.load(tmp_wav, sr=sample_rate, mono=False)
             os.unlink(tmp_wav)
@@ -648,7 +696,9 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
         # 运行模型
         start = time.time()
         with torch.no_grad():
-            sources = apply_model(model, mix_tensor, shifts=shifts, split=True, overlap=overlap, device=device)
+            sources = apply_model(
+                model, mix_tensor, shifts=shifts, split=True, overlap=overlap, device=device
+            )
         elapsed = time.time() - start
 
         # 保存结果
@@ -679,23 +729,27 @@ def demucs_separate(input_path, output_dir=None, two_stem=None, device=None,
 
     pbar.close()
     if JSON_MODE:
-        Output.json({"ok": True,
-                      "output_dir": str(output_dir),
-                      "files": len(audio_files),
-                      "model": model_name,
-                      "device": device,
-                      "format": output_format})
+        Output.json(
+            {
+                "ok": True,
+                "output_dir": str(output_dir),
+                "files": len(audio_files),
+                "model": model_name,
+                "device": device,
+                "format": output_format,
+            }
+        )
     else:
         tqdm.write(f"\n✅ 全部完成！输出目录: {output_dir}")
 
 
-def run_process(args):
+def run_process(args: argparse.Namespace) -> None:
     """处理 process 和 demucs 命令"""
     cfg = load_config()
 
     # 设置全局进度条开关
     global _NO_PROGRESS
-    _NO_PROGRESS = getattr(args, 'no_progress', False)
+    _NO_PROGRESS = getattr(args, "no_progress", False)
 
     input_path = Path(args.input)
     if not input_path.exists():
@@ -705,7 +759,9 @@ def run_process(args):
 
     if arch == "vr":
         if JSON_MODE:
-            Output.json({"ok": False, "error": "VR Architecture 分离请使用 GUI 模式 (uvr_cli.py gui)"})
+            Output.json(
+                {"ok": False, "error": "VR Architecture 分离请使用 GUI 模式 (uvr_cli.py gui)"}
+            )
         else:
             print("⚠️  VR Architecture 模型暂不支持 CLI 方式调用。")
             print("   请使用图形界面: python uvr_cli.py gui")
@@ -736,7 +792,7 @@ def run_process(args):
     )
 
 
-def cmd_config(args):
+def cmd_config(args: argparse.Namespace) -> None:
     """查看或修改配置"""
     cfg_path = args.config or CONFIG_FILE
 
@@ -813,18 +869,22 @@ def cmd_config(args):
             print(f"✅ 已设置 {args.key} = {args.value}")
 
     cfg = load_config()
-    if args.list_config or not (args.key or args.reset or args.export_to or args.import_from or args.delete or args.init):
+    if args.list_config or not (
+        args.key or args.reset or args.export_to or args.import_from or args.delete or args.init
+    ):
         if JSON_MODE:
             Output.json({"config": cfg})
         else:
             print("当前配置:")
             print(json.dumps(cfg, indent=2, ensure_ascii=False))
 
-    if args.list_config or not (args.key or args.reset or args.export_to or args.import_from or args.delete or args.init):
+    if args.list_config or not (
+        args.key or args.reset or args.export_to or args.import_from or args.delete or args.init
+    ):
         return
 
 
-def download_models():
+def download_models() -> None:
     """预下载 Demucs 模型（使用 curl 加速）"""
     import subprocess
 
@@ -888,13 +948,22 @@ def download_models():
         if not JSON_MODE:
             print(f"[{i}/{total}] ⬇️  正在下载 {filename} ...")
         start = time.time()
-        subprocess.run(["curl", "-L", "-o", str(cached_path), "--retry", "3", "--progress-bar", url],
-                       capture_output=False, check=True)
+        subprocess.run(
+            ["curl", "-L", "-o", str(cached_path), "--retry", "3", "--progress-bar", url],
+            capture_output=False,
+            check=True,
+        )
         elapsed = time.time() - start
         size_mb = cached_path.stat().st_size / 1024 / 1024
         speed = size_mb / elapsed if elapsed > 0 else 0
-        results.append({"file": filename, "status": "downloaded",
-                        "size_mb": round(size_mb, 1), "speed_mbps": round(speed, 1)})
+        results.append(
+            {
+                "file": filename,
+                "status": "downloaded",
+                "size_mb": round(size_mb, 1),
+                "speed_mbps": round(speed, 1),
+            }
+        )
         if not JSON_MODE:
             print(f"[{i}/{total}] ✅  {filename} ({size_mb:.0f}MB, {speed:.0f}MB/s)")
 
@@ -904,7 +973,7 @@ def download_models():
         print(f"\n✅ 全部完成！模型缓存目录: {cache_dir}")
 
 
-def print_help():
+def print_help() -> None:
     """显示帮助信息"""
     print(f"UVR CLI {FORK_VERSION} (基于 {VERSION})")
     print(f"仓库: {FORK_REPO}")
@@ -912,39 +981,55 @@ def print_help():
     print(__doc__)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Ultimate Vocal Remover CLI 工具",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
-    parser.add_argument("command", nargs="?", help="list | gui | info | process | demucs | download-models | config | version | help")
+    parser.add_argument(
+        "command",
+        nargs="?",
+        help="list | gui | info | process | demucs | download-models | config | version | help",
+    )
     parser.add_argument("input", nargs="?", help="输入音频文件或目录")
 
     # Process 参数
     proc_group = parser.add_argument_group("process 命令选项")
     proc_group.add_argument("--out", "-o", dest="output", help="输出目录")
-    proc_group.add_argument("--two-stem", "-2", dest="two_stem",
-                            help="提取指定音源（如 vocals），同时输出其补集")
-    proc_group.add_argument("--device", "-d", default=None,
-                            help="运行设备 (cpu/mps/cuda)，默认自动选择")
-    proc_group.add_argument("--model", "-m", default=None,
-                            help="Demucs 模型 (htdemucs/htdemucs_6s/mdx_extra 等)")
-    proc_group.add_argument("--format", "-f", "--output-format", default=None,
-                            help="输出格式 (wav/flac/mp3/aiff，默认 wav)")
-    proc_group.add_argument("--arch", default=None,
-                            choices=["demucs", "vr", "mdx"],
-                            help="分离架构 (demucs/vr/mdx，默认 demucs)")
-    proc_group.add_argument("--shifts", type=int, default=1,
-                            help="Demucs 随机移位次数（默认 1，越大质量越高）")
-    proc_group.add_argument("--overlap", type=float, default=0.25,
-                            help="Demucs 分割重叠率（默认 0.25）")
-    proc_group.add_argument("--no-progress", action="store_true",
-                            help="不显示进度条（用于脚本调用）")
-    proc_group.add_argument("--resume", action="store_true",
-                            help="跳过已存在的输出文件")
-    proc_group.add_argument("--dry-run", action="store_true",
-                            help="仅列出要处理的文件，不实际执行")
+    proc_group.add_argument(
+        "--two-stem", "-2", dest="two_stem", help="提取指定音源（如 vocals），同时输出其补集"
+    )
+    proc_group.add_argument(
+        "--device", "-d", default=None, help="运行设备 (cpu/mps/cuda)，默认自动选择"
+    )
+    proc_group.add_argument(
+        "--model", "-m", default=None, help="Demucs 模型 (htdemucs/htdemucs_6s/mdx_extra 等)"
+    )
+    proc_group.add_argument(
+        "--format",
+        "-f",
+        "--output-format",
+        default=None,
+        help="输出格式 (wav/flac/mp3/aiff，默认 wav)",
+    )
+    proc_group.add_argument(
+        "--arch",
+        default=None,
+        choices=["demucs", "vr", "mdx"],
+        help="分离架构 (demucs/vr/mdx，默认 demucs)",
+    )
+    proc_group.add_argument(
+        "--shifts", type=int, default=1, help="Demucs 随机移位次数（默认 1，越大质量越高）"
+    )
+    proc_group.add_argument(
+        "--overlap", type=float, default=0.25, help="Demucs 分割重叠率（默认 0.25）"
+    )
+    proc_group.add_argument(
+        "--no-progress", action="store_true", help="不显示进度条（用于脚本调用）"
+    )
+    proc_group.add_argument("--resume", action="store_true", help="跳过已存在的输出文件")
+    proc_group.add_argument("--dry-run", action="store_true", help="仅列出要处理的文件，不实际执行")
 
     # Config 参数
     cfg_group = parser.add_argument_group("config 命令选项")
@@ -953,18 +1038,15 @@ def main():
     cfg_group.add_argument("--delete", help="删除指定配置项")
     cfg_group.add_argument("--reset", action="store_true", help="重置配置到默认值")
     cfg_group.add_argument("--init", action="store_true", help="创建默认配置文件")
-    cfg_group.add_argument("--list", action="store_true", dest="list_config",
-                            help="列出所有配置项")
+    cfg_group.add_argument("--list", action="store_true", dest="list_config", help="列出所有配置项")
     cfg_group.add_argument("--export", dest="export_to", help="导出配置到文件")
     cfg_group.add_argument("--import", dest="import_from", help="从文件导入配置")
     cfg_group.add_argument("--config", help="指定配置文件路径")
 
     # List 参数
     list_group = parser.add_argument_group("list 命令选项")
-    list_group.add_argument("--downloaded", action="store_true",
-                            help="仅显示已下载的模型")
-    list_group.add_argument("--missing", action="store_true",
-                            help="仅显示未下载的模型")
+    list_group.add_argument("--downloaded", action="store_true", help="仅显示已下载的模型")
+    list_group.add_argument("--missing", action="store_true", help="仅显示未下载的模型")
 
     # 全局参数
     parser.add_argument("--json", action="store_true", help="JSON 格式输出（AI 工具调用用）")
