@@ -1005,14 +1005,10 @@ def print_help() -> None:
 
 # ─── 模型数据源映射（TRvlvr/application_data → 本地路径） ───
 MODEL_DATA_SOURCES: dict[str, str] = {
-    "models/MDX_Net_Models/model_data/model_data.json":
-        "https://raw.githubusercontent.com/TRvlvr/application_data/main/mdx_model_data/model_data_new.json",
-    "models/VR_Models/model_data/model_data.json":
-        "https://raw.githubusercontent.com/TRvlvr/application_data/main/vr_model_data/model_data_new.json",
-    "models/Demucs_Models/model_data/model_name_mapper.json":
-        "https://raw.githubusercontent.com/TRvlvr/application_data/main/demucs_model_data/model_name_mapper.json",
-    "models/MDX_Net_Models/model_data/model_name_mapper.json":
-        "https://raw.githubusercontent.com/TRvlvr/application_data/main/mdx_model_data/model_name_mapper.json",
+    "models/MDX_Net_Models/model_data/model_data.json": "https://raw.githubusercontent.com/TRvlvr/application_data/main/mdx_model_data/model_data_new.json",
+    "models/VR_Models/model_data/model_data.json": "https://raw.githubusercontent.com/TRvlvr/application_data/main/vr_model_data/model_data_new.json",
+    "models/Demucs_Models/model_data/model_name_mapper.json": "https://raw.githubusercontent.com/TRvlvr/application_data/main/demucs_model_data/model_name_mapper.json",
+    "models/MDX_Net_Models/model_data/model_name_mapper.json": "https://raw.githubusercontent.com/TRvlvr/application_data/main/mdx_model_data/model_name_mapper.json",
 }
 
 
@@ -1042,7 +1038,9 @@ def cmd_update_model_data() -> None:
         try:
             subprocess.run(
                 ["curl", "-s", "-L", "-o", str(tmp), url],
-                check=True, capture_output=True, timeout=120,
+                check=True,
+                capture_output=True,
+                timeout=120,
             )
         except (subprocess.CalledProcessError, OSError) as e:
             failed += 1
@@ -1064,27 +1062,29 @@ def cmd_update_model_data() -> None:
             tmp.replace(dest)
             updated += 1
             size_kb = dest.stat().st_size / 1024
-            results.append((local_path, "updated", f"{size_kb:.0f}KB  {old_hash[:12]}->{new_hash[:12]}"))
+            results.append(
+                (local_path, "updated", f"{size_kb:.0f}KB  {old_hash[:12]}->{new_hash[:12]}")
+            )
             if not JSON_MODE:
                 print(f"  [{i}/{total}] ✅ {local_path}  ({size_kb:.0f}KB)")
                 print(f"     {old_hash[:12]} → {new_hash[:12]}")
 
     if not JSON_MODE:
-        print(f"\n{'='*50}")
+        print(f"\n{'=' * 50}")
         print(f"  总计: {total}  |  更新: {updated}  |  跳过: {skipped}  |  失败: {failed}")
-        print(f"{'='*50}")
+        print(f"{'=' * 50}")
 
     if JSON_MODE:
-        Output.json({
-            "ok": failed == 0,
-            "total": total,
-            "updated": updated,
-            "skipped": skipped,
-            "failed": failed,
-            "files": [
-                {"path": r[0], "status": r[1], "detail": r[2]} for r in results
-            ],
-        })
+        Output.json(
+            {
+                "ok": failed == 0,
+                "total": total,
+                "updated": updated,
+                "skipped": skipped,
+                "failed": failed,
+                "files": [{"path": r[0], "status": r[1], "detail": r[2]} for r in results],
+            }
+        )
 
 
 def main() -> None:

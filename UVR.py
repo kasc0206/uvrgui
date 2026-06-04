@@ -5769,7 +5769,11 @@ class MainWindow(_MainWindowBase):  # type: ignore[misc]
         language_Label = self.menu_sub_LABEL_SET(settings_menu_main_Frame, LANGUAGE_TEXT)
         language_Label.grid(pady=(MENU_PADDING_2, 0))
         language_var = tk.StringVar()
-        from gui_data.l10n import get_available_languages, set_language, get_language
+        from gui_data.l10n import (
+            get_available_languages,
+            get_language,
+            set_language,
+        )
 
         _lang_opts = get_available_languages()
         _lang_values = [f"{l['label']}" for l in _lang_opts]

@@ -33,8 +33,8 @@ class TestProcessSecondaryModel:
 
     def test_secondary_stem_mapping(self):
         """Test the secondary_stem function mapping."""
+        from gui_data.constants import INST_STEM, VOCAL_STEM
         from separate import secondary_stem
-        from gui_data.constants import VOCAL_STEM, INST_STEM
 
         # Test all defined mappings
         cases = {

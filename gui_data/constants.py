@@ -1,6 +1,7 @@
+import json
 import platform
 from pathlib import Path
-import json
+
 from gui_data.l10n import _
 
 # Platform Details
@@ -1830,6 +1831,9 @@ try:
     _lang = _cfg.get("language", "zh")
 except (FileNotFoundError, json.JSONDecodeError, KeyError):
     _lang = "zh"
-from gui_data.l10n import set_language as _set_language
+
+# Late import for i18n initialization — must be here
+# after all constants are defined, to avoid circular imports
+from gui_data.l10n import set_language as _set_language  # noqa: E402
 
 _set_language(_lang)

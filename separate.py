@@ -1842,7 +1842,9 @@ def process_chain_model(
         return None
 
 
-def gather_sources(primary_stem_name: str, secondary_stem_name: str, secondary_sources: dict) -> tuple:
+def gather_sources(
+    primary_stem_name: str, secondary_stem_name: str, secondary_sources: dict
+) -> tuple:
 
     source_primary = False
     source_secondary = False
