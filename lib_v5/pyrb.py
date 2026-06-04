@@ -7,28 +7,29 @@ import numpy as np
 import six
 import soundfile as sf
 
-if getattr(sys, 'frozen', False):
-    BASE_PATH_RUB = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+if getattr(sys, "frozen", False):
+    BASE_PATH_RUB = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
 else:
     BASE_PATH_RUB = os.path.dirname(os.path.abspath(__file__))
 
-__all__ = ['time_stretch', 'pitch_shift']
+__all__ = ["time_stretch", "pitch_shift"]
 
-__RUBBERBAND_UTIL = os.path.join(BASE_PATH_RUB, 'rubberband')
+__RUBBERBAND_UTIL = os.path.join(BASE_PATH_RUB, "rubberband")
 
 if six.PY2:
-    DEVNULL = open(os.devnull, 'w')
+    DEVNULL = open(os.devnull, "w")
 else:
     DEVNULL = subprocess.DEVNULL
+
 
 def __rubberband(y, sr, **kwargs):
 
     assert sr > 0
 
     # Get the input and output tempfile
-    fd, infile = tempfile.mkstemp(suffix='.wav')
+    fd, infile = tempfile.mkstemp(suffix=".wav")
     os.close(fd)
-    fd, outfile = tempfile.mkstemp(suffix='.wav')
+    fd, outfile = tempfile.mkstemp(suffix=".wav")
     os.close(fd)
 
     # dump the audio
@@ -36,7 +37,7 @@ def __rubberband(y, sr, **kwargs):
 
     try:
         # Execute rubberband
-        arguments = [__RUBBERBAND_UTIL, '-q']
+        arguments = [__RUBBERBAND_UTIL, "-q"]
 
         for key, value in six.iteritems(kwargs):
             arguments.append(str(key))
@@ -54,10 +55,12 @@ def __rubberband(y, sr, **kwargs):
             y_out = np.squeeze(y_out)
 
     except OSError as exc:
-        six.raise_from(RuntimeError('Failed to execute rubberband. '
-                                    'Please verify that rubberband-cli '
-                                    'is installed.'),
-                       exc)
+        six.raise_from(
+            RuntimeError(
+                "Failed to execute rubberband. Please verify that rubberband-cli is installed."
+            ),
+            exc,
+        )
 
     finally:
         # Remove temp files
@@ -66,9 +69,10 @@ def __rubberband(y, sr, **kwargs):
 
     return y_out
 
+
 def time_stretch(y, sr, rate, rbargs=None):
     if rate <= 0:
-        raise ValueError('rate must be strictly positive')
+        raise ValueError("rate must be strictly positive")
 
     if rate == 1.0:
         return y
@@ -76,9 +80,10 @@ def time_stretch(y, sr, rate, rbargs=None):
     if rbargs is None:
         rbargs = dict()
 
-    rbargs.setdefault('--tempo', rate)
+    rbargs.setdefault("--tempo", rate)
 
     return __rubberband(y, sr, **rbargs)
+
 
 def pitch_shift(y, sr, n_steps, rbargs=None):
 
@@ -88,6 +93,6 @@ def pitch_shift(y, sr, n_steps, rbargs=None):
     if rbargs is None:
         rbargs = dict()
 
-    rbargs.setdefault('--pitch', n_steps)
+    rbargs.setdefault("--pitch", n_steps)
 
     return __rubberband(y, sr, **rbargs)

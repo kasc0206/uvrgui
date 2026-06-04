@@ -11,12 +11,14 @@ def file_check(original_dir, new_dir):
         if len(os.listdir(original_dir)) == 0:
             shutil.rmtree(original_dir)
 
+
 def remove_unneeded_yamls(demucs_dir):
 
     for file in os.listdir(demucs_dir):
-        if file.endswith('.yaml'):
+        if file.endswith(".yaml"):
             if os.path.isfile(os.path.join(demucs_dir, file)):
                 os.remove(os.path.join(demucs_dir, file))
+
 
 def remove_temps(remove_dir):
 

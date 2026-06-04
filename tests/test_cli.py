@@ -1,4 +1,5 @@
 """Tests for uvr_cli.py - CLI interface."""
+
 import json
 import os
 import subprocess
@@ -34,7 +35,10 @@ class TestCLICommands:
         """Test 'uvr_cli.py help' prints usage."""
         rc, out, err = run_cli("help")
         assert rc == 0, f"help command failed: {err}"
-        assert any(cmd in out for cmd in ["list", "info", "process", "demucs", "config", "version", "gui", "help"])
+        assert any(
+            cmd in out
+            for cmd in ["list", "info", "process", "demucs", "config", "version", "gui", "help"]
+        )
 
     def test_help_default(self):
         """Test running CLI without args shows help."""

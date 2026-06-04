@@ -310,7 +310,6 @@ def expectation_maximization(
 
             # separate the sources
             for j in range(nb_sources):
-
                 # create a wiener gain for this source
                 gain = torch.zeros_like(inv_Cxx)
 

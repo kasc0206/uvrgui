@@ -1,4 +1,5 @@
 """Tests for project path constants."""
+
 from pathlib import Path
 
 import pytest
@@ -40,6 +41,7 @@ def test_gui_data_exists():
 def test_demucs_package():
     """demucs/ package should be importable."""
     import demucs
+
     # demucs is a namespace package; verify modules exist as files
     root = Path(__file__).parent.parent
     demucs_dir = root / "demucs"
@@ -51,17 +53,20 @@ def test_demucs_package():
 def test_config_file_in_root():
     """uvr_config.json should be in the project root."""
     from uvr_cli import CONFIG_FILE
+
     assert CONFIG_FILE.exists()
 
 
 def test_base_dir_points_to_root():
     """BASE_DIR should be the project root."""
     from uvr_cli import BASE_DIR
+
     assert (BASE_DIR / "uvr_cli.py").exists()
 
 
 def test_models_dir_path():
     """MODELS_DIR should point to models/ in the project root."""
     from uvr_cli import MODELS_DIR
+
     assert MODELS_DIR.name == "models"
     assert MODELS_DIR.parent.name == Path(__file__).parent.parent.name

@@ -1,4 +1,5 @@
 """Tests for model registry functions."""
+
 from pathlib import Path
 
 import pytest

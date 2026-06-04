@@ -1,4 +1,5 @@
 """Pytest configuration and shared fixtures for UVR tests."""
+
 import os
 import sys
 import tempfile
@@ -39,6 +40,7 @@ def sample_wav(temp_dir):
         # Generate a 440Hz sine wave
         for i in range(num_samples):
             import math
+
             sample = int(16000 * math.sin(2 * math.pi * 440 * i / sample_rate))
             wav.writeframes(struct.pack("<h", sample))
 

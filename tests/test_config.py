@@ -1,4 +1,5 @@
 """Tests for configuration loading/saving."""
+
 import json
 import os
 import tempfile
@@ -64,6 +65,7 @@ def test_config_save_and_reload():
 
     # Cleanup
     from uvr_cli import CONFIG_FILE
+
     if CONFIG_FILE.exists():
         with open(CONFIG_FILE) as f:
             data = json.load(f)

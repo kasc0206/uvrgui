@@ -1,4 +1,5 @@
 """Tests for model download functions."""
+
 from pathlib import Path
 
 import pytest
@@ -42,4 +43,5 @@ def test_files_txt_parse():
 def test_download_models_function_exists():
     """download_models() should be importable and callable."""
     from uvr_cli import download_models
+
     assert callable(download_models)
